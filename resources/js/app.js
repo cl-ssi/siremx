@@ -8,6 +8,14 @@ require('./bootstrap');
 
 window.Vue = require('vue');
 
+import ElementUI from 'element-ui';
+import 'element-ui/lib/theme-chalk/index.css';
+
+window.Vue.use(ElementUI);
+
+import Swal from 'sweetalert2';
+window.Swal = Swal;
+
 /**
  * The following block of code may be used to automatically register your
  * Vue components. It will recursively scan this directory for the Vue
@@ -27,6 +35,9 @@ Vue.component('App', require('./components/App.vue').default);
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
+import router from './routes'
+
 const app = new Vue({
     el: '#app',
+    router
 });

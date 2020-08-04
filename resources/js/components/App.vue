@@ -6,7 +6,11 @@
         <Sidebar :ruta="ruta"></Sidebar>
 
         <!-- Main Content Container -->
-        <Content></Content>
+        <div  class="content-wrapper">
+            <transition name="slide-fade" mode="out-in">
+                <router-view></router-view>
+            </transition>
+        </div>
 
         <!-- Footer -->
         <Footer></Footer>
@@ -22,10 +26,9 @@
 <script>
     import Navbar from './layouts/Navbar'
     import Sidebar from './layouts/Sidebar'
-    import Content from './layouts/Content'
     import Footer from './layouts/Footer'
     export default {
         props: ['ruta'],
-        components:{Navbar,Sidebar,Content,Footer}
+        components:{Navbar,Sidebar,Footer}
     }
 </script>

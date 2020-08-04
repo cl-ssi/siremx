@@ -13,7 +13,8 @@ const mix = require('laravel-mix');
 
 mix.styles([
     'resources/vendor/css/all.min.css',
-    'resources/vendor/css/adminlte.min.css'
+    'resources/vendor/css/adminlte.min.css',
+    'resources/vendor/css/config.css'
 ], 'public/css/sismamtheme.css')
 .js('resources/js/app.js', 'public/js').sourceMaps() // JQuery, Bootstrap, VueJS
 .scripts([
