@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Exam;
 use App\Exam;
 use App\Patient;
 
+use Carbon\Carbon;
+
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
@@ -36,5 +38,44 @@ class ExamController extends Controller
                     ->get();
 
        return $exams->toArray();
+    }
+
+    public function setLoadExams(Request $request)
+    {
+        //dd($request['exams']);
+        //dd(json_decode($request->getContent(), true));
+        //DB::statement('DELETE FROM cambio_turnos');
+
+        $exams = json_decode($request->getContent(), true);
+        //dd($turnos['operadores']);
+
+        foreach($exams['exams'] as $exam) {
+           
+            list($run,$dv) = explode('-',str_replace(".", "", $exam['RUN']));
+            //dd($run);
+            $patient_id = Patient::Where('run','LIKE','%'.$run.'%')->first('id');
+            //dd($patient_id->id);
+
+            $date_exam_order = date('Y-m-d',strtotime(str_replace('/', '-',$exam['FECHA SOLICITUD'])));
+            $date_exam_order = ($date_exam_order == NULL) ? ($date_exam_order = '') : $date_exam_order;
+
+            $date_exam = date('Y-m-d',strtotime(str_replace('/', '-',$exam['FECHA TOMA'])));
+            $date_exam = ($date_exam == NULL) ? ($date_exam = '') : $date_exam;
+
+            $date_exam_reception = date('Y-m-d',strtotime(str_replace('/', '-',$exam['FECHA RECEPCION'])));
+            $date_exam_reception = ($date_exam_reception == NULL) ? ($date_exam_reception = '') : $date_exam_reception;
+
+            $examDet = new Exam();
+            $examDet->date_exam_order      = $date_exam_order;
+            $examDet->date_exam            = $date_exam;
+            $examDet->date_exam_reception  = $date_exam_reception;
+            $examDet->user_id              = 1;
+            $examDet->patient_id           = $patient_id->id;
+            $examDet->save();
+
+        }
+        
+        
+        return $exams;
     }
 }

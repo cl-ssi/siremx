@@ -52,9 +52,9 @@
                     </router-link>
                   </li>
                   <li class="nav-item">
-                    <router-link href="#" class="nav-link" :to="'/'">
+                    <router-link href="#" class="nav-link" :to="'/examLoad'">
                       <i class="far fa-circle nav-icon"></i>
-                      <p>Recepcionar Resultados</p>
+                      <p>Carga de Resultados</p>
                     </router-link>
                   </li>
                 </ul>

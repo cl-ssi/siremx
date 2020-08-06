@@ -34,6 +34,7 @@ export default new Router({
             component: require('./components/modules/exam/view').default,
             props: true 
         },
+        { path: '/examLoad', component: require('./components/modules/exam/load').default },
     ],
     mode: 'history',
     linkActiveClass: 'active'

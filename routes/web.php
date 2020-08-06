@@ -32,6 +32,7 @@ Route::get('/administracion/patient/getPatient','PatientController@getPatient');
 Route::get('/administracion/patient/showPatient','PatientController@showPatient');
 
 Route::get('/exam/getListExams','Exam\ExamController@getListExams');
+Route::post('/exam/setLoadExams','Exam\ExamController@setLoadExams');
 
 Route::get('/{optional?}', function () {
     return view('app');
