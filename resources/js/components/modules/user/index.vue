@@ -108,9 +108,16 @@
                     <tbody>
                       <tr v-for="(item, index) in listarUsuariosPaginated" :key="index">
                         <td>
-                          <li class="user-block">
-                            <img src="/img/avatar.png" alt="" :alt="item.username" class="profile-avatar-img img-fluid img-circle img-circle img-size-20 mr-2">
-                          </li>
+                          <template v-if="!item.profile_image">
+                            <li class="user-block">
+                              <img src="/img/avatar.png" alt="" :alt="item.username" class="profile-avatar-img img-fluid img-circle img-circle img-size-20 mr-2">
+                            </li>
+                          </template>
+                          <template v-else>
+                            <li class="user-block">
+                              <img :src="item.profile_image" alt="" :alt="item.username" class="profile-avatar-img img-fluid img-circle img-circle img-size-20 mr-2">
+                            </li>
+                          </template>
                         </td>
                         <td v-text="item.fullname"></td>
                         <td v-text="item.email"></td>
@@ -120,25 +127,30 @@
                             <span class="badge badge-success" v-text="item.state_alias"></span>
                           </template>
                           <template v-else>
-                            <span class="badge badge-success" v-text="item.state_alias"></span>
+                            <span class="badge badge-danger" v-text="item.state_alias"></span>
                           </template>
                         </td>
                         <td class="text-right">
-                          <router-link class="btn btn-xs btn-default" :to="'/'">
-                            <i class="fas fa-folder"></i> 
-                          </router-link>
-                          <router-link class="btn btn-xs btn-default" :to="'/'">
-                            <i class="fas fa-pencil-alt"></i> 
-                          </router-link>
-                          <router-link class="btn btn-xs btn-default" :to="'/'">
-                            <i class="fas fa-key"></i> 
-                          </router-link>
-                          <router-link class="btn btn-xs btn-default" :to="'/'">
-                            <i class="fas fa-check"></i> 
-                          </router-link>
-                          <router-link class="btn btn-xs btn-danger" :to="'/'">
-                            <i class="fas fa-trash"></i> 
-                          </router-link>
+                          <template v-if="item.state == 'A'">
+                            <router-link class="btn btb-flat btn-xs btn-default" :to="'/'">
+                              <i class="fas fa-folder"></i> 
+                            </router-link>
+                            <!--Editar-->
+                            <router-link class="btn btb-flat btn-xs btn-default" :to="{name: 'user.edit', params: {id: item.id}}">
+                              <i class="fas fa-pencil-alt"></i> 
+                            </router-link>
+                            <router-link class="btn btb-flat btn-xs btn-default" :to="'/'">
+                              <i class="fas fa-key"></i> 
+                            </router-link>
+                            <button class="btn btb-flat btn-xs btn-default"  @click.prevent="setChangeUserState(1, item.id)">
+                              <i class="fas fa-trash text-danger"></i> 
+                            </button>
+                          </template>
+                          <template v-else>
+                            <button class="btn btb-flat btn-xs btn-default"  @click.prevent="setChangeUserState(2, item.id)">
+                              <i class="fas fa-check text-success"></i> 
+                            </button>
+                           </template>
                         </td>
                       </tr>
                     </tbody>
@@ -254,6 +266,35 @@
         },
         inicializarPaginacion() {
           this.pageNumber = 0;
+        },
+        setChangeUserState(op, id) {
+          Swal.fire({
+            title: '¿Está Seguro de '+((op == 1)? 'desactivar': 'activar')+' el usuario?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: ((op == 1)? 'Si desactivar': 'Si, activar')
+          }).then((result) => {
+              if (result.value) {
+              // AQUI IRA LA CONFIRMACIÓN DEL BOTON Y PETICIÓN DEL SERVIDOR
+                var  url = '/administracion/user/setChangeUserState'
+                axios.post(url, {
+                  'idUser'        : id,
+                  'state' : ((op == 1)? 'I': 'A'),
+
+                }).then(response => {
+                     Swal.fire({
+                      icon: 'success',
+                      title: 'Se '+((op == 1)? 'desactivo': 'activo')+'el usuario',
+                      showConfirmButton: false,
+                      timer: 1500
+                    })
+                    this.getListarUsuarios();
+                })
+              
+            }
+          })
         }
       }
     }

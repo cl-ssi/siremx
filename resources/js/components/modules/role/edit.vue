@@ -237,11 +237,11 @@
             console.log("Se creao Rol exitosamente");
             this.fullscreenLoading = false;
               Swal.fire({
-              icon: 'success',
-              title: 'Actualizado',
-              showConfirmButton: false,
-              timer: 1500
-            })
+                icon: 'success',
+                title: 'Actualizado',
+                showConfirmButton: false,
+                timer: 1500
+              })
             //this.$router.push('/role');
           })
         },

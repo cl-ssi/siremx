@@ -37,7 +37,7 @@ class PatientController extends Controller
     {
        if(!$request->ajax()) return redirect('/');
         
-       /*$cNombre        = $request->cNombre;
+       /*$cNombre      = $request->cNombre;
        $cSegundoNombre = $request->cSegundoNombre;
        $cApellido      = $request->cApellido;
        $cUsuario       = $request->cUsuario;

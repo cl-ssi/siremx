@@ -16,11 +16,21 @@ class CreateExamsTable extends Migration
         Schema::create('exams', function (Blueprint $table) {
             $table->id();
 
-            $table->date('date_exam_order')->nullable();
-            $table->date('date_exam')->nullable();
+            $table->string('servicio_salud')->nullable();
+            $table->string('profesional_solicita')->nullable();
+            $table->string('diagnostico')->nullable();
+            $table->string('establecimiento_realiza_examen')->nullable();
+            $table->string('cesfam')->nullable();
+            $table->string('medico')->nullable();
+            $table->string('fonasa')->nullable();
+
+
+            $table->date('date_exam_order')->nullable(); // Fecha de Solicitud
+            $table->date('date_exam')->nullable(); // Fecha Exámen
             $table->date('date_exam_reception')->nullable();
             $table->string('derivation_reason')->nullable();
-            $table->string('birards')->nullable();
+            $table->string('birards_mamografia')->nullable();
+            $table->string('birards_ecografia')->nullable();
             $table->string('result')->nullable();
 
             $table->unsignedBigInteger('user_id');

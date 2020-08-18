@@ -27,7 +27,7 @@ class Establishment extends Model
         return $this->belongsToMany('App\User');
     }
   
-    use SoftDeletes;
+    //use SoftDeletes;
   
     /**
      * The attributes that should be mutated to dates.

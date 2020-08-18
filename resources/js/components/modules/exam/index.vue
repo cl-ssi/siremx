@@ -150,7 +150,7 @@
               {value: 'I', label: 'Inactivo'}
             ],
             pageNumber: 0,
-            perPage: 25
+            perPage: 50
           }
       },
       computed: {

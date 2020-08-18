@@ -63,6 +63,9 @@
                             v-loading="tableLoading"
                             border
                             style="width: 100%"
+                            striped
+                            size="mini"
+                            fit
                         >
                             <el-table-column
                             :prop="item.prop"

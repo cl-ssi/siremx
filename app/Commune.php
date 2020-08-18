@@ -23,7 +23,7 @@ class Commune extends Model
         return $this->hasMany('\App\Establishment');
     }
 
-    use SoftDeletes;
+    //use SoftDeletes;
 
     /**
      * The attributes that should be mutated to dates.

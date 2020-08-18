@@ -85,6 +85,23 @@
                     </div>
                     <div class="col-md-6">
                       <div class="form-group">
+                        <label class="col-md-3 col-form-label">Rol</label>
+                        <div class="col-md-9">
+                          <el-select v-model="fillCrearUsuario.idRole" 
+                          placeholder="Seleccione Rol"
+                          clearable>
+                            <el-option
+                              v-for="item in listRoles"
+                              :key="item.id"
+                              :label="item.name"
+                              :value="item.id">
+                            </el-option>
+                          </el-select>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="form-group">
                         <label class="col-md-3 col-form-label">Fotografía</label>
                         <div class="col-md-9">
                           <input type="file" class="form-control" @change="getFile">
@@ -140,8 +157,10 @@
               cUsuario: '',
               cCorreo: '',
               cContrasena: '',
-              oFotografia: ''
+              oFotografia: '',
+              idRole: '',
             },
+            listRoles: [],
             form: new FormData,
             fullscreenLoading: false,
             modalShow: false,
@@ -158,6 +177,9 @@
       },
       computed: {
         
+      },
+      mounted() {
+        this.getListRoles();
       },
       methods: {
         limpiarCriterios(){
@@ -210,11 +232,30 @@
             'cCorreo'        : this.fillCrearUsuario.cCorreo,
             'cContrasena'    : this.fillCrearUsuario.cContrasena,
             'oFotografia'    : nIdFile,
+            'idRole'         : this.fillCrearUsuario.idRole,
 
           }).then(response => {
-            console.log("Registro Usuario exitosamente");t
+            console.log(response.data[0].nIdUsuario);
+            this.setEditRoleByUser(response.data[0].nIdUsuario);
+          })
+        },
+        setEditRoleByUser(nIdUsuario) {
+          console.log("en funcion");
+          var  url = '/administracion/user/setEditRoleByUser'
+          axios.post(url, {
+            'idUser' : nIdUsuario,
+            'idRole' : this.fillCrearUsuario.idRole,
+
+          }).then(response => {
+            console.log("hola"+response);
             this.fullscreenLoading = false;
             this.$router.push('/user');
+          })
+        },
+        getListRoles(){
+          var url = '/administracion/role/getListRoles'
+          axios.get(url).then(response => {
+            this.listRoles = response.data;
           })
         },
         validarRegistrarUsuario() {

@@ -25,7 +25,7 @@
 
                     <h3 class="profile-username text-center" 
                     v-text="fillShowPatient.name+' '+fillShowPatient.fathers_family+' '+fillShowPatient.mothers_family">
-                    </h3>
+                    </h3> 
 
                     <p class="text-muted text-center">Run: {{fillShowPatient.run}}</p>
 

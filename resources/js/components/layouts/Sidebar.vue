@@ -21,6 +21,14 @@
             </div>
           </div>
 
+          <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+            <div class="info">
+              <a href="#" class="d-block" @click.prevent="logout" v-loading.fullscreen.lock="fullscreenLoading">
+                <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+              </a>
+            </div>
+          </div>
+
           <!-- Sidebar Menu -->
           <nav class="mt-2">
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
@@ -48,13 +56,13 @@
                   <li class="nav-item">
                     <router-link href="#" class="nav-link" :to="'/exam'">
                       <i class="far fa-circle nav-icon"></i>
-                      <p>Solicitudes de Exámen</p>
+                      <p>Ingreso de Exámen</p>
                     </router-link>
                   </li>
                   <li class="nav-item">
                     <router-link href="#" class="nav-link" :to="'/examLoad'">
                       <i class="far fa-circle nav-icon"></i>
-                      <p>Carga de Resultados</p>
+                      <p>Carga Masiva</p>
                     </router-link>
                   </li>
                 </ul>
@@ -70,12 +78,12 @@
               
 
               <li class="nav-header">REPORTES</li>
-              <li class="nav-item">
+              <!--<li class="nav-item">
                 <router-link class="nav-link" :to="'/report'" >
                   <i class="nav-icon fas fa-chart-line"></i>
                   <p>Exámenes</p>
                 </router-link>
-              </li>
+              </li>-->
               <li class="nav-item has-treeview">
                 <a href="#" class="nav-link">
                   <i class="nav-icon fas fa-notes-medical"></i>
@@ -86,16 +94,28 @@
                 </a>
                 <ul class="nav nav-treeview" style="display: none;">
                   <li class="nav-item">
-                    <a href="#" class="nav-link">
+                    <router-link class="nav-link" :to="'/patientHistory'">
                       <i class="far fa-circle nav-icon"></i>
-                      <p>Vigentes</p>
-                    </a>
+                      <p>Historial Paciente</p>
+                    </router-link>
                   </li>
                   <li class="nav-item">
-                    <a href="#" class="nav-link">
+                    <router-link class="nav-link" :to="'/reportMX'">
                       <i class="far fa-circle nav-icon"></i>
-                      <p>Por Venir</p>
-                    </a>
+                      <p>Reporte MX</p>
+                    </router-link>
+                  </li>
+                  <li class="nav-item">
+                    <router-link class="nav-link" :to="'/reportMXBirards'">
+                      <i class="far fa-circle nav-icon"></i>
+                      <p>MX por BIRARDS</p>
+                    </router-link>
+                  </li>
+                  <li class="nav-item">
+                    <router-link class="nav-link" :to="'/reportBirardsAge'">
+                      <i class="far fa-circle nav-icon"></i>
+                      <p>Birards por Edad</p>
+                    </router-link>
                   </li>
                 </ul>
               </li>
@@ -131,8 +151,23 @@
 <script>
     export default {
       props:['ruta'],
-        mounted() {
-            console.log('Component Sidebar.')
+      data() {
+            return {
+                fullscreenLoading: false
+            }
+        },
+      methods: {
+        logout() {
+          this.fullscreenLoading = true;
+          var  url = '/authenticate/logout'
+          axios.post(url).then(response => {
+            if(response.data.code == 204){
+              this.$router.push({name: 'login'})
+              location.reload();
+              this.fullscreenLoading = false;
+            }
+          })
         }
+      }
     }
 </script>

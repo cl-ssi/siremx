@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Database\Seeder;
+use App\Establishment;
 
 class EstablishmentTableSeeder extends Seeder
 {
@@ -11,7 +12,7 @@ class EstablishmentTableSeeder extends Seeder
      */
     public function run()
     {
-        Establishment::Create(['name'=>'Actividades gestionadas por la Dirección del Servicio para apoyo de la Red (S.S de Arica)','alias'=>'Actividades gestionadas por la Dirección del Servicio para apoyo de la Red (S.S de Arica)','type'=>'Dirección Servicio de Salud','old_code_deis' => '01-010','new_code_deis' => '101010','service'=>'Servicio de Salud Arica','dependency'=>'Servicio de Salud','commune_id'=>1]);
+      Establishment::Create(['name'=>'Actividades gestionadas por la Dirección del Servicio para apoyo de la Red (S.S de Arica)','alias'=>'Actividades gestionadas por la Dirección del Servicio para apoyo de la Red (S.S de Arica)','type'=>'Dirección Servicio de Salud','old_code_deis' => '01-010','new_code_deis' => '101010','service'=>'Servicio de Salud Arica','dependency'=>'Servicio de Salud','commune_id'=>1]);
       Establishment::Create(['name'=>'PRAIS (S.S Arica)','alias'=>'PRAIS (S.S Arica)','type'=>'Centro PRAIS','old_code_deis' => '01-011','new_code_deis' => '101011','service'=>'Servicio de Salud Arica','dependency'=>'Servicio de Salud','commune_id'=>1]);
       Establishment::Create(['name'=>'Clínica Dental Móvil Simple. Pat. PW4076 (Arica)','alias'=>'Clínica Dental Móvil Simple. Pat. PW4076 (Arica)','type'=>'Clínica Dental Móvil','old_code_deis' => '01-012','new_code_deis' => '101012','service'=>'Servicio de Salud Arica','dependency'=>'Servicio de Salud','commune_id'=>1]);
       Establishment::Create(['name'=>'Oficina Sanitaria Chacalluta','alias'=>'Oficina Sanitaria Chacalluta','type'=>'Oficina Sanitaria','old_code_deis' => '01-090','new_code_deis' => '101090','service'=>'Servicio de Salud Arica','dependency'=>'Autoridad Sanitaria','commune_id'=>1]);

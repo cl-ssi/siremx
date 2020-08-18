@@ -298,6 +298,41 @@
             this.fullscreenLoading = false;
           })
         },
+        getListPatientsApi(){
+          var session_url = 'https://i.saludiquique.cl/monitor/api/webservices/fonasa?run=15287582&dv=7';
+          var username = 'api@redsalud.gob.cl';
+          var password = 'apiesmeralda';
+          var basicAuth = 'Basic ' + btoa(username + ':' + password);
+
+          axios.get(session_url, {}, {
+            headers: { 'Authorization': + basicAuth }
+          }).then(function(response) {
+            console.log('Authenticated');
+          }).catch(function(error) {
+            console.log('Error on Authentication');
+          });
+                    /*console.log("id "+this.fillCreatePatient.run,);
+          axios.get(url, {
+            params: {
+              'idPatient' : this.fillCreatePatient.run,
+            }
+          }).then(response => {
+            console.log(response.data);
+            this.fillCreatePatient.name = response.data.name;
+            this.fillCreatePatient.run = response.data.run;
+            this.fillCreatePatient.fathers_family = response.data.fathers_family;
+            this.fillCreatePatient.mothers_family = response.data.mothers_family;
+        
+            this.fillCreatePatient.address = response.data.address;
+            this.fillCreatePatient.birthday = response.data.birthday;
+            this.fillCreatePatient.gender = response.data.gender;
+            this.fillCreatePatient.exams = response.data.exams;
+
+            this.fillCreatePatient.telephone = response.data.telephone;
+
+            this.fullscreenLoading = false;
+          })*/
+        },
         setRegistrarUsuario() {
             
             if(this.validarRegistrarUsuario()) {
