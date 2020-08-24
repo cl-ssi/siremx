@@ -41,4 +41,11 @@ class User extends Authenticatable
     public function establishments() {
         return $this->belongsToMany('App\Establishment');
     }
+    
+    protected $appends = ["fullname"];
+
+    public function getFullNameAttribute()
+    {
+        return "{$this->firstname} {$this->secondname} {$this->lastname}";
+    }
 }

@@ -17,7 +17,7 @@
               <img :src="ruta + '/img/avatar.png'" class="img-circle elevation-2" alt="User Image">
             </div>
             <div class="info">
-              <a href="#" class="d-block">Jorge Cruz</a>
+              <a href="#" class="d-block">{{user.fullname}}</a>
             </div>
           </div>
 
@@ -32,113 +32,132 @@
           <!-- Sidebar Menu -->
           <nav class="mt-2">
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-              <!-- Add icons to the links using the .nav-icon class
-                   with font-awesome or any other icon font library -->
-              <li class="nav-item has-treeview">
-                <router-link class="nav-link active" :to="'/'" >
-                  <i class="nav-icon fas fa-tachometer-alt"></i>
-                  <p>
-                    Dashboard
-                  </p>
-                </router-link>
-              </li>
               
-              <li class="nav-header">GESTIÓN</li>
               <li class="nav-item has-treeview">
-                <a href="#" class="nav-link">
-                  <i class="nav-icon fas fa-notes-medical"></i>
-                  <p>
-                    Mamografías
-                    <i class="right fas fa-angle-left"></i>
-                  </p>
-                </a>
-                <ul class="nav nav-treeview" style="display: none;">
-                  <li class="nav-item">
-                    <router-link href="#" class="nav-link" :to="'/exam'">
-                      <i class="far fa-circle nav-icon"></i>
-                      <p>Ingreso de Exámen</p>
-                    </router-link>
-                  </li>
-                  <li class="nav-item">
-                    <router-link href="#" class="nav-link" :to="'/examLoad'">
-                      <i class="far fa-circle nav-icon"></i>
-                      <p>Carga Masiva</p>
-                    </router-link>
-                  </li>
-                </ul>
+                <template v-if="listPermissions.includes('dashboard.index')">
+                  <router-link class="nav-link active" :to="'/'" >
+                    <i class="nav-icon fas fa-tachometer-alt"></i>
+                    <p>Dashboard</p>
+                  </router-link>
+                </template>
               </li>
-              <li class="nav-item">
-                <router-link class="nav-link" :to="'/patient'" >
-                  <i class="nav-icon fas fa-user-friends"></i>
-                  <p>
-                    Pacientes
-                  </p>
-                </router-link>
-              </li>
-              
 
-              <li class="nav-header">REPORTES</li>
-              <!--<li class="nav-item">
-                <router-link class="nav-link" :to="'/report'" >
-                  <i class="nav-icon fas fa-chart-line"></i>
-                  <p>Exámenes</p>
-                </router-link>
-              </li>-->
-              <li class="nav-item has-treeview">
-                <a href="#" class="nav-link">
-                  <i class="nav-icon fas fa-notes-medical"></i>
-                  <p>
-                    Mamografías
-                    <i class="right fas fa-angle-left"></i>
-                  </p>
-                </a>
-                <ul class="nav nav-treeview" style="display: none;">
-                  <li class="nav-item">
-                    <router-link class="nav-link" :to="'/patientHistory'">
-                      <i class="far fa-circle nav-icon"></i>
-                      <p>Historial Paciente</p>
+              <template v-if="listPermissions.includes('exam.index','examLoad.index')">
+                <li class="nav-header">GESTIÓN</li>
+                <li class="nav-item has-treeview">
+                  <a href="#" class="nav-link">
+                    <i class="nav-icon fas fa-notes-medical"></i>
+                    <p>
+                      Mamografías
+                      <i class="right fas fa-angle-left"></i>
+                    </p>
+                  </a>
+                  <ul class="nav nav-treeview" style="display: none;">
+                    <li class="nav-item">
+                      <template v-if="listPermissions.includes('exam.index')">
+                        <router-link class="nav-link" :to="'/exam'" >
+                          <i class="far fa-circle nav-icon"></i>
+                          <p>Ingreso de Exámen</p>
+                        </router-link>
+                      </template>
+                    </li>
+                    <li class="nav-item">
+                      <template v-if="listPermissions.includes('exam.load')">
+                        <router-link class="nav-link" :to="'/examLoad'" >
+                          <i class="far fa-circle nav-icon"></i>
+                          <p>Carga Masiva</p>
+                        </router-link>
+                      </template>
+                    </li>
+                  </ul>
+                </li>
+              </template>
+
+              <template v-if="listPermissions.includes('patient.index')">
+                <li class="nav-item">
+                  <template v-if="listPermissions.includes('patient.index')">
+                    <router-link class="nav-link" :to="'/patient'" >
+                      <i class="nav-icon fas fa-users "></i>
+                      <p>Pacientes</p>
                     </router-link>
-                  </li>
-                  <li class="nav-item">
-                    <router-link class="nav-link" :to="'/reportMX'">
-                      <i class="far fa-circle nav-icon"></i>
-                      <p>Reporte MX</p>
-                    </router-link>
-                  </li>
-                  <li class="nav-item">
-                    <router-link class="nav-link" :to="'/reportMXBirards'">
-                      <i class="far fa-circle nav-icon"></i>
-                      <p>MX por BIRARDS</p>
-                    </router-link>
-                  </li>
-                  <li class="nav-item">
-                    <router-link class="nav-link" :to="'/reportBirardsAge'">
-                      <i class="far fa-circle nav-icon"></i>
-                      <p>Birards por Edad</p>
-                    </router-link>
-                  </li>
-                </ul>
-              </li>
+                  </template>
+                </li>
+              </template>
               
-              <li class="nav-header">ADMINISTRACIÓN</li>
-              <li class="nav-item">
-                <router-link class="nav-link" :to="'/user'" >
-                  <i class="nav-icon fas fa-user"></i>
-                  <p>Usuarios</p>
-                </router-link>
-              </li>
-              <li class="nav-item">
-                <router-link class="nav-link" :to="'/role'" >
-                  <i class="nav-icon fas fa-unlock-alt"></i>
-                  <p>Roles</p>
-                </router-link>
-              </li>
-              <li class="nav-item">
-                <router-link class="nav-link" :to="'/permission'" >
-                  <i class="nav-icon fas fa-key"></i>
-                  <p>Permisos</p>
-                </router-link>
-              </li>
+              <template v-if="listPermissions.includes('patientHistory.index','reportMX.index','reportMXBirards.index','reportBirardsAge.index')">
+                <li class="nav-header">REPORTES</li>
+                <li class="nav-item has-treeview">
+                  <a href="#" class="nav-link">
+                    <i class="nav-icon fas fa-notes-medical"></i>
+                    <p>
+                      Mamografías
+                      <i class="right fas fa-angle-left"></i>
+                    </p>
+                  </a>
+                  <ul class="nav nav-treeview" style="display: none;">
+                    <li class="nav-item">
+                      <template v-if="listPermissions.includes('patientHistory.index')">
+                        <router-link class="nav-link" :to="'/patientHistory'" >
+                          <i class="fas fa-file-contract nav-icon"></i>
+                          <p>Historial Paciente</p>
+                        </router-link>
+                      </template>
+                    </li>
+                    <li class="nav-item">
+                      <template v-if="listPermissions.includes('reportMX.index')">
+                        <router-link class="nav-link" :to="'/reportMX'">
+                          <i class="fas fa-file-contract nav-icon"></i>
+                          <p>Reporte MX</p>
+                        </router-link>
+                      </template>
+                    </li>
+                    <li class="nav-item">
+                      <template v-if="listPermissions.includes('reportMXBirards.index')">
+                        <router-link class="nav-link" :to="'/reportMXBirards'">
+                          <i class="fas fa-file-contract nav-icon"></i>
+                          <p>MX por BIRARDS</p>
+                        </router-link>
+                      </template>
+                    </li>
+                    <li class="nav-item">
+                      <template v-if="listPermissions.includes('reportBirardsAge.index')">
+                        <router-link class="nav-link" :to="'/reportBirardsAge'">
+                          <i class="fas fa-file-contract nav-icon"></i>
+                          <p>Birards por Edad</p>
+                        </router-link>
+                      </template>
+                    </li>
+                  </ul>
+                </li>
+              </template>
+              
+              <template v-if="listPermissions.includes('user.index','role.index','permission.index')">
+                <li class="nav-header">ADMINISTRACIÓN</li>
+                <li class="nav-item">
+                  <template v-if="listPermissions.includes('user.index')">
+                    <router-link class="nav-link" :to="'/user'" >
+                      <i class="nav-icon fas fa-user"></i>
+                      <p>Usuarios</p>
+                    </router-link>
+                  </template>
+                </li>
+                <li class="nav-item">
+                  <template v-if="listPermissions.includes('role.index')">
+                    <router-link class="nav-link" :to="'/role'" >
+                      <i class="nav-icon fas fa-unlock-alt"></i>
+                      <p>Roles</p>
+                    </router-link>
+                  </template>
+                </li>
+                <li class="nav-item">
+                  <template v-if="listPermissions.includes('permission.index')">
+                    <router-link class="nav-link" :to="'/permission'" >
+                      <i class="nav-icon fas fa-key"></i>
+                      <p>Permisos</p>
+                    </router-link>
+                  </template>
+                </li>
+              </template>
 
             </ul>
           </nav>
@@ -150,7 +169,7 @@
 
 <script>
     export default {
-      props:['ruta'],
+      props:['ruta', 'user', 'listPermissions'],
       data() {
             return {
                 fullscreenLoading: false
@@ -164,6 +183,7 @@
             if(response.data.code == 204){
               this.$router.push({name: 'login'})
               location.reload();
+              sessionStorage.clear();
               this.fullscreenLoading = false;
             }
           })

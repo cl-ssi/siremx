@@ -16,9 +16,11 @@
       <div class="card">
         <div class="card-header">
           <div class="card-tools">
-            <router-link class="btn btn-info btn-sm" :to="'/user/create'">
-              <i class="fas fa-plus-square"></i> Nuevo Usuario
-            </router-link>
+            <template v-if="listRolePermissionsByUser.includes('user.create')">
+                <router-link class="btn btn-info btn-sm" :to="{name:'/user/create'}">
+                  <i class="fas fa-plus-square"></i> Nuevo Usuario
+                </router-link>
+            </template>
           </div>
         </div>
         <div class="card-body">
@@ -132,24 +134,32 @@
                         </td>
                         <td class="text-right">
                           <template v-if="item.state == 'A'">
-                            <router-link class="btn btb-flat btn-xs btn-default" :to="'/'">
+                            <!--<router-link class="btn btb-flat btn-xs btn-default" :to="'/'">
                               <i class="fas fa-folder"></i> 
-                            </router-link>
+                            </router-link>-->
                             <!--Editar-->
-                            <router-link class="btn btb-flat btn-xs btn-default" :to="{name: 'user.edit', params: {id: item.id}}">
-                              <i class="fas fa-pencil-alt"></i> 
-                            </router-link>
-                            <router-link class="btn btb-flat btn-xs btn-default" :to="'/'">
-                              <i class="fas fa-key"></i> 
-                            </router-link>
-                            <button class="btn btb-flat btn-xs btn-default"  @click.prevent="setChangeUserState(1, item.id)">
-                              <i class="fas fa-trash text-danger"></i> 
-                            </button>
+                            <template v-if="listRolePermissionsByUser.includes('user.edit')">
+                              <router-link class="btn btb-flat btn-xs btn-default" :to="{name: 'user.edit', params: {id: item.id}}">
+                                <i class="fas fa-pencil-alt"></i> 
+                              </router-link>
+                            </template>
+                            <template v-if="listRolePermissionsByUser.includes('user.permission')">
+                              <router-link class="btn btb-flat btn-xs btn-default" :to="{name: 'user.permission', params: {id: item.id}}">
+                                <i class="fas fa-key"></i> Permisos
+                              </router-link>
+                            </template>
+                            <template v-if="listRolePermissionsByUser.includes('user.activate')">
+                              <button class="btn btb-flat btn-xs btn-default"  @click.prevent="setChangeUserState(1, item.id)">
+                                <i class="fas fa-trash text-danger"></i> 
+                              </button>
+                            </template>
                           </template>
                           <template v-else>
-                            <button class="btn btb-flat btn-xs btn-default"  @click.prevent="setChangeUserState(2, item.id)">
-                              <i class="fas fa-check text-success"></i> 
-                            </button>
+                            <template v-if="listRolePermissionsByUser.includes('user.activate')">
+                              <button class="btn btb-flat btn-xs btn-default"  @click.prevent="setChangeUserState(2, item.id)">
+                                <i class="fas fa-check text-success"></i> 
+                              </button>
+                            </template>
                            </template>
                         </td>
                       </tr>
@@ -195,6 +205,7 @@
               cEstado: ''
             },
             listUsuarios: [],
+            listRolePermissionsByUser: JSON.parse(sessionStorage.getItem('listRolePermissionsByUser')),
             listEstados: [
               {value: 'A', label: 'Activo'},
               {value: 'I', label: 'Inactivo'}
@@ -253,6 +264,13 @@
             console.log(response.data)
             this.inicializarPaginacion();
             this.listUsuarios = response.data;
+          }).catch(error => {
+              if(error.response.status == 401){
+                this.$router.push({name: 'login'})
+                location.reload();
+                sessionStorage.clear();
+                this.fullscreenLoading = false;
+              }
           })
         },
         nextPage() {
@@ -291,6 +309,13 @@
                       timer: 1500
                     })
                     this.getListarUsuarios();
+                }).catch(error => {
+                    if(error.response.status == 401){
+                      this.$router.push({name: 'login'})
+                      location.reload();
+                      sessionStorage.clear();
+                      this.fullscreenLoading = false;
+                    }
                 })
               
             }

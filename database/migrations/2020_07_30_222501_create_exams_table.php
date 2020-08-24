@@ -33,6 +33,10 @@ class CreateExamsTable extends Migration
             $table->string('birards_ecografia')->nullable();
             $table->string('result')->nullable();
 
+            // VARIABLES DE CONTROL
+            $table->enum('load_source',['excel', 'app', 'other']);
+            $table->unsignedBigInteger('load_id');
+
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('patient_id');
 

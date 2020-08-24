@@ -3,7 +3,7 @@
         <!-- Navbar -->
         <Navbar :ruta="ruta"></Navbar>
         <!-- Main Sidebar Container -->
-        <Sidebar :ruta="ruta"></Sidebar>
+        <Sidebar :ruta="ruta" :user="user" :listPermissions="listRolePermissionsByUser"></Sidebar>
 
         <!-- Main Content Container -->
         <div  class="content-wrapper">
@@ -28,7 +28,20 @@
     import Sidebar from './layouts/Sidebar'
     import Footer from './layouts/Footer'
     export default {
-        props: ['ruta'],
-        components:{Navbar,Sidebar,Footer}
+        props: ['ruta', 'user'],
+        data() {
+            return {
+                listRolePermissionsByUser: []
+            }
+        },
+        components:{Navbar,Sidebar,Footer},
+        mounted() {
+
+            this.listRolePermissionsByUser = JSON.parse(sessionStorage.getItem('listRolePermissionsByUser'));
+
+            EventBus.$on('notifyrolePermissionsByUser',data => {
+                this.listRolePermissionsByUser = data;
+            })
+        },
     }
 </script>

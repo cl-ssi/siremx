@@ -31,14 +31,37 @@
               </div>
               <div class="card-body">
                 <form role="form">
-                    <div class="form-row">
-                      <fieldset class="form-group col-4">
-                          <label>Cargar Archivo</label>
-                          <input type="file" class="form-control" @change="importExcel">
-                          <small class="form-text text-muted">* Extensión xls</small>
-                      </fieldset>
-                  </div>
-
+                    <div class="row">
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <label class="col-md-3 col-form-label">Título de la Carga</label>
+                          <div class="col-md-9">
+                            <input type="text" class="form-control" v-model="fillSetLoad.title" >
+                            <small class="form-text text-muted"> * Ej: 2020-01 Carga exámenes CESFAM SUR</small>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <label class="col-md-4 col-form-label">Seleccionar Archivo</label>
+                          <div class="col-md-9">
+                              <input type="file" class="form-control" @change="importExcel">
+                              <small class="form-text text-muted">* Extensión xls</small>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <label class="col-md-3 col-form-label">Descripción</label>
+                          <div class="col-md-9">
+                            <textarea class="form-control" v-model="fillSetLoad.description"  rows="3" placeholder="Redactar ..."></textarea>
+                            <small class="form-text text-muted"></small>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                 </form>
               </div>
               <div class="card-footer">
@@ -65,8 +88,7 @@
                             style="width: 100%"
                             striped
                             size="mini"
-                            fit
-                        >
+                            fit>
                             <el-table-column
                             :prop="item.prop"
                             :label="item.label"
@@ -76,28 +98,7 @@
                             ></el-table-column>
                         </el-table>
                         </div>
-                    <!--<table class="table table-hover table-sm  table-striped table-header-fixed text-nowrap table-valign-middle projects">
-                        <thead>
-                            <tr>
-                                <th  v-for="(item, index) in tableColumn" :key="index" >
-                                {{ item.label | capitalize }}
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr v-for="(csv, index) in Object.values(dataArr)" :key="index" >
-                            <td v-for="(item, index) in tableColumn" :key="index">
-                                {{csv[index]}}
-                            </td>
-                            </tr>
-                        </tbody>
-                    </table>-->
                 </template>
-                <!--<template >
-                  <div class="callout callout-info">
-                      <h5>No se encontraron resultados...</h5>
-                  </div>
-                </template>-->
               </div>
             </div>
           </div>
@@ -118,12 +119,11 @@
             tableColumn: [], // Table header configuration array
             tableLoading: false, // Whether the table is loading
             examsData: [],
-            fillBsqUsuario: {
-              nRun: '',
-              cName: '',
-              cFathers_family: ''
-            },
-            listUsuarios: []
+            fillSetLoad: {
+              file: '',
+              title: '',
+              description: ''
+            }
           }
       },
       computed: {
@@ -131,12 +131,11 @@
       },
       methods: {
         limpiarCriteriosBsq(){
-          this.fillBsqUsuario.nRun  = '';
-          this.fillBsqUsuario.cName = '';
-          this.fillBsqUsuario.cFathers_family  = '';
+          this.fillSetLoad.file  = '';
         },
         limpiarBandejaUsuarios(){
-          this.listUsuarios = [];
+          this.examsData = [];
+          this.dataArr = [];
         },
 
         getHeader(sheet) {
@@ -239,34 +238,34 @@
             this.dataArr = newTableData;
         },
 
-          storeExcel(){
-          console.log(this.examsData);
-          let post = {
-            exams: this.examsData,
-            };
-          var url = '/exam/setLoadExams'
-         /* axios.post(url, {
-            params: {
-              'nRun' : this.fillBsqUsuario.nRun,
-              'cName' : this.fillBsqUsuario.cName,
-              'cFathers_family': this.fillBsqUsuario.cFathers_family,
-            }
-          }).then(response => {
-            console.log(response.data);
-            this.inicializarPaginacion();
-            this.listUsuarios = response.data;
-          })*/
+        storeExcel() {
+          Swal.fire({
+            title: '¿Está Seguro de desea cargar el archivo?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Cargar'
+          }).then((result) => {
+              if (result.value) {
+                let post = {
+                  exams: this.examsData,
+                };
+                // AQUI IRA LA CONFIRMACIÓN DEL BOTON Y PETICIÓN DEL SERVIDOR
+                var  url = '/exam/setLoadExams'
 
-         axios.post(url,post).then((result) => {
-                console.log(result);
-            if (result.status == 201) {
-                this.$swal( 'Acción Finalizada.','El archivo se ha cargado correctamente.','success')
-            }
+                axios.post(url,post).then(response => {
+                     Swal.fire({
+                      icon: 'success',
+                      title: 'Acción Finalizada',
+                      showConfirmButton: false,
+                      timer: 1500
+                    })
+                    //this.getListarUsuarios();
+                })
               
-		 }).catch((error) => {
-            console.log(error)
-         })    
-
+            }
+          }) 
 
         },
 

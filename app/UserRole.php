@@ -12,5 +12,7 @@ class UserRole extends Model
         'user_id','role_id'
     ];
 
+    protected $primaryKey = 'user_id';
+
     public $timestamps = false;
 }

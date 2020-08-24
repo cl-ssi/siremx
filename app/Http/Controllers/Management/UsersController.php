@@ -4,10 +4,12 @@ namespace App\Http\Controllers\Management;
 
 use App\User;
 use App\UserRole;
+use App\UserPermission;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Hash;
 
 
@@ -94,6 +96,7 @@ class UsersController extends Controller
         $cContrasena    = Hash::make($request->cContrasena);
        }
        $oFototgrafia   = $request->oFotografia;
+       $user = User::find($idUser);
 
        $cNombre        = ($cNombre == NULL) ? ($cNombre = '') : $cNombre;
        $cSegundoNombre = ($cSegundoNombre == NULL) ? ($cSegundoNombre = '') : $cSegundoNombre;
@@ -101,16 +104,16 @@ class UsersController extends Controller
        $cUsuario       = ($cUsuario == NULL) ? ($cUsuario = '') : $cUsuario;
        $cCorreo        = ($cCorreo == NULL) ? ($cCorreo = '') : $cCorreo;
        $cContrasena    = ($cContrasena == NULL) ? ($cContrasena = '') : $cContrasena;
-       $oFototgrafia   = ($oFototgrafia == NULL) ? ($oFototgrafia = '') : $oFototgrafia;
+       $oFototgrafia   = ($oFototgrafia == NULL) ? ($oFototgrafia = $user->file_id ) : $oFototgrafia;
 
-       $user = User::find($idUser);
+  
        $user->firstname  = $cNombre;
        $user->secondname = $cSegundoNombre;
        $user->lastname   = $cApellido;
        $user->username   = $cUsuario;
        $user->email      = $cCorreo;
        $user->password   = $cContrasena;
-       $user->file_id   = $oFototgrafia;
+       $user->file_id    = $oFototgrafia;
        $user->updated_by  = 1;
        $user->updated_at  = date("Y-m-d");
        $user->save();
@@ -147,12 +150,11 @@ class UsersController extends Controller
        $idUser  = ($idUser == NULL) ? ($idUser = '') : $idUser;
        $idRole  = ($idRole == NULL) ? ($idRole = '') : $idRole;
 
-       $countUserRole = UserRole::Where('user_id','=','%'.$idUser.'%')->count();
+       $countUserRole = UserRole::Where('user_id','=',$idUser)->count();
 
        if($countUserRole > 0) {
-          $userRole = UserRole::Where('user_id','=','%'.$idUser.'%');
+          $userRole = UserRole::Where('user_id','=',$idUser)->first();
           $userRole->role_id = $idRole;
-          $userRole->updated_at  = date("Y-m-d");
           $userRole->save();
        }
        else {
@@ -161,8 +163,133 @@ class UsersController extends Controller
           $userRole->role_id = $idRole;
           $userRole->save();
        }
-       //dd($userRole);
-
       return $userRole;
+    }
+
+    public function getRolByUser(Request $request)
+    {
+      if(!$request->ajax()) return redirect('/');
+
+      $idUser   = $request->idUser; 
+
+      $idUser  = ($idUser == NULL) ? ($idUser = 0) : $idUser;
+
+      $sql="SELECT UR.role_id,
+                   RO.name
+            FROM users_roles UR
+            INNER JOIN roles RO ON UR.role_id = RO.id
+            WHERE UR.user_id = ".$idUser;
+
+      $roleId = DB::select($sql,array(1));
+
+      return $roleId;
+    }
+
+    public function getListPermissionByRoleAssigned(Request $request)
+    {
+      if(!$request->ajax()) return redirect('/');
+
+       $idUser   = $request->idUser; 
+
+       $idUser  = ($idUser == NULL) ? ($idUser = 0) : $idUser;
+
+       $sql="SELECT P.id,
+                    P.name,
+                    P.slug
+            FROM users_roles UR
+            INNER JOIN roles_permissions RP ON UR.role_id = RP.role_id
+            INNER JOIN permissions P ON RP.permission_id = P.id
+            WHERE UR.user_id = ".$idUser;
+
+      $rpta = DB::select($sql,array(1));
+
+      return $rpta;
+    }
+
+    public function getListPermissionsByUser(Request $request)
+    {
+      if(!$request->ajax()) return redirect('/');
+
+       $idUser   = $request->idUser; 
+
+       $idUser  = ($idUser == NULL) ? ($idUser = 0) : $idUser;
+
+       $sql="SELECT 
+                  P.id
+                 ,P.slug
+                 ,P.name
+                 ,CASE IFNULL(UP.user_id,'') WHEN '' THEN 0 ELSE 1 END checked
+            FROM permissions P
+            LEFT OUTER JOIN users_permissions UP ON P.id = UP.permission_id
+                                                AND UP.user_id = ".$idUser;
+
+      $rpta = DB::select($sql,array(1));
+
+      return $rpta;
+    }
+
+    public function setStoreRolePermissionsByUser(Request $request)
+    {
+      if(!$request->ajax()) return redirect('/');
+
+       $idUser   = $request->idUser; 
+
+       $idUser  = ($idUser == NULL) ? ($idUser = 0) : $idUser;
+
+         $PermissionsListOld = UserPermission::where('user_id', $request->input('idUser'));
+
+         $PermissionsListOld->delete();
+
+         $idUser = $request->input('idUser');
+
+         $listPermissions     = $request->listPermissionsFilter;
+         $listPermissionsSize = sizeof($listPermissions);
+         if($listPermissionsSize > 0) {
+            foreach($listPermissions as $key => $value){
+               if($value['checked'] == true) {
+
+                  $permissionsRole = new UserPermission;
+                  $permissionsRole->user_id = $idUser;
+                  $permissionsRole->permission_id = $value['id'];
+                  $permissionsRole->save();
+
+               }
+            }
+         }
+       
+       return $permissionsRole;
+    }
+
+    public function getListRolePermissionsByUser(Request $request)
+    {
+      if(!$request->ajax()) return redirect('/');
+
+       $idUser   = $request->idUser; 
+
+       $idUser  = ($idUser == NULL) ? ($idUser = 0) : $idUser;
+
+       if(!$idUser) {
+          $idUser = Auth::id();
+       }
+
+       $sql="SELECT 
+                      P.id
+                     ,P.slug
+                     ,P.name
+               FROM permissions P
+              INNER JOIN users_permissions UP ON P.id = UP.permission_id
+                                                   AND UP.user_id = ".$idUser."
+            UNION
+            SELECT  P.id
+                   ,P.slug
+                   ,P.name
+             FROM users_roles UR
+            INNER JOIN roles_permissions RP ON UR.role_id = RP.role_id
+            INNER JOIN permissions P ON RP.permission_id = P.id
+            WHERE UR.user_id = ".$idUser;
+
+      $rpta = DB::select($sql,array(1));
+
+      return $rpta;
     }
 }

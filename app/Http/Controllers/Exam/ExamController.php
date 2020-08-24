@@ -113,6 +113,17 @@ class ExamController extends Controller
                 
                 $date_birthday = date('Y-m-d',strtotime(str_replace('/', '-',$exam['FECHA NAC'])));
                 $date_birthday = ($date_birthday == NULL) ? ($date_birthday = '') : $date_birthday;
+
+                $gender = $exam['GENERO'];
+                if($gender == 'F'){
+                    $gender = 'female';
+                }
+                else if($gender == 'M'){
+                    $gender = 'male';
+                }
+                else{
+                    $gender = 'unknown';
+                }
                
                 
                 $newPatient = new Patient();
@@ -124,6 +135,7 @@ class ExamController extends Controller
                 $newPatient->birthday = $date_birthday;
                 $newPatient->address = $exam['DIRECCION'];
                 $newPatient->telephone = $exam['FONO'];
+                $newPatient->gender    = $gender;
                 $newPatient->save();
 
                 $idInsertPatient = $newPatient->id;
@@ -162,7 +174,8 @@ class ExamController extends Controller
             $examDet->date_exam_reception  = $date_exam_reception;
             $examDet->birards_mamografia   = $birardsMam;
             $examDet->birards_ecografia    = $birardsEco;
-            $examDet->gender              = 'FEMENINO';
+            $examDet->load_source          = 'excel';
+            $examDet->load_id              = 1;
             $examDet->user_id              = 1;
             $examDet->patient_id           = $idInsertPatient;
             $examDet->save();

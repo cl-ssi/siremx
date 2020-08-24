@@ -145,6 +145,8 @@
             },
             listPermissions: [],
             listPermissionsFilter: [],
+            listRolePermissionsByUser: [],
+            listRolePermissionsByUserFilter: [],
             fullscreenLoading: false,
             modalShow: false,
             mostrarModal: {
@@ -234,15 +236,7 @@
             'listPermissionsFilter'  : this.listPermissionsFilter
 
           }).then(response => {
-            console.log("Se creao Rol exitosamente");
-            this.fullscreenLoading = false;
-              Swal.fire({
-                icon: 'success',
-                title: 'Actualizado',
-                showConfirmButton: false,
-                timer: 1500
-              })
-            //this.$router.push('/role');
+            this.getListRolePermissionsByUser();
           })
         },
         validEditRole() {
@@ -269,7 +263,30 @@
                 this.error = 1;
             }
             return this.error;
-        }
+        },
+        getListRolePermissionsByUser() {
+          var route = '/administracion/user/getListRolePermissionsByUser'
+          axios.get(route).then( response => {
+              this.listRolePermissionsByUser = response.data;
+              this.filterListRolePermissionsByUser();
+          })
+        },
+        filterListRolePermissionsByUser() {
+            var me = this;
+            me.listRolePermissionsByUserFilter = [];
+            me.listRolePermissionsByUser.map(function(x, y){
+                me.listRolePermissionsByUserFilter.push(x.slug)
+            })
+            sessionStorage.setItem('listRolePermissionsByUser', JSON.stringify(me.listRolePermissionsByUserFilter));
+            EventBus.$emit('notifyrolePermissionsByUser', me.listRolePermissionsByUserFilter);
+            this.fullscreenLoading = false;
+              Swal.fire({
+                icon: 'success',
+                title: 'Actualizado',
+                showConfirmButton: false,
+                timer: 1500
+              })
+        },
       }
     }
 </script>

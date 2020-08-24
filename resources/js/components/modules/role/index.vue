@@ -75,9 +75,6 @@
                           <router-link class="btn btn-xs btn-default" :to="{name: 'role.edit', params: {id: item.id}}">
                             <i class="fas fa-pencil-alt"></i> 
                           </router-link>
-                          <router-link class="btn btn-xs btn-danger" :to="'/'">
-                            <i class="fas fa-trash"></i> 
-                          </router-link>
                         </td>
                       </tr>
                     </tbody>

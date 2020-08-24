@@ -12,7 +12,7 @@
 
             <form  method="post">
                 <div class="input-group mb-3">
-                    <input type="email" v-model="fillLogin.email" class="form-control" placeholder="Email">
+                    <input type="email" @keyup.enter="login" v-model="fillLogin.email" class="form-control" placeholder="Email">
                     <div class="input-group-append">
                         <div class="input-group-text">
                         <span class="fas fa-envelope"></span>
@@ -20,7 +20,7 @@
                     </div>
                 </div>
                 <div class="input-group mb-3">
-                    <input type="password" v-model="fillLogin.pass" class="form-control" placeholder="Password">
+                    <input type="password" @keyup.enter="login" v-model="fillLogin.pass" class="form-control" placeholder="Password">
                     <div class="input-group-append">
                         <div class="input-group-text">
                         <span class="fas fa-lock"></span>
@@ -58,6 +58,8 @@
                     pass: ''
 
                 },
+                listRolePermissionsByUser: [],
+                listRolePermissionsByUserFilter: [],
                 fullscreenLoading: false,
                 error: 0,
                 messageError: []
@@ -74,15 +76,35 @@
                     'email'  : this.fillLogin.email,
                     'pass'   : this.fillLogin.pass,
                 }).then(response => {
-                    console.log(response);
+                    //console.log(response);
                     if(response.data.code == 401){
                         this.loginFailed();
                     }
                     if(response.data.code == 200){
-                        this.loginSuccess();
+                        this.getListRolePermissionsByUser(response.data.authUser);
                     }
                     this.fullscreenLoading = false;
                 })
+            },
+            getListRolePermissionsByUser(authUser) {
+                var route = '/administracion/user/getListRolePermissionsByUser'
+                axios.get(route,{
+                    params: {
+                    'idUser': authUser.id
+                    }
+                }).then( response => {
+                    this.listRolePermissionsByUser = response.data;
+                    this.filterListRolePermissionsByUser(authUser);
+                })
+            },
+            filterListRolePermissionsByUser(authUser) {
+                var me = this;
+                me.listRolePermissionsByUser.map(function(x, y){
+                    me.listRolePermissionsByUserFilter.push(x.slug)
+                })
+                sessionStorage.setItem('listRolePermissionsByUser', JSON.stringify(me.listRolePermissionsByUserFilter));
+                sessionStorage.setItem('authUser', JSON.stringify(authUser));
+                this.loginSuccess();
             },
             validateLogin() {
                 this.error = 0;
