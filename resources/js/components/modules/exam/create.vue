@@ -5,7 +5,7 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0 text-dark">Emitir orden de exámen</h1>
+            <h1 class="m-0 text-dark">Registrar orden de exámen</h1>
           </div><!-- /.col -->
         </div><!-- /.row -->
       </div><!-- /.container-fluid -->
@@ -38,7 +38,7 @@
                   <div class="form-row">
                       <fieldset class="form-group col-4">
                           <label>Run</label>
-                          <input type="text" class="form-control" v-model="fillCreatePatient.run" @keyup.enter="setRegistrarUsuario">
+                          <input type="text" class="form-control" v-model="fillCreateExam.run" @keyup.enter="setRegisterExam">
                           <small class="form-text text-muted">Utilizar: 12213213-1</small>
                          
                       </fieldset>
@@ -51,22 +51,22 @@
                   <div class="form-row">
                       <fieldset class="form-group col-4">
                           <label>Nombre</label>
-                           <input type="text" class="form-control" v-model="fillCreatePatient.name" @keyup.enter="setRegistrarUsuario">
+                           <input type="text" class="form-control" v-model="fillCreateExam.name" @keyup.enter="setRegisterExam">
                       </fieldset>
                       <fieldset class="form-group col-4">
                         <label>Apellido Paterno</label>
-                           <input type="text" class="form-control" v-model="fillCreatePatient.fathers_family" @keyup.enter="setRegistrarUsuario">
+                           <input type="text" class="form-control" v-model="fillCreateExam.fathers_family" @keyup.enter="setRegisterExam">
                       </fieldset>
                       <fieldset class="form-group col-4">
                         <label>Apellido Materno</label>
-                          <input type="text" class="form-control" v-model="fillCreatePatient.mothers_family" @keyup.enter="setRegistrarUsuario">
+                          <input type="text" class="form-control" v-model="fillCreateExam.mothers_family" @keyup.enter="setRegisterExam">
                       </fieldset>
                   </div>
 
                   <div class="form-row">
                       <fieldset class="form-group col-4">
                           <label>Genero</label>
-                           <el-select v-model="fillCreatePatient.gender" 
+                           <el-select v-model="fillCreateExam.gender" 
                               placeholder="Seleccione"
                               clearable>
                                 <el-option
@@ -79,15 +79,26 @@
                       </fieldset>
                       <fieldset class="form-group col-4">
                         <label>Telefóno</label>
-                          <input type="text" class="form-control" v-model="fillCreatePatient.telephone" @keyup.enter="setRegistrarUsuario">
+                          <input type="text" class="form-control" v-model="fillCreateExam.telephone" @keyup.enter="setRegisterExam">
                       </fieldset>
-                       <fieldset class="form-group col-4">
-                          <label>Sector</label>
-                           <el-select v-model="fillCreatePatient.listSector" 
+                      <fieldset class="form-group col-2">
+                          <label>Fecha Nacimiento</label>
+                           <input type="text"  class="form-control" v-model="fillCreateExam.birthday" @keyup.enter="setRegisterExam">
+                      </fieldset>
+                       <fieldset class="form-group col-2">
+                          <label>Edad</label>
+                           <input type="text" class="form-control" v-model="fillCreateExam.age" @keyup.enter="setRegisterExam">
+                      </fieldset>
+                  </div>
+                  <hr>
+                  <div class="form-row">
+                      <fieldset class="form-group col-4">
+                          <label>Servicio de Salud</label>
+                           <el-select v-model="fillCreateExam.ServicioSalud" 
                               placeholder="Seleccione"
                               clearable>
                                 <el-option
-                                  v-for="item in listSector"
+                                  v-for="item in listServicioSalud"
                                   :key="item.value"
                                   :label="item.label"
                                   :value="item.value">
@@ -95,50 +106,87 @@
                            </el-select>
                       </fieldset>
                   </div>
-
+                  <hr>
                   <div class="form-row">
-                       <fieldset class="form-group col-4">
-                          <label>Fecha Nacimiento</label>
-                           <input type="text"  class="form-control" v-model="fillCreatePatient.birthday" @keyup.enter="setRegistrarUsuario">
+                      <fieldset class="form-group col-4">
+                          <label>Establecimiento solicita Exámen</label>
+                           <el-select v-model="fillCreateExam.establishmentRequest" filterable
+                              placeholder="Seleccione"
+                              clearable>
+                                <el-option
+                                  v-for="item in listEstablishments"
+                                  :key="item.id"
+                                  :label="item.alias"
+                                  :value="item.id">
+                                </el-option>
+                           </el-select>
                       </fieldset>
-                       <fieldset class="form-group col-2">
-                          <label>Edad</label>
-                           <input type="text" class="form-control" v-model="fillCreatePatient.name" @keyup.enter="setRegistrarUsuario">
+                      <fieldset class="form-group col-4">
+                          <label>Profesional solicita Exámen</label>
+                            <input type="text" class="form-control" v-model="fillCreateExam.professional" @keyup.enter="setRegisterExam">
+                      </fieldset>
+                      <fieldset class="form-group col-4">
+                          <label>Fecha Solicitud</label>
+                          <el-date-picker
+                            v-model="fillCreateExam.date_exam_order"
+                            type="date"
+                            placeholder="Fecha"
+                            value-format="yyyy-MM-dd">
+                          </el-date-picker>
+                          <small class="form-text text-muted"></small>
                       </fieldset>
                   </div>
                   <hr>
                   <div class="form-row">
-                       <fieldset class="form-group col-4">
-                          <label>Fecha Solicitud</label>
-                           <input type="text" class="form-control" v-model="fillCreatePatient.date_exam_order" @keyup.enter="setRegistrarUsuario">
+                      <fieldset class="form-group col-4">
+                          <label>Establecimiento donde toma Exámen</label>
+                           <el-select v-model="fillCreateExam.establishmentExam" filterable
+                              placeholder="Seleccione"
+                              clearable>
+                                <el-option
+                                  v-for="item in listEstablishments"
+                                  :key="item.id"
+                                  :label="item.alias"
+                                  :value="item.id">
+                                </el-option>
+                           </el-select>
                       </fieldset>
-                       <fieldset class="form-group col-4">
+                      <fieldset class="form-group col-4">
+                          <label>Médico</label>
+                            <input type="text" class="form-control" v-model="fillCreateExam.doctor" @keyup.enter="setRegisterExam">
+                      </fieldset>
+                      <fieldset class="form-group col-4">
                           <label>Fecha Toma Exámen</label>
-                           <input type="text" class="form-control" v-model="fillCreatePatient.date_exam" @keyup.enter="setRegistrarUsuario">
-                      </fieldset>
-                       <fieldset class="form-group col-4">
-                          <label>Fecha de Recepción</label>
-                           <input type="text" class="form-control" v-model="fillCreatePatient.date_exam_reception" @keyup.enter="setRegistrarUsuario">
+                          <el-date-picker
+                            v-model="fillCreateExam.date_exam"
+                            type="date"
+                            placeholder="Fecha"
+                            value-format="yyyy-MM-dd">
+                          </el-date-picker>
                       </fieldset>
                   </div>
                   <hr>
                   <div class="form-row">
                        <fieldset class="form-group col-6">
                           <label>Motivo Derivación</label>
-                           <el-select v-model="fillCreatePatient.listDerivation" 
+                          <input type="text" class="form-control" v-model="fillCreateExam.derivation" @keyup.enter="setRegisterExam">
+                      </fieldset>
+                      <fieldset class="form-group col-3">
+                          <label>BIRADS - Exámen Mamario</label>
+                           <el-select v-model="fillCreateExam.listBIRADSMam" 
                               placeholder="Seleccione"
                               clearable>
                                 <el-option
-                                  v-for="item in listDerivation"
+                                  v-for="item in listBIRADS"
                                   :key="item.value"
                                   :label="item.label"
                                   :value="item.value">
                                 </el-option>
                            </el-select>
                       </fieldset>
-                      <fieldset class="form-group col-6">
-                          <label>BIRADS</label>
-                           <el-select v-model="fillCreatePatient.listBIRADS" 
+                      <fieldset class="form-group col-3">
+                          <label>BIRADS - Exámen EcoMamario</label>
+                           <el-select v-model="fillCreateExam.listBIRADSEcoMam" 
                               placeholder="Seleccione"
                               clearable>
                                 <el-option
@@ -150,16 +198,29 @@
                            </el-select>
                       </fieldset>
                   </div>
+                  <hr>
+                  <div class="form-row">
+                       <fieldset class="form-group col-4">
+                          <label>Fecha de Recepción</label>
+                           <el-date-picker
+                            v-model="fillCreateExam.date_exam_reception"
+                            type="date"
+                            placeholder="Fecha"
+                            value-format="yyyy-MM-dd">
+                          </el-date-picker>
+                      </fieldset>
+                  </div>
+                  
                   <div class="form-group">
                         <label>Observaciones</label>
-                        <textarea class="form-control" rows="3" placeholder="Redactar ..."></textarea>
+                        <textarea v-model="fillCreateExam.diagnostic" class="form-control" rows="3" placeholder="Redactar ..."></textarea>
                       </div>
                 </form>
               </div>
               <div class="card-footer">
                 <div class="row">
                   <div class="col-md-4 offset-4">
-                    <button class="btn btn-flat btn-info btnWidth" @click.prevent="setRegistrarUsuario" 
+                    <button class="btn btn-flat btn-info btnWidth" @click.prevent="setRegisterExam" 
                     v-loading.fullscreen.lock="fullscreenLoading">Registrar</button>
                     <button class="btn btn-flat btn-default btnWidth" @click.prevent="limpiarCriterios">Limpiar</button>
                   </div>
@@ -195,7 +256,8 @@
     export default {
       data(){
           return {
-            fillCreatePatient: {
+            fillCreateExam: {
+              idPatient: '',
               run: '',
               name: '',
               fathers_family: '',
@@ -204,25 +266,30 @@
               birthday: '',
               gender: '',
               telephone: '',
+              age: '',
+              listServicioSalud: '',
+              establishmentRequest: '',
+              professional: '',
+              date_exam_order: '',
+              establishmentExam: '',
+              doctor: '',
+              date_exam: '',
+              derivation: '',
+              listBIRADSMam: '',
+              listBIRADSEcoMam: '',
+              date_exam_reception: '',
+              diagnostic: '',
               exams: ''
             },
+            listEstablishments: [],
             listGender: [
               {value: 'female', label: 'Femenino'},
               {value: 'male', label: 'Masculino'},
               {value: 'other', label: 'Otro'},
               {value: 'unknown', label: 'Prefiero no decir'}
             ],
-            listSector: [
-              {value: 'CELESTE', label: 'CELESTE'},
-              {value: 'AMARILLO', label: 'AMARILLO'},
-              {value: 'AZUL', label: 'AZUL'},
-              {value: 'NARANJO', label: 'NARANJO'},
-              {value: 'VERDE', label: 'VERDE'},
-              {value: 'LARAMA', label: 'LARAMA'},
-              {value: 'TORTUGA', label: 'TORTUGA'},
-              {value: 'ARUMI', label: 'ARUMI'},
-              {value: 'AÑAZCO', label: 'AÑAZCO'},
-              {value: 'BORO', label: 'BORO'}
+            listServicioSalud: [
+              {value: 'IQUIQUE', label: 'IQUIQUE'}
             ],
             listDerivation: [
               {value: 'mastalgia', label: 'MASTALGIA'},
@@ -257,45 +324,70 @@
       computed: {
         
       },
+      mounted(){
+        this.getListEstablishments();
+      },
       methods: {
         limpiarCriterios(){
-          this.fillCreatePatient.run = '';
-          this.fillCreatePatient.dv  = '';
-          this.fillCreatePatient.name  = '';
-          this.fillCreatePatient.fathers_family = '';
-          this.fillCreatePatient.mothers_family  = '';
-          this.fillCreatePatient.gender  = '';
-          this.fillCreatePatient.birthday  = '';
-          this.fillCreatePatient.telephone  = '';
+          this.fillCreateExam.run = '';
+          this.fillCreateExam.dv  = '';
+          this.fillCreateExam.name  = '';
+          this.fillCreateExam.fathers_family = '';
+          this.fillCreateExam.mothers_family  = '';
+          this.fillCreateExam.gender  = '';
+          this.fillCreateExam.birthday  = '';
+          this.fillCreateExam.telephone  = '';
         },
         abrirModal(){
             this.modalShow = !this.modalShow;
         },
         getFile(e) {
-            this.fillCreatePatient.oFotografia = e.target.files[0];       
+            this.fillCreateExam.oFotografia = e.target.files[0];       
+        },
+        getListEstablishments() {
+          var route = '/administracion/establishments/getListEstablishments'
+          axios.get(route).then( response => {
+            this.listEstablishments = response.data;
+          }).catch(error => {
+              if(error.response.status == 401){
+                this.$router.push({name: 'login'})
+                location.reload();
+                sessionStorage.clear();
+                this.fullscreenLoading = false;
+              }
+          })
         },
         getListPatients(){
           var url = '/administracion/patient/getPatient'
-          console.log("id "+this.fillCreatePatient.run,);
+          console.log("id "+this.fillCreateExam.run,);
           axios.get(url, {
             params: {
-              'idPatient' : this.fillCreatePatient.run,
+              'idPatient' : this.fillCreateExam.run,
             }
           }).then(response => {
             console.log(response.data);
-            this.fillCreatePatient.name = response.data.name;
-            this.fillCreatePatient.run = response.data.run;
-            this.fillCreatePatient.fathers_family = response.data.fathers_family;
-            this.fillCreatePatient.mothers_family = response.data.mothers_family;
+            this.fillCreateExam.idPatient = response.data.id;
+            this.fillCreateExam.name = response.data.name;
+            this.fillCreateExam.run = response.data.run;
+            this.fillCreateExam.fathers_family = response.data.fathers_family;
+            this.fillCreateExam.mothers_family = response.data.mothers_family;
         
-            this.fillCreatePatient.address = response.data.address;
-            this.fillCreatePatient.birthday = response.data.birthday;
-            this.fillCreatePatient.gender = response.data.gender;
-            this.fillCreatePatient.exams = response.data.exams;
+            this.fillCreateExam.address = response.data.address;
+            this.fillCreateExam.birthday = response.data.birthday;
+            this.fillCreateExam.gender = response.data.gender;
+            this.fillCreateExam.age = response.data.age;
+            this.fillCreateExam.exams = response.data.exams;
 
-            this.fillCreatePatient.telephone = response.data.telephone;
+            this.fillCreateExam.telephone = response.data.telephone;
 
             this.fullscreenLoading = false;
+          }).catch(error => {
+              if(error.response.status == 401){
+                this.$router.push({name: 'login'})
+                location.reload();
+                sessionStorage.clear();
+                this.fullscreenLoading = false;
+              }
           })
         },
         getListPatientsApi(){
@@ -311,78 +403,99 @@
           }).catch(function(error) {
             console.log('Error on Authentication');
           });
-                    /*console.log("id "+this.fillCreatePatient.run,);
+                    /*console.log("id "+this.fillCreateExam.run,);
           axios.get(url, {
             params: {
-              'idPatient' : this.fillCreatePatient.run,
+              'idPatient' : this.fillCreateExam.run,
             }
           }).then(response => {
             console.log(response.data);
-            this.fillCreatePatient.name = response.data.name;
-            this.fillCreatePatient.run = response.data.run;
-            this.fillCreatePatient.fathers_family = response.data.fathers_family;
-            this.fillCreatePatient.mothers_family = response.data.mothers_family;
+            this.fillCreateExam.name = response.data.name;
+            this.fillCreateExam.run = response.data.run;
+            this.fillCreateExam.fathers_family = response.data.fathers_family;
+            this.fillCreateExam.mothers_family = response.data.mothers_family;
         
-            this.fillCreatePatient.address = response.data.address;
-            this.fillCreatePatient.birthday = response.data.birthday;
-            this.fillCreatePatient.gender = response.data.gender;
-            this.fillCreatePatient.exams = response.data.exams;
+            this.fillCreateExam.address = response.data.address;
+            this.fillCreateExam.birthday = response.data.birthday;
+            this.fillCreateExam.gender = response.data.gender;
+            this.fillCreateExam.exams = response.data.exams;
 
-            this.fillCreatePatient.telephone = response.data.telephone;
+            this.fillCreateExam.telephone = response.data.telephone;
 
             this.fullscreenLoading = false;
           })*/
         },
-        setRegistrarUsuario() {
+        setRegisterExam() {
             
-            if(this.validarRegistrarUsuario()) {
+            /*if(this.validarRegistrarUsuario()) {
                 console.log("en agregar");
                 this.modalShow = true;
                 return;
-            }
+            }*/
             this.fullscreenLoading = true;
-            this.setGuardarUsuario();
+            this.setStoreExam();
         },
-        setGuardarUsuario(){
-          var  url = '/administracion/patient/setStorePatient'
+        setStoreExam(){
+          var  url = '/exam/setStoreExam'
           axios.post(url, {
-            'run'            : this.fillCreatePatient.run,
-            'dv'             : this.fillCreatePatient.dv,
-            'name'           : this.fillCreatePatient.name,
-            'fathers_family' : this.fillCreatePatient.fathers_family,
-            'mothers_family' : this.fillCreatePatient.mothers_family,
-            'gender'         : this.fillCreatePatient.gender,
-            'birthday'       : this.fillCreatePatient.birthday,
-            'telephone'      : this.fillCreatePatient.telephone,
+            'idPatient'      : this.fillCreateExam.idPatient,
+            'run'            : this.fillCreateExam.run,
+            'dv'             : this.fillCreateExam.dv,
+            'name'           : this.fillCreateExam.name,
+            'fathers_family' : this.fillCreateExam.fathers_family,
+            'mothers_family' : this.fillCreateExam.mothers_family,
+            'gender'         : this.fillCreateExam.gender,
+            'birthday'       : this.fillCreateExam.birthday,
+            'telephone'      : this.fillCreateExam.telephone,
+            'age': this.fillCreateExam.teleagephone,
+            'listServicioSalud': this.fillCreateExam.listServicioSalud,
+            'establishmentRequest': this.fillCreateExam.establishmentRequest,
+            'professional': this.fillCreateExam.professional,
+            'date_exam_order': this.fillCreateExam.date_exam_order,
+            'establishmentExam': this.fillCreateExam.establishmentExam,
+            'doctor': this.fillCreateExam.doctor,
+            'date_exam': this.fillCreateExam.date_exam,
+            'derivation': this.fillCreateExam.derivation,
+            'listBIRADSMam': this.fillCreateExam.listBIRADSMam,
+            'listBIRADSEcoMam': this.fillCreateExam.listBIRADSEcoMam,
+            'date_exam_reception': this.fillCreateExam.date_exam_reception,
+            'diagnostic': this.fillCreateExam.diagnostic,
 
           }).then(response => {
             console.log("Registro Paciente exitosamente");
             this.fullscreenLoading = false;
             this.$router.push('/patient');
+          }).catch(error => {
+              if(error.response.status == 401){
+                this.$router.push({name: 'login'})
+                location.reload();
+                sessionStorage.clear();
+                this.fullscreenLoading = false;
+              }
           })
         },
         validarRegistrarUsuario() {
             this.error = 0;
             this.mensajeError = [];
-            if(!this.fillCreatePatient.run) {
+            if(!this.fillCreateExam.run) {
                 this.mensajeError.push("Run campo obligatorio")
             }
-            if(!this.fillCreatePatient.dv) {
+            if(!this.fillCreateExam.dv) {
                 this.mensajeError.push("Digito Verificador es un campo obligatorio")
             }
-            if(!this.fillCreatePatient.name) {
+            if(!this.fillCreateExam.name) {
                 this.mensajeError.push("Nombre es un campo obligatorio")
             }
-            if(!this.fillCreatePatient.fathers_family) {
+            if(!this.fillCreateExam.fathers_family) {
                 this.mensajeError.push("Apellido Paterno es un campo obligatorio")
             }
-            if(!this.fillCreatePatient.mothers_family) {
+            if(!this.fillCreateExam.mothers_family) {
                 this.mensajeError.push("Apellido Materno es un campo obligatorio")
             }
-            if(!this.fillCreatePatient.gender) {
+            if(!this.fillCreateExam.gender) {
                 this.mensajeError.push("El Genero es un campo obligatorio")
             }
-            if(!this.fillCreatePatient.birthday) {
+            if(!this.fillCreateExam.birthday) {
                 this.mensajeError.push("Fecha de Nacimiento es un campo obligatorio")
             }
 

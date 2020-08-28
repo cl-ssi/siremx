@@ -180,6 +180,13 @@
               }
           }).then( response => {
             this.listPermissionByRoleAssigned = response.data;
+          }).catch(error => {
+              if(error.response.status == 401){
+                this.$router.push({name: 'login'})
+                location.reload();
+                sessionStorage.clear();
+                this.fullscreenLoading = false;
+              }
           })
         },
         getRolByUser(){
@@ -192,6 +199,13 @@
             console.log(response.data);
             this.fillPermission.nameRol = (response.data.length == 0)? '' : response.data[0].name;
             this.fullscreenLoading = false;
+          }).catch(error => {
+              if(error.response.status == 401){
+                this.$router.push({name: 'login'})
+                location.reload();
+                sessionStorage.clear();
+                this.fullscreenLoading = false;
+              }
           })
         },
         getListPermissionsByUser() {
@@ -203,6 +217,13 @@
           }).then( response => {
             this.listPermissions = response.data;
             this.filterPermissionsByUser();
+          }).catch(error => {
+              if(error.response.status == 401){
+                this.$router.push({name: 'login'})
+                location.reload();
+                sessionStorage.clear();
+                this.fullscreenLoading = false;
+              }
           })
         },
         filterPermissionsByUser() {
@@ -247,6 +268,13 @@
                       showConfirmButton: false,
                       timer: 1500
                     })
+          }).catch(error => {
+              if(error.response.status == 401){
+                this.$router.push({name: 'login'})
+                location.reload();
+                sessionStorage.clear();
+                this.fullscreenLoading = false;
+              }
           })
         },
         getListRolePermissionsByUser() {
@@ -254,6 +282,13 @@
           axios.get(route).then( response => {
               this.listRolePermissionsByUser = response.data;
               this.filterListRolePermissionsByUser();
+          }).catch(error => {
+              if(error.response.status == 401){
+                this.$router.push({name: 'login'})
+                location.reload();
+                sessionStorage.clear();
+                this.fullscreenLoading = false;
+              }
           })
         },
         filterListRolePermissionsByUser() {

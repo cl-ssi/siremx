@@ -17,7 +17,7 @@
         <div class="card-header">
           <div class="card-tools">
             <router-link class="btn btn-info btn-sm" :to="'/exam/create'">
-              <i class="fas fa-plus-square"></i> Emitir Orden
+              <i class="fas fa-plus-square"></i> Registrar Exámen
             </router-link>
           </div>
         </div>
@@ -93,15 +93,21 @@
                         <td v-text="item.patients.name"></td>
                         <td v-text="item.patients.birthday"></td>
                         <td class="text-right">
-                          <router-link class="btn btn-xs btn-default" :to="{name: 'exam.view', params: {id: item.patient_id}}">
-                            <i class="fas fa-history"></i> 
-                          </router-link>
-                          <router-link class="btn btn-xs btn-default" :to="'/'">
-                            <i class="fas fa-pencil-alt"></i> 
-                          </router-link>
-                          <router-link class="btn btn-xs btn-danger" :to="'/'">
-                            <i class="fas fa-trash"></i> 
-                          </router-link>
+                          <template v-if="listRolePermissionsByUser.includes('exam.view')"> 
+                              <router-link class="btn btn-xs btn-default" :to="{name: 'exam.view', params: {id: item.patient_id}}">
+                                <i class="fas fa-history"></i> 
+                              </router-link>
+                          </template>
+                          <template v-if="listRolePermissionsByUser.includes('exam.edit')"> 
+                              <router-link class="btn btn-xs btn-default" :to="'/'">
+                                <i class="fas fa-pencil-alt"></i> 
+                              </router-link>
+                          </template>
+                          <template v-if="listRolePermissionsByUser.includes('exam.delete')"> 
+                              <router-link class="btn btn-xs btn-danger" :to="'/'">
+                                <i class="fas fa-trash"></i> 
+                              </router-link>
+                          </template>
                         </td>
                       </tr>
                     </tbody>
@@ -145,6 +151,7 @@
               cFathers_family: ''
             },
             listUsuarios: [],
+            listRolePermissionsByUser: JSON.parse(sessionStorage.getItem('listRolePermissionsByUser')),
             listEstados: [
               {value: 'A', label: 'Activo'},
               {value: 'I', label: 'Inactivo'}
@@ -201,6 +208,13 @@
             console.log(response.data);
             this.inicializarPaginacion();
             this.listUsuarios = response.data;
+          }).catch(error => {
+              if(error.response.status == 401){
+                this.$router.push({name: 'login'})
+                location.reload();
+                sessionStorage.clear();
+                this.fullscreenLoading = false;
+              }
           })
         },
         nextPage() {

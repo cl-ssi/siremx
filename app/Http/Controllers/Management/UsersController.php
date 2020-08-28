@@ -90,6 +90,8 @@ class UsersController extends Controller
        $cSegundoNombre = $request->cSegundoNombre;
        $cApellido      = $request->cApellido;
        $cUsuario       = $request->cUsuario;
+       $commune        = $request->commune;
+       $establishment  = $request->establishment;
        $cCorreo        = $request->cCorreo;
        $cContrasena    = $request->cContrasena;
        if($cContrasena != NULL){
@@ -102,20 +104,24 @@ class UsersController extends Controller
        $cSegundoNombre = ($cSegundoNombre == NULL) ? ($cSegundoNombre = '') : $cSegundoNombre;
        $cApellido      = ($cApellido == NULL) ? ($cApellido = '') : $cApellido;
        $cUsuario       = ($cUsuario == NULL) ? ($cUsuario = '') : $cUsuario;
+       $commune        = ($commune == NULL) ? ($commune = NULL) : $commune;
+       $establishment  = ($establishment == NULL) ? ($establishment = NULL) : $establishment;
        $cCorreo        = ($cCorreo == NULL) ? ($cCorreo = '') : $cCorreo;
-       $cContrasena    = ($cContrasena == NULL) ? ($cContrasena = '') : $cContrasena;
+       $cContrasena    = ($cContrasena == NULL) ? ($cContrasena = $user->password) : $cContrasena;
        $oFototgrafia   = ($oFototgrafia == NULL) ? ($oFototgrafia = $user->file_id ) : $oFototgrafia;
 
   
-       $user->firstname  = $cNombre;
-       $user->secondname = $cSegundoNombre;
-       $user->lastname   = $cApellido;
-       $user->username   = $cUsuario;
-       $user->email      = $cCorreo;
-       $user->password   = $cContrasena;
-       $user->file_id    = $oFototgrafia;
-       $user->updated_by  = 1;
-       $user->updated_at  = date("Y-m-d");
+       $user->firstname         = $cNombre;
+       $user->secondname        = $cSegundoNombre;
+       $user->lastname          = $cApellido;
+       $user->username          = $cUsuario;
+       $user->commune_id        = $commune;
+       $user->establishment_id  = $establishment;
+       $user->email             = $cCorreo;
+       $user->password          = $cContrasena;
+       $user->file_id           = $oFototgrafia;
+       $user->updated_by        = 1;
+       $user->updated_at        = date("Y-m-d");
        $user->save();
  
        return $user;

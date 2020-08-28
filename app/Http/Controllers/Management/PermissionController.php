@@ -19,9 +19,16 @@ class PermissionController extends Controller
 
        $idPermission = ($idPermission == NULL) ? ($idPermission = '') : $idPermission;
        $name  = ($name == NULL) ? ($name = '') : $name;
+
+       if(!$idPermission)
+       {
+         $permissions = Permission::Where('name','LIKE','%'.$name.'%')->orderBy('slug', 'asc')->get();
+       }
+       else{
+         $permissions = Permission::Where('id','=',$idPermission)->orderBy('slug', 'asc')->get();
+       }
        
-       $permissions = Permission::Where('name','LIKE','%'.$name.'%')
-                    ->orWhere('id','LIKE',$idPermission)->orderBy('slug', 'asc')->get();
+       
 
        return $permissions->toArray();
     }

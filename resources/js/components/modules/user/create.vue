@@ -220,7 +220,14 @@
               console.log(response)
               var nIdFile = response.data[0].nIdFile;
               this.setGuardarUsuario(nIdFile);
-            })
+            }).catch(error => {
+              if(error.response.status == 401){
+                this.$router.push({name: 'login'})
+                location.reload();
+                sessionStorage.clear();
+                this.fullscreenLoading = false;
+              }
+          })
         },
         setGuardarUsuario(nIdFile){
           var  url = '/administracion/usuario/setRegistrarUsuario'
@@ -237,6 +244,13 @@
           }).then(response => {
             console.log(response.data[0].nIdUsuario);
             this.setEditRoleByUser(response.data[0].nIdUsuario);
+          }).catch(error => {
+              if(error.response.status == 401){
+                this.$router.push({name: 'login'})
+                location.reload();
+                sessionStorage.clear();
+                this.fullscreenLoading = false;
+              }
           })
         },
         setEditRoleByUser(nIdUsuario) {
@@ -250,12 +264,26 @@
             console.log("hola"+response);
             this.fullscreenLoading = false;
             this.$router.push('/user');
+          }).catch(error => {
+              if(error.response.status == 401){
+                this.$router.push({name: 'login'})
+                location.reload();
+                sessionStorage.clear();
+                this.fullscreenLoading = false;
+              }
           })
         },
         getListRoles(){
           var url = '/administracion/role/getListRoles'
           axios.get(url).then(response => {
             this.listRoles = response.data;
+          }).catch(error => {
+              if(error.response.status == 401){
+                this.$router.push({name: 'login'})
+                location.reload();
+                sessionStorage.clear();
+                this.fullscreenLoading = false;
+              }
           })
         },
         validarRegistrarUsuario() {

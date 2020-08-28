@@ -29,6 +29,7 @@ class PatientController extends Controller
                           ->Where('fathers_family','LIKE','%'.$cFathers_family.'%')
                           ->get();
 
+   
 
        return $patients->toArray();
     }

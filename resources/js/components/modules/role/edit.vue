@@ -187,6 +187,13 @@
             this.fillEditRole.name = response.data[0].name;
             this.fillEditRole.slug = response.data[0].slug;
             this.fullscreenLoading = false;
+          }).catch(error => {
+              if(error.response.status == 401){
+                this.$router.push({name: 'login'})
+                location.reload();
+                sessionStorage.clear();
+                this.fullscreenLoading = false;
+              }
           })
         },
         getListPermissionsByRole() {
@@ -198,6 +205,13 @@
           }).then( response => {
             this.listPermissions = response.data;
             this.filterPermissionsByRole();
+          }).catch(error => {
+              if(error.response.status == 401){
+                this.$router.push({name: 'login'})
+                location.reload();
+                sessionStorage.clear();
+                this.fullscreenLoading = false;
+              }
           })
         },
         filterPermissionsByRole() {
@@ -237,6 +251,13 @@
 
           }).then(response => {
             this.getListRolePermissionsByUser();
+          }).catch(error => {
+              if(error.response.status == 401){
+                this.$router.push({name: 'login'})
+                location.reload();
+                sessionStorage.clear();
+                this.fullscreenLoading = false;
+              }
           })
         },
         validEditRole() {
@@ -269,6 +290,13 @@
           axios.get(route).then( response => {
               this.listRolePermissionsByUser = response.data;
               this.filterListRolePermissionsByUser();
+          }).catch(error => {
+              if(error.response.status == 401){
+                this.$router.push({name: 'login'})
+                location.reload();
+                sessionStorage.clear();
+                this.fullscreenLoading = false;
+              }
           })
         },
         filterListRolePermissionsByUser() {

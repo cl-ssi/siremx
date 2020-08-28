@@ -28,6 +28,10 @@ Route::group(['middleware' => ['auth']], function () {
   Route::post('/administracion/permission/setStorePermission','Management\PermissionController@setStorePermission');
   Route::post('/administracion/permission/setEditPermission','Management\PermissionController@setEditPermission');
 
+  Route::get('/administracion/communes/getListCommunes','Management\CommuneController@getListCommunes');
+
+  Route::get('/administracion/establishments/getListEstablishments','Management\EstablishmentController@getListEstablishments');
+
   Route::post('/archivo/setRegistrarArchivo','FileController@setRegistrarArchivo');
 
   Route::get('/administracion/patient/getListarPatients','PatientController@getListarPatients');
@@ -36,11 +40,13 @@ Route::group(['middleware' => ['auth']], function () {
   Route::get('/administracion/patient/showPatient','PatientController@showPatient');
 
   Route::get('/exam/getListExams','Exam\ExamController@getListExams');
+  Route::post('/exam/setStoreExam','Exam\ExamController@setStoreExam');
   Route::post('/exam/setLoadExams','Exam\ExamController@setLoadExams');
 
   Route::get('/report/exams/getPatientHistory','Report\ReportController@getPatientHistory');
   Route::get('/report/exams/getMX','Report\ReportController@getMX');
   Route::get('/report/exams/getBirardsAgeMX','Report\ReportController@getBirardsAgeMX');
+  Route::get('/report/exams/getBirardsEcoAgeMX','Report\ReportController@getBirardsEcoAgeMX');
   Route::get('/report/exam/export','Report\ReportController@export');
   Route::get('/report/exams/getMXBirards','Report\ReportController@getMXBirards');
 

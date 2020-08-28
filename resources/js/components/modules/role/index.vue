@@ -168,6 +168,13 @@
             console.log(response.data);
             this.initPaginated();
             this.listRoles = response.data;
+          }).catch(error => {
+              if(error.response.status == 401){
+                this.$router.push({name: 'login'})
+                location.reload();
+                sessionStorage.clear();
+                this.fullscreenLoading = false;
+              }
           })
         },
         nextPage() {

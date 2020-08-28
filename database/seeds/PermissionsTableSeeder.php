@@ -13,32 +13,122 @@ class PermissionsTableSeeder extends Seeder
     public function run()
     {
         Permission::create([
+            'name' => 'Dashboard',
+            'slug' => 'dashboard.index'
+        ]);
+        Permission::create([
             'name' => 'Navegar Usuario',
-            'slug' => 'usuario.index'
+            'slug' => 'user.index'
         ]);
         Permission::create([
             'name' => 'Crear Usuario',
-            'slug' => 'usuario.crear'
+            'slug' => 'user.create'
         ]);
         Permission::create([
             'name' => 'Editar Usuario',
-            'slug' => 'usuario.editar'
+            'slug' => 'user.edit'
         ]);
         Permission::create([
             'name' => 'Ver Usuario',
-            'slug' => 'usuario.ver'
+            'slug' => 'user.show'
         ]);
         Permission::create([
             'name' => 'Activar Usuario',
-            'slug' => 'usuario.activar'
-        ]);
-        Permission::create([
-            'name' => 'Desactivar Usuario',
-            'slug' => 'usuario.desactivar'
+            'slug' => 'user.activate'
         ]);
         Permission::create([
             'name' => 'Navegar Roles',
             'slug' => 'rol.index'
+        ]);
+        Permission::create([
+            'name' => 'Permisos asociados al usuario',
+            'slug' => 'permission.index'
+        ]);
+
+        Permission::create([
+            'name' => 'Navegar Roles',
+            'slug' => 'role.index'
+        ]);
+        Permission::create([
+            'name' => 'Crear Roles',
+            'slug' => 'role.create'
+        ]);
+        Permission::create([
+            'name' => 'Editar Roles',
+            'slug' => 'role.edit'
+        ]);
+
+        Permission::create([
+            'name' => 'Navegar Permiso',
+            'slug' => 'permission.index'
+        ]);
+        Permission::create([
+            'name' => 'Crear Permiso',
+            'slug' => 'permission.create'
+        ]);
+        Permission::create([
+            'name' => 'Editar Permiso',
+            'slug' => 'permission.edit'
+        ]);
+
+        Permission::create([
+            'name' => 'Navegar Paciente',
+            'slug' => 'patient.index'
+        ]);
+        Permission::create([
+            'name' => 'Crear Paciente',
+            'slug' => 'patient.create'
+        ]);
+        Permission::create([
+            'name' => 'Editar Paciente',
+            'slug' => 'patient.edit'
+        ]);
+
+        Permission::create([
+            'name' => 'Navegar Exámen',
+            'slug' => 'exam.index'
+        ]);
+        Permission::create([
+            'name' => 'Crear Exámen',
+            'slug' => 'exam.create'
+        ]);
+        Permission::create([
+            'name' => 'Editar Exámen',
+            'slug' => 'exam.edit'
+        ]);
+        Permission::create([
+            'name' => 'Cargar Exámenes Masivamente',
+            'slug' => 'exam.load'
+        ]);
+        // REPORTES
+        Permission::create([
+            'name' => 'Reporte listado MX por BIRARDS',
+            'slug' => 'reportMXBirards.index'
+        ]);
+        Permission::create([
+            'name' => 'Reporte listado MX',
+            'slug' => 'reportMX.index'
+        ]);
+        Permission::create([
+            'name' => 'Reporte de BIRARDS por edad',
+            'slug' => 'reportBirardsAge.index'
+        ]);
+        Permission::create([
+            'name' => 'Reporte Historial de paciente',
+            'slug' => 'patientHistory.index'
+        ]);
+        // FILTROS patientHistory.index
+        Permission::create([
+            'name' => 'Filtro: Establecimientoa Toma de Exámen',
+            'slug' => 'establishmentExam.filter'
+        ]);
+        Permission::create([
+            'name' => 'Filtro: Ver Establecimientos',
+            'slug' => 'establishment.filter'
+        ]);
+        Permission::create([
+            'name' => 'Filtro: Ver Comunas',
+            'slug' => 'commune.filter'
         ]);
         
     }

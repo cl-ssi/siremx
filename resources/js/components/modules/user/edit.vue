@@ -69,7 +69,7 @@
                     </div>
                     <div class="col-md-6">
                       <div class="form-group">
-                        <label class="col-md-3 col-form-label">Correo Electronico</label>
+                        <label class="col-md-5 col-form-label">Correo Electronico</label>
                         <div class="col-md-9">
                           <input type="text" class="form-control" v-model="fillEditUser.cCorreo" @keyup.enter="setEditUser">
                         </div>
@@ -83,6 +83,43 @@
                        </div>
                       </div>
                     </div>
+
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label class="col-md-3 col-form-label">Establecimiento</label>
+                        <div class="col-md-9">
+                          <el-select v-model="fillEditUser.establishment" 
+                          placeholder="Seleccione Rol" filterable
+                          clearable>
+                            <el-option
+                              v-for="item in listEstablishments"
+                              :key="item.id"
+                              :label="item.new_code_deis+' - '+item.alias"
+                              :value="item.new_code_deis">
+                            </el-option>
+                          </el-select>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label class="col-md-3 col-form-label">Comuna</label>
+                        <div class="col-md-9">
+                          <el-select v-model="fillEditUser.commune" 
+                          placeholder="Seleccione Rol" filterable
+                          clearable>
+                            <el-option
+                              v-for="item2 in listCommunes"
+                              :key="item2.id"
+                              :label="item2.code_deis+' - '+item2.name"
+                              :value="item2.code_deis">
+                            </el-option>
+                          </el-select>
+                        </div>
+                      </div>
+                    </div>
+
 
                     <div class="col-md-6">
                       <div class="form-group">
@@ -160,8 +197,12 @@
               cCorreo: '',
               cContrasena: '',
               oFotografia: '',
-              idRole: ''
+              idRole: '',
+              establishment: '',
+              commune: ''
             },
+            listEstablishments: [],
+            listCommunes: [],
             listRoles: [],
             form: new FormData,
             fullscreenLoading: false,
@@ -180,6 +221,8 @@
       mounted(){
         this.getUserById();
         this.getListRoles();
+        this.getListEstablishments();
+        this.getListCommunes();
       },
       methods: {
         getUserById() {
@@ -196,8 +239,17 @@
             this.fillEditUser.cApellido      = response.data[0].lastname;
             this.fillEditUser.cUsuario       = response.data[0].username;
             this.fillEditUser.cCorreo        = response.data[0].email;
+            this.fillEditUser.commune        = (response.data[0].commune_id)? response.data[0].commune_id : ''; 
+            this.fillEditUser.establishment  = (response.data[0].establishment_id)? response.data[0].establishment_id : ''; 
 
             this.fullscreenLoading = false; 
+          }).catch(error => {
+              if(error.response.status == 401){
+                this.$router.push({name: 'login'})
+                location.reload();
+                sessionStorage.clear();
+                this.fullscreenLoading = false;
+              }
           })
         },
         limpiarCriterios(){
@@ -237,7 +289,14 @@
               console.log(response)
               var nIdFile = response.data[0].nIdFile;
               this.setSaveUser(nIdFile);
-            })
+            }).catch(error => {
+              if(error.response.status == 401){
+                this.$router.push({name: 'login'})
+                location.reload();
+                sessionStorage.clear();
+                this.fullscreenLoading = false;
+              }
+          })
         },
         setSaveUser(nIdFile){
           var  url = '/administracion/usuario/setEditUser'
@@ -247,12 +306,21 @@
             'cSegundoNombre' : this.fillEditUser.cSegundoNombre,
             'cApellido'      : this.fillEditUser.cApellido,
             'cUsuario'       : this.fillEditUser.cUsuario,
+            'establishment'  : this.fillEditUser.establishment,
+            'commune'        : this.fillEditUser.commune,
             'cCorreo'        : this.fillEditUser.cCorreo,
             'cContrasena'    : this.fillEditUser.cContrasena,
             'oFotografia'    : nIdFile,
 
           }).then(response => {
             this.setEditRoleByUser();
+          }).catch(error => {
+              if(error.response.status == 401){
+                this.$router.push({name: 'login'})
+                location.reload();
+                sessionStorage.clear();
+                this.fullscreenLoading = false;
+              }
           })
         },
         getListRoles(){
@@ -260,6 +328,39 @@
           axios.get(url).then(response => {
             this.listRoles = response.data;
             this.getRolByUser();
+          }).catch(error => {
+              if(error.response.status == 401){
+                this.$router.push({name: 'login'})
+                location.reload();
+                sessionStorage.clear();
+                this.fullscreenLoading = false;
+              }
+          })
+        },
+        getListEstablishments() {
+          var route = '/administracion/establishments/getListEstablishments'
+          axios.get(route).then( response => {
+            this.listEstablishments = response.data;
+          }).catch(error => {
+              if(error.response.status == 401){
+                this.$router.push({name: 'login'})
+                location.reload();
+                sessionStorage.clear();
+                this.fullscreenLoading = false;
+              }
+          })
+        },
+        getListCommunes() {
+          var route = '/administracion/communes/getListCommunes'
+          axios.get(route).then( response => {
+            this.listCommunes = response.data;
+          }).catch(error => {
+              if(error.response.status == 401){
+                this.$router.push({name: 'login'})
+                location.reload();
+                sessionStorage.clear();
+                this.fullscreenLoading = false;
+              }
           })
         },
         getRolByUser(){
@@ -272,6 +373,13 @@
             console.log(response.data);
             this.fillEditUser.idRole = (response.data[0].role_id)? response.data[0].role_id : '';
             this.fullscreenLoading = false;
+          }).catch(error => {
+              if(error.response.status == 401){
+                this.$router.push({name: 'login'})
+                location.reload();
+                sessionStorage.clear();
+                this.fullscreenLoading = false;
+              }
           })
         },
         setEditRoleByUser() {
@@ -289,6 +397,13 @@
                 showConfirmButton: false,
                 timer: 1500
               })
+          }).catch(error => {
+              if(error.response.status == 401){
+                this.$router.push({name: 'login'})
+                location.reload();
+                sessionStorage.clear();
+                this.fullscreenLoading = false;
+              }
           })
         },
         validarRegistrarUsuario() {

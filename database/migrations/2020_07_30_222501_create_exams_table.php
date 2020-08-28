@@ -17,10 +17,11 @@ class CreateExamsTable extends Migration
             $table->id();
 
             $table->string('servicio_salud')->nullable();
+            $table->string('comuna')->nullable();
             $table->string('profesional_solicita')->nullable();
             $table->string('diagnostico')->nullable();
-            $table->string('establecimiento_realiza_examen')->nullable();
             $table->string('cesfam')->nullable();
+            $table->string('establecimiento_realiza_examen')->nullable();
             $table->string('medico')->nullable();
             $table->string('fonasa')->nullable();
 

@@ -31,11 +31,73 @@ class ExamController extends Controller
                                ->Where('name','LIKE','%'.$cName.'%')
                                ->Where('fathers_family','LIKE','%'.$cFathers_family.'%')
                                ->get('id');
+       
 
         
        $exams = Exam::with("patients")
                     ->whereIn('patient_id',$patients_list)
                     ->get();
+
+       return $exams;
+    }
+
+    public function setStoreExam(Request $request)
+    {
+       if(!$request->ajax()) return redirect('/');
+       //dd($request);
+
+       $idPatient             = $request->idPatient;
+       $run                   = $request->run;
+       $name                  = $request->name;
+       $fathers_family        = $request->fathers_family;
+       $mothers_family        = $request->mothers_family;
+       $gender                = $request->gender;
+       $birthday              = $request->birthday;
+       $telephone             = $request->telephone;
+       $servicioSalud         = $request->listServicioSalud;
+       $establishmentRequest  = $request->establishmentRequest;
+       $professional          = $request->professional;
+       $date_exam_order       = $request->date_exam_order;
+       $establishmentExam     = $request->establishmentExam;
+       $doctor                = $request->doctor;
+       $date_exam             = $request->date_exam;
+       $derivation            = $request->derivation;
+       $birardsMam         = $request->listBIRADSMam;
+       $birardsEco      = $request->listBIRADSEcoMam;
+       $date_exam_reception   = $request->date_exam_reception;
+       $diagnostic            = $request->diagnostic;
+
+
+      /* $cName  = ($cName == NULL) ? ($cName = '') : $cName;
+       $cFathers_family = ($cFathers_family == NULL) ? ($cFathers_family = '') : $cFathers_family;
+       $nRun  = ($nRun == NULL) ? ($nRun = '') : $nRun;*/
+       
+
+       // Se obtiene el listado de Id de pacientes conforme el request.
+       $patients_list = Patient::Where('run','LIKE','%'.$run.'%')
+                               ->Where('name','LIKE','%'.$name.'%')
+                               ->Where('fathers_family','LIKE','%'.$fathers_family.'%')
+                               ->get('id');
+
+        
+        $exams = new Exam();
+        $exams->servicio_salud   = $servicioSalud;
+        $exams->profesional_solicita   = $professional;
+        $exams->establecimiento_realiza_examen   = $establishmentExam;
+        $exams->cesfam   = $establishmentRequest;
+        $exams->medico   = $doctor;
+        //$exams->fonasa   = $exam['FONASA'];
+
+        $exams->date_exam_order      = $date_exam_order;
+        $exams->date_exam            = $date_exam;
+        $exams->date_exam_reception  = $date_exam_reception;
+        $exams->birards_mamografia   = $birardsMam;
+        $exams->birards_ecografia    = $birardsEco;
+        $exams->load_source          = 'app';
+        $exams->load_id              = 1;
+        $exams->user_id              = 1;
+        $exams->patient_id           = $idPatient;
+        $exams->save();
 
        return $exams->toArray();
     }
@@ -156,6 +218,9 @@ class ExamController extends Controller
             $date_exam_reception = date('Y-m-d',strtotime(str_replace('/', '-',$exam['FECHA RECEPCION'])));
             $date_exam_reception  = ($exam['FECHA RECEPCION'] == NULL) ? ($date_exam_reception = NULL) : $date_exam_reception;
 
+            $commune = $exam['COMUNA'];
+            $commune  = ($commune == NULL) ? ($commune = NULL) : $commune;
+
             $birardsMam = $exam['BIRADS MAM'];
             $birardsMam  = ($birardsMam == NULL) ? ($birardsMam = '') : $birardsMam;
             $birardsEco = $exam['BIRADS ECO'];
@@ -163,6 +228,7 @@ class ExamController extends Controller
 
             $examDet = new Exam();
             $examDet->servicio_salud   = $exam['SERVICIO SALUD'];
+            $examDet->comuna   = $commune;
             $examDet->profesional_solicita   = $exam['PROFESIONAL'];
             $examDet->establecimiento_realiza_examen   = $exam['ESTABLECIMIENTO EXAMEN'];
             $examDet->cesfam   = $exam['CESFAM'];

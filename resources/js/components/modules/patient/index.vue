@@ -81,41 +81,21 @@
                 <template v-if="listarUsuariosPaginated.length">
                   <table class="table table-hover table-sm  table-striped table-header-fixed text-nowrap table-valign-middle projects">
                     <thead>
-                      <th>Fotografía</th>
                       <th>Rut</th>
                       <th>Nombres</th>
                       <th>F. Nacimiento</th>
-                      <th>Telefono</th>
-                      <th></th>
+                      <th>Edad</th>
+                      <th>Dirección</th>
+                      <th>Telefóno</th>
                     </thead>
                     <tbody>
                       <tr v-for="(item, index) in listarUsuariosPaginated" :key="index">
-                        <td>
-                          <li class="user-block small">
-                            <img src="/img/avatar.png" width="50%" height="50%" alt="" :alt="item.name" class="profile-avatar-img img-fluid img-circle img-size-20 mr-2">
-                          </li>
-                        </td>
                         <td v-text="item.run+'-'+item.dv"></td>
                         <td v-text="item.name+' '+item.fathers_family+' '+item.mothers_family"></td>
                         <td v-text="item.birthday"></td>
+                        <td v-text="item.age"></td>
+                        <td v-text="item.address"></td>
                         <td v-text="item.telephone"></td>
-                        <td class="text-right">
-                          <router-link class="btn btn-xs btn-default" :to="'/'">
-                            <i class="fas fa-folder"></i> 
-                          </router-link>
-                          <router-link class="btn btn-xs btn-default" :to="'/'">
-                            <i class="fas fa-pencil-alt"></i> 
-                          </router-link>
-                          <router-link class="btn btn-xs btn-default" :to="'/'">
-                            <i class="fas fa-key"></i> 
-                          </router-link>
-                          <router-link class="btn btn-xs btn-default" :to="'/'">
-                            <i class="fas fa-check"></i> 
-                          </router-link>
-                          <router-link class="btn btn-xs btn-danger" :to="'/'">
-                            <i class="fas fa-trash"></i> 
-                          </router-link>
-                        </td>
                       </tr>
                     </tbody>
                   </table>
@@ -163,7 +143,7 @@
               {value: 'I', label: 'Inactivo'}
             ],
             pageNumber: 0,
-            perPage: 25
+            perPage: 50
           }
       },
       computed: {
@@ -214,6 +194,13 @@
             console.log(response.data);
             this.inicializarPaginacion();
             this.listUsuarios = response.data;
+          }).catch(error => {
+              if(error.response.status == 401){
+                this.$router.push({name: 'login'})
+                location.reload();
+                sessionStorage.clear();
+                this.fullscreenLoading = false;
+              }
           })
         },
         nextPage() {

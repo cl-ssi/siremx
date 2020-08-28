@@ -174,6 +174,13 @@
           axios.get(route).then( response => {
             this.listPermissions = response.data;
             this.filterPermissionsByRole();
+          }).catch(error => {
+              if(error.response.status == 401){
+                this.$router.push({name: 'login'})
+                location.reload();
+                sessionStorage.clear();
+                this.fullscreenLoading = false;
+              }
           })
         },
         filterPermissionsByRole() {
@@ -214,6 +221,13 @@
             console.log("Se creao Rol exitosamente");
             this.fullscreenLoading = false;
             this.$router.push('/role');
+          }).catch(error => {
+              if(error.response.status == 401){
+                this.$router.push({name: 'login'})
+                location.reload();
+                sessionStorage.clear();
+                this.fullscreenLoading = false;
+              }
           })
         },
         validAddRole() {

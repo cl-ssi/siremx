@@ -1,12 +1,11 @@
 <template>
     <aside class="main-sidebar sidebar-dark-info elevation-4">
         <!-- Brand Logo -->
-        <a href="../../index3.html" class="brand-link">
+        <a href="/dashboard" class="brand-link">
           <img :src="ruta + '/img/adminLteLogo.png'"
-               alt="sismam logo"
-               class="brand-image img-circle elevation-3"
-               style="opacity: .8">
-          <span class="brand-text font-weight-light">SISMAM</span>
+               alt="siremx logo"
+               class="brand-image ">
+          <span class="brand-text font-weight">SIREMX</span>
         </a>
 
         <!-- Sidebar -->
@@ -21,13 +20,16 @@
             </div>
           </div>
 
-          <div class="user-panel mt-3 pb-3 mb-3 d-flex">
-            <div class="info">
-              <a href="#" class="d-block" @click.prevent="logout" v-loading.fullscreen.lock="fullscreenLoading">
-                <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
-              </a>
-            </div>
-          </div>
+          <nav class="mt-3 pb-3 mb-3  user-panel ">
+            <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+              <li class="nav-item has-treeview">
+                  <a class="nav-link" href="#" @click.prevent="logout" v-loading.fullscreen.lock="fullscreenLoading">
+                    <i class="nav-icon fas fa-sign-out-alt"></i>
+                    <p>Cerrar Sesión</p>
+                  </a>
+              </li>
+            </ul>
+          </nav>
 
           <!-- Sidebar Menu -->
           <nav class="mt-2">
@@ -42,7 +44,7 @@
                 </template>
               </li>
 
-              <template v-if="listPermissions.includes('exam.index','examLoad.index')">
+              <template v-if="listPermissions.includes('exam.index','exam.load')">
                 <li class="nav-header">GESTIÓN</li>
                 <li class="nav-item has-treeview">
                   <a href="#" class="nav-link">

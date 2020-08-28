@@ -56,7 +56,7 @@ export default new Router({
         },
 
         { path: '/user/create',
-          name: 'create.index',
+          name: 'user.create',
           component: require('./components/modules/user/create').default,
           beforeEnter: (to, from, next) => {
             verifyAccess(to, from, next);

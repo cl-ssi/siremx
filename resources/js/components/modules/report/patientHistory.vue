@@ -39,7 +39,71 @@
                         </div>
                       </div>
                     </div>
+
+                    <template v-if="listRolePermissionsByUser.includes('commune.filter')">
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <label class="col-md-4 col-form-label">Comuna</label>
+                          <div class="col-md-9">
+                            <el-select v-model="fillBsqReport.commune" filterable
+                                placeholder="Seleccione"
+                                clearable>
+                                  <el-option
+                                    v-for="item in listCommunes"
+                                    :key="item.id"
+                                    :label="item.code_deis+' - '+item.name"
+                                    :value="item.code_deis">
+                                  </el-option>
+                            </el-select>
+                          </div>
+                        </div>
+                      </div>
+                    </template>
                   </div>
+
+                  <div class="row">
+                    <template v-if="listRolePermissionsByUser.includes('establishment.filter')">
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <label class="col-md-4 col-form-label">Establecimiento Origen</label>
+                          <div class="col-md-9">
+                            <el-select v-model="fillBsqReport.establishmentRequest" filterable
+                                placeholder="Seleccione"
+                                clearable>
+                                  <el-option
+                                    v-for="item in listEstablishments"
+                                    :key="item.id"
+                                    :label="item.new_code_deis+' - '+item.alias"
+                                    :value="item.new_code_deis">
+                                  </el-option>
+                            </el-select>
+                          </div>
+                        </div>
+                      </div>
+                    </template>
+                    
+                    <template v-if="listRolePermissionsByUser.includes('establishmentExam.filter')">
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <label class="col-md-7 col-form-label">Establecimiento Toma de Exámen</label>
+                          <div class="col-md-9">
+                            <el-select v-model="fillBsqReport.establishmentExam" filterable
+                                placeholder="Seleccione"
+                                clearable>
+                                  <el-option
+                                    v-for="item in listEstablishments"
+                                    :key="item.id"
+                                    :label="item.new_code_deis+' - '+item.alias"
+                                    :value="item.new_code_deis">
+                                  </el-option>
+                            </el-select>
+                          </div>
+                        </div>
+                      </div>
+                    </template>
+                  </div>
+
+                 
 
                 </form>
               </div>
@@ -67,7 +131,7 @@
                  <table id="data-table" class="table table-hover table-sm table-bordered table-striped table-header-fixed text-nowrap table-valign-middle projects">
                     <tr>
                       <th>S. Salud</th>
-                      <th>Cesfam</th>
+                      <th>Cesfam Solicita</th>
                       <th>Profesional Solicita</th>
                       <th>Run</th>
                       <th>Nombre</th>
@@ -85,7 +149,7 @@
                     </tr>
                     <tr v-for="(item, index) in listPatients" :key="index">
                       <td v-text="item.servicio_salud"></td>
-                      <td v-text="item.cesfam"></td>
+                      <td v-text="item.cesfam_name"></td>
                       <td v-text="item.profesional_solicita"></td>
                       <td v-text="item.run+'-'+item.dv"></td>
                       <td v-text="item.name+' '+item.fathers_family+' '+item.mothers_family"></td>
@@ -125,8 +189,14 @@ import XLSX from 'xlsx'
           return {
             fillBsqReport: {
               run: '',
-              name: ''
+              name: '',
+              establishmentRequest: '',
+              establishmentExam: '',
+              commune: ''
             },
+            listRolePermissionsByUser: JSON.parse(sessionStorage.getItem('listRolePermissionsByUser')),
+            listEstablishments: [],
+            listCommunes: [],
             listPatients: [],
             listStatus: [
               {value: 'vig', label: 'Vigente'},
@@ -164,6 +234,11 @@ import XLSX from 'xlsx'
               return pagesArray;
         },
       },
+      mounted() {
+        this.getRespReport();
+        this.getListEstablishments();
+        this.getListCommunes();
+      },
       methods: {
         limpiarCriteriosBsq(){
           this.fillBsqReport.run  = '';
@@ -173,11 +248,40 @@ import XLSX from 'xlsx'
         limpiarBandejaUsuarios(){
           this.listPatients = [];
         },
+        getListEstablishments() {
+          var route = '/administracion/establishments/getListEstablishments'
+          axios.get(route).then( response => {
+            this.listEstablishments = response.data;
+          }).catch(error => {
+              if(error.response.status == 401){
+                this.$router.push({name: 'login'})
+                location.reload();
+                sessionStorage.clear();
+                this.fullscreenLoading = false;
+              }
+          })
+        },
+        getListCommunes() {
+          var route = '/administracion/communes/getListCommunes'
+          axios.get(route).then( response => {
+            this.listCommunes = response.data;
+          }).catch(error => {
+              if(error.response.status == 401){
+                this.$router.push({name: 'login'})
+                location.reload();
+                sessionStorage.clear();
+                this.fullscreenLoading = false;
+              }
+          })
+        },
         getRespReport(){
           var url = '/report/exams/getPatientHistory'
           axios.get(url, {
             params: {
               'run' : this.fillBsqReport.run,
+              'codeDeisRequest' : (!this.fillBsqReport.establishmentRequest) ? '' : this.fillBsqReport.establishmentRequest,
+              'codeDeis' : (!this.fillBsqReport.establishmentExam) ? '' : this.fillBsqReport.establishmentExam,
+              'commune' : (!this.fillBsqReport.commune) ? '' : this.fillBsqReport.commune,
             }
           }).then(response => {
             console.log(response.data);

@@ -67,7 +67,7 @@
                       <div class="form-group">
                         <label class="col-md-3 col-form-label">BIRARDS</label>
                         <div class="col-md-9">
-                          <el-select v-model="selectBIRADS"
+                          <el-select v-model="fillBsqReport.selectBIRADS"
                               placeholder="Seleccione" multiple
                               clearable>
                                 <el-option
@@ -80,7 +80,71 @@
                         </div>
                       </div>
                     </div>
+                    <template v-if="listRolePermissionsByUser.includes('commune.filter')">
+                      <div class="row">
+                        <div class="col-md-6">
+                          <div class="form-group">
+                            <label class="col-md-4 col-form-label">Comuna</label>
+                            <div class="col-md-9">
+                              <el-select v-model="fillBsqReport.commune" filterable
+                                  placeholder="Seleccione"
+                                  clearable>
+                                    <el-option
+                                      v-for="item in listCommunes"
+                                      :key="item.id"
+                                      :label="item.code_deis+' - '+item.name"
+                                      :value="item.code_deis">
+                                    </el-option>
+                              </el-select>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                  </template>
                   </div>
+
+                  <div class="row">
+                    <template v-if="listRolePermissionsByUser.includes('establishment.filter')">
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <label class="col-md-4 col-form-label">Establecimiento Origen</label>
+                          <div class="col-md-9">
+                            <el-select v-model="fillBsqReport.establishmentRequest" filterable
+                                placeholder="Seleccione"
+                                clearable>
+                                  <el-option
+                                    v-for="item in listEstablishments"
+                                    :key="item.id"
+                                    :label="item.new_code_deis+' - '+item.alias"
+                                    :value="item.new_code_deis">
+                                  </el-option>
+                            </el-select>
+                          </div>
+                        </div>
+                      </div>
+                    </template>
+                    
+                    <template v-if="listRolePermissionsByUser.includes('establishmentExam.filter')">
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <label class="col-md-7 col-form-label">Establecimiento Toma de Exámen</label>
+                          <div class="col-md-9">
+                            <el-select v-model="fillBsqReport.establishmentExam" filterable
+                                placeholder="Seleccione"
+                                clearable>
+                                  <el-option
+                                    v-for="item in listEstablishments"
+                                    :key="item.id"
+                                    :label="item.new_code_deis+' - '+item.alias"
+                                    :value="item.new_code_deis">
+                                  </el-option>
+                            </el-select>
+                          </div>
+                        </div>
+                      </div>
+                    </template>
+                  </div>
+
                   
                 </form>
               </div>
@@ -98,7 +162,7 @@
                 <h3 class="card-title">
                     <template v-if="listarUsuariosPaginated.length">
                         <el-tooltip class="item" effect="dark" content="Descargar en Excel" placement="bottom-start">
-                            <i class="fas fa-file-excel" @click.prevent="exportExcel"></i>
+                            <i class="fas fa-file-excel text-success" @click.prevent="exportExcel"></i>
                         </el-tooltip>
                     </template>
                     Bandeja de Resultados</h3>
@@ -106,14 +170,15 @@
               <div class="card-body table-responsive">
                 <template v-if="listarUsuariosPaginated.length">
                  <table class="table table-hover table-sm  table-striped table-header-fixed text-nowrap table-valign-middle projects">
-                    <thead>
+                    <tr>
                       <th>S. Salud</th>
-                      <th>Cesfam</th>
+                      <th>Cesfam Solicita</th>
                       <th>Profesional Solicita</th>
                       <th>Run</th>
                       <th>Nombre</th>
                       <th>Genero</th>
                       <th>F. Nacimiento</th>
+                      <th>Edad</th>
                       <th>Dirección</th>
                       <th>Establecimiento Exámen</th>
                       <th>F. Orden</th>
@@ -122,26 +187,25 @@
                       <th>Mamografía</th>
                       <th>Eco Mamografía</th>
                       <th>Médico</th>
-                    </thead>
-                    <tbody>
-                      <tr v-for="(item, index) in listarUsuariosPaginated" :key="index">
-                        <td v-text="item.servicio_salud"></td>
-                        <td v-text="item.cesfam"></td>
-                        <td v-text="item.profesional_solicita"></td>
-                        <td v-text="item.patients.run+'-'+item.patients.dv"></td>
-                        <td v-text="item.patients.name+' '+item.patients.fathers_family+' '+item.patients.mothers_family"></td>
-                        <td v-text="item.patients.gender"></td>
-                        <td v-text="item.patients.birthday"></td>
-                        <td v-text="item.patients.address"></td>
-                        <td v-text="item.establecimiento_realiza_examen"></td>
-                        <td v-text="item.date_exam_order"></td>
-                        <td v-text="item.date_exam"></td>
-                        <td v-text="item.date_exam_reception"></td>
-                        <td v-text="item.birards_mamografia"></td>
-                        <td v-text="item.birards_ecografia"></td>
-                        <td v-text="item.medico"></td>
-                      </tr>
-                    </tbody>
+                    </tr>
+                    <tr v-for="(item, index) in listarUsuariosPaginated" :key="index">
+                      <td v-text="item.servicio_salud"></td>
+                      <td v-text="item.cesfam_name"></td>
+                      <td v-text="item.profesional_solicita"></td>
+                      <td v-text="item.run+'-'+item.dv"></td>
+                      <td v-text="item.name+' '+item.fathers_family+' '+item.mothers_family"></td>
+                      <td v-text="item.gender"></td>
+                      <td v-text="item.birthday"></td>
+                      <td v-text="item.age"></td>
+                      <td v-text="item.address"></td>
+                      <td v-text="item.establecimiento_realiza_examen"></td>
+                      <td v-text="item.date_exam_order"></td>
+                      <td v-text="item.date_exam"></td>
+                      <td v-text="item.date_exam_reception"></td>
+                      <td v-text="item.birards_mamografia"></td>
+                      <td v-text="item.birards_ecografia"></td>
+                      <td v-text="item.Médico"></td>
+                    </tr>
                   </table>
                   <div class="card-footer clearfix">
                     <ul class="pagination pagination-sm pagination-secondary m-0 float-right">
@@ -169,6 +233,24 @@
         </div>
       </div>
     </div>
+
+    <div class="modal fade" :class="{show: modalShow}" :style=" modalShow ? mostrarModal : ocultarModal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"> Mensaje</h5>
+                    <button class="close" @click="abrirModal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="callout callout-danger" v-for="(item, index) in mensajeError" :key="index" v-text="item">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" @click="abrirModal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
   </div>
 </template>
 
@@ -182,10 +264,16 @@ import XLSX from 'xlsx'
               name: '',
               Fathers_family: '',
               date_ini: '',
-              date_end: ''
+              date_end: '',
+              selectBIRADS: '',
+              establishmentRequest: '',
+              establishmentExam: '',
+              commune: ''
             },
+            listRolePermissionsByUser: JSON.parse(sessionStorage.getItem('listRolePermissionsByUser')),
+            listEstablishments: [],
+            listCommunes: [],
             listUsuarios: [],
-            selectBIRADS: '',
             listStatus: [
               {value: 'vig', label: 'Vigente'},
               {value: 'noVig', label: 'No Vigente'},
@@ -200,6 +288,17 @@ import XLSX from 'xlsx'
               {value: '5', label: 'V'},
               {value: '6', label: 'VI'}
             ],
+            fullscreenLoading: false,
+            modalShow: false,
+            mostrarModal: {
+              display: 'block',
+              background: '#0000006b',
+            },
+            ocultarModal: {
+                display: 'none',
+            },
+            error: 0,
+            mensajeError: [],
             pageNumber: 0,
             perPage: 75
           }
@@ -231,30 +330,74 @@ import XLSX from 'xlsx'
               return pagesArray;
         },
       },
+      mounted() {
+        this.getListEstablishments();
+        this.getListCommunes();
+      },
       methods: {
         limpiarCriteriosBsq(){
           this.fillBsqReport.nRun  = '';
           this.fillBsqReport.cName = '';
           this.fillBsqReport.cFathers_family  = '';
         },
+        abrirModal(){
+            this.modalShow = !this.modalShow;
+        },
         limpiarBandejaUsuarios(){
           this.listUsuarios = [];
         },
+        getListEstablishments() {
+          var route = '/administracion/establishments/getListEstablishments'
+          axios.get(route).then( response => {
+            this.listEstablishments = response.data;
+          }).catch(error => {
+              if(error.response.status == 401){
+                this.$router.push({name: 'login'})
+                location.reload();
+                sessionStorage.clear();
+                this.fullscreenLoading = false;
+              }
+          })
+        },
+        getListCommunes() {
+          var route = '/administracion/communes/getListCommunes'
+          axios.get(route).then( response => {
+            this.listCommunes = response.data;
+          }).catch(error => {
+              if(error.response.status == 401){
+                this.$router.push({name: 'login'})
+                location.reload();
+                sessionStorage.clear();
+                this.fullscreenLoading = false;
+              }
+          })
+        },
         getRespReport(){
-          console.log(this.selectBIRADS);
+          //console.log(this.fillBsqReport.selectBIRADS);
+          if(this.validForm()) {
+                this.modalShow = true;
+                return;
+          }
+          this.fullscreenLoading = true;
+          
           var url = '/report/exams/getMXBirards'
           axios.get(url, {
             params: {
-              'listBirards' : this.selectBIRADS,
+              'listBirards' : this.fillBsqReport.selectBIRADS,
               'dateIni' : (!this.fillBsqReport.date_ini) ? '' : this.fillBsqReport.date_ini,
               'dateEnd' : (!this.fillBsqReport.date_end) ? '' : this.fillBsqReport.date_end,
+              'codeDeisRequest' : (!this.fillBsqReport.establishmentRequest) ? '' : this.fillBsqReport.establishmentRequest,
+              'codeDeis' : (!this.fillBsqReport.establishmentExam) ? '' : this.fillBsqReport.establishmentExam,
+              'commune' : (!this.fillBsqReport.commune) ? '' : this.fillBsqReport.commune,
             }
           }).then(response => {
             console.log(response.data);
             this.inicializarPaginacion();
             this.listUsuarios = response.data;
+            this.fullscreenLoading = false;
           })
         },
+        
         setGenerateDocument() {
             /*const loading = this.$vs.loading([
                 type: "square",
@@ -298,7 +441,26 @@ import XLSX from 'xlsx'
         },
         inicializarPaginacion() {
           this.pageNumber = 0;
-        }
+        },
+        validForm() {
+            this.error = 0;
+            this.mensajeError = [];
+            if(!this.fillBsqReport.date_ini) {
+                this.mensajeError.push("Fecha Inicio es un campo obligatorio")
+            }
+            if(!this.fillBsqReport.date_end) {
+                this.mensajeError.push("Fecha Termino es un campo obligatorio")
+            }
+            if(!this.fillBsqReport.selectBIRADS) {
+                this.mensajeError.push("Birads es un campo obligatorio")
+            }
+
+            if(this.mensajeError.length) {
+                this.error = 1;
+            }
+            return this.error;
+        
+      }
       }
     }
 </script>

@@ -17,7 +17,7 @@
         <div class="card-header">
           <div class="card-tools">
             <template v-if="listRolePermissionsByUser.includes('user.create')">
-                <router-link class="btn btn-info btn-sm" :to="{name:'/user/create'}">
+                <router-link class="btn btn-info btn-sm" :to="{name:'user.create'}">
                   <i class="fas fa-plus-square"></i> Nuevo Usuario
                 </router-link>
             </template>

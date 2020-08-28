@@ -39,11 +39,12 @@
                       <fieldset class="form-group col-4">
                           <label>Run</label>
                           <input type="text" class="form-control" v-model="fillCreatePatient.run" @keyup.enter="setRegistrarUsuario">
-                          <small class="form-text text-muted">Utilizar: 11111111-1</small>
+                          <small class="form-text text-muted">Sin punto ni guión ni digito verificador: Ej. 11111111</small>
                       </fieldset>
                       <fieldset class="form-group col-1">
                         <label>DV</label>
                           <input type="text" class="form-control" v-model="fillCreatePatient.dv" @keyup.enter="setRegistrarUsuario">
+                          <small class="form-text text-muted">D.V. : Ej: 4</small>
                       </fieldset>
                   </div>
 
@@ -66,7 +67,7 @@
                       <fieldset class="form-group col-4">
                           <label>Genero</label>
                            <el-select v-model="fillCreatePatient.gender" 
-                              placeholder="Seleccione un estado"
+                              placeholder="Seleccione Genero"
                               clearable>
                                 <el-option
                                   v-for="item in listGender"
@@ -78,13 +79,29 @@
                       </fieldset>
                       <fieldset class="form-group col-4">
                         <label>Fecha de Nacimiento</label>
-                          <input type="text" class="form-control" v-model="fillCreatePatient.birthday" @keyup.enter="setRegistrarUsuario">
+                          <el-date-picker
+                            v-model="fillCreatePatient.birthday"
+                            type="date"
+                            placeholder="Fecha"
+                            value-format="yyyy-MM-dd"
+                            default-value="1990-01-02">
+                          </el-date-picker>
+                          <small class="form-text text-muted"></small>
                       </fieldset>
                       <fieldset class="form-group col-4">
                         <label>Telefóno</label>
                           <input type="text" class="form-control" v-model="fillCreatePatient.telephone" @keyup.enter="setRegistrarUsuario">
                       </fieldset>
                   </div>
+
+                  <div class="form-row">
+                      <fieldset class="form-group col-8">
+                          <label>Dirección</label>
+                           <input type="text" class="form-control" v-model="fillCreatePatient.address" @keyup.enter="setRegistrarUsuario">
+                      </fieldset>
+                  </div>
+
+
                 </form>
               </div>
               <div class="card-footer">
@@ -127,12 +144,15 @@
       data(){
           return {
             fillCreatePatient: {
-              cNombre: '',
-              cSegundoNombre: '',
-              cApellido: '',
-              cUsuario: '',
-              cCorreo: '',
-              cContrasena: '',
+               run : '',
+               dv  : '',
+               name  : '',
+               fathers_family : '',
+               mothers_family  : '',
+               gender  : '',
+               birthday  : '',
+               telephone  : '',
+               address  : ''
             },
             listGender: [
               {value: 'female', label: 'Femenino'},
@@ -167,6 +187,7 @@
           this.fillCreatePatient.gender  = '';
           this.fillCreatePatient.birthday  = '';
           this.fillCreatePatient.telephone  = '';
+          this.fillCreatePatient.address  = '';
         },
         abrirModal(){
             this.modalShow = !this.modalShow;
@@ -195,11 +216,19 @@
             'gender'         : this.fillCreatePatient.gender,
             'birthday'       : this.fillCreatePatient.birthday,
             'telephone'      : this.fillCreatePatient.telephone,
+            'address'        : this.fillCreatePatient.address,
 
           }).then(response => {
             console.log("Registro Paciente exitosamente");
             this.fullscreenLoading = false;
             this.$router.push('/patient');
+          }).catch(error => {
+              if(error.response.status == 401){
+                this.$router.push({name: 'login'})
+                location.reload();
+                sessionStorage.clear();
+                this.fullscreenLoading = false;
+              }
           })
         },
         validarRegistrarUsuario() {
