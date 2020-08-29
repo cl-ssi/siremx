@@ -36,7 +36,7 @@
       methods:{
         getGraphBar() {
           var ctx = document.getElementById("myChart").getContext('2d');
-          var dataValues = [22, 59, 73, 45, 20,10];
+          var dataValues = [22, 59, 73, 46, 20,10];
           var dataLabels = [0, 20, 30, 40, 50, 60];
           var myChart = new Chart(ctx, {
             type: 'bar',
