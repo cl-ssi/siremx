@@ -81,10 +81,9 @@
                       </div>
                     </div>
                     <template v-if="listRolePermissionsByUser.includes('commune.filter')">
-                      <div class="row">
                         <div class="col-md-6">
                           <div class="form-group">
-                            <label class="col-md-4 col-form-label">Comuna</label>
+                            <label class="col-md-3 col-form-label">Comuna</label>
                             <div class="col-md-9">
                               <el-select v-model="fillBsqReport.commune" filterable
                                   placeholder="Seleccione"
@@ -99,7 +98,6 @@
                             </div>
                           </div>
                         </div>
-                      </div>
                   </template>
                   </div>
 

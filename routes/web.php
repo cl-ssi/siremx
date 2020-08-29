@@ -54,7 +54,7 @@ Route::group(['middleware' => ['auth']], function () {
 
 
 
-Route::get('/{optional?}', function () {
+Route::get('/sismam/{optional?}', function () {
     return view('app');
 })->name('basepath')
   ->where('optional', '.*');
