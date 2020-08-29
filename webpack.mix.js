@@ -11,6 +11,8 @@ const mix = require('laravel-mix');
  |
  */
 
+mix.setPublicPath('public/sismam')
+
 mix.styles([
     'resources/vendor/css/all.min.css',
     'resources/vendor/css/adminlte.min.css',
