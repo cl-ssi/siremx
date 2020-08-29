@@ -1,4 +1,7 @@
 {
     "/js/app.js": "/js/app.js",
-    "/css/app.css": "/css/app.css"
+    "/css/sismamtheme.css": "/css/sismamtheme.css",
+    "/js/sismamtheme.js": "/js/sismamtheme.js",
+    "/css/adminlte.min.css.map": "/css/adminlte.min.css.map",
+    "/js/adminlte.min.js.map": "/js/adminlte.min.js.map"
 }
