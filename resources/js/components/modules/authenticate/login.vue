@@ -27,7 +27,7 @@
                         </div>
                     </div>
                 </div>
-            </form> 
+            </form>
 
             <div class="row">
                 <div class="col-md-12">
@@ -76,6 +76,7 @@
                     'email'  : this.fillLogin.email,
                     'pass'   : this.fillLogin.pass,
                 }).then(response => {
+                    //console.log(response);
                     if(response.data.code == 401){
                         this.loginFailed();
                     }

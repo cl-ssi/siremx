@@ -53,25 +53,22 @@ class LoginController extends Controller
             if($u) {
                 $resp = Auth::login($u, true);
                 if($resp) {
-                    return Redirect::to('https://i.saludiquique.cl/sismam/');
-                    /*return response()->json([
+                    return response()->json([
                         'authUser' => Auth::user(),
                         'code'     => 200
                         
-                    ]);*/
+                    ]);
                 }
                 else {
-                    return Redirect::to('https://i.saludiquique.cl/sismam/');
-                    /*return response()->json([
+                    return response()->json([
                         'code'     => 401
-                    ]);*/
+                    ]);
                 }
             }
             else {
-                return Redirect::to('https://i.saludiquique.cl/sismam/');
-                /*return response()->json([
+                return response()->json([
                     'code'     => 401
-                ]);*/
+                ]);
             }
             
         }

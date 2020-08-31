@@ -38,6 +38,11 @@ export default new Router({
           name: 'login',
           component: require('./components/modules/authenticate/login').default
         },
+        {
+          path: '/logincu/:token',
+          name: 'logincu',
+          component: require('./components/modules/authenticate/logincu').default
+        },
 
         { path: '/',
           name: 'dashboard.index',
@@ -212,10 +217,6 @@ export default new Router({
         { path: '/reportBirardsAge', component: require('./components/modules/report/birardsAge').default },
         { path: '/patientHistory', component: require('./components/modules/report/patientHistory').default },
         { path: '/reportMXBirards', component: require('./components/modules/report/mxBirards').default },
-
-        { path: '/claveunica/login/:token',
-          redirect: '/claveunica/login/:token'
-        },
 
         { path: '*',
           component: require('./components/layouts/404').default
