@@ -6,7 +6,7 @@
         data() {
             return {
                 fillLogin : {
-                    userToken: this.$attrs.token
+                    userToken: 'd6aa2fa7189d49379fac4de9eefb7ee3'
                 },
                 listRolePermissionsByUser: [],
                 listRolePermissionsByUserFilter: [],
