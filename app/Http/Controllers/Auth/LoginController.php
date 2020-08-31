@@ -48,25 +48,29 @@ class LoginController extends Controller
             $user_cu = json_decode($response);
 
             $u = User::where('run',$user_cu->RolUnico->numero)->first();
-
+           
             if($u) {
                 $resp = Auth::login($u, true);
                 if($resp) {
-                    return response()->json([
+                    return redirect()->route('/');
+                    /*return response()->json([
                         'authUser' => Auth::user(),
                         'code'     => 200
-                    ]);
+                        
+                    ]);*/
                 }
                 else {
-                    return response()->json([
+                    return redirect()->route('/login');
+                    /*return response()->json([
                         'code'     => 401
-                    ]);
+                    ]);*/
                 }
             }
             else {
-                return response()->json([
+                return redirect()->route('/login');
+                /*return response()->json([
                     'code'     => 401
-                ]);
+                ]);*/
             }
             
         }
