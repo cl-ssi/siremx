@@ -34,6 +34,20 @@ class PatientController extends Controller
        return $patients->toArray();
     }
 
+    public function getPatientById(Request $request)
+    {
+       if(!$request->ajax()) return redirect('/');
+    
+       $idPatient  = $request->idPatient;
+       $idPatient  = ($idPatient == NULL) ? ($idPatient = '') : $idPatient;
+
+       //dd($idPatient );
+       
+       $patients = Patient::Where('id','=',$idPatient)->get();
+
+       return $patients;
+    }
+
     public function setStorePatient(Request $request)
     {
        if(!$request->ajax()) return redirect('/');
@@ -70,6 +84,49 @@ class PatientController extends Controller
        ]);*/
 
        return $patient;
+    }
+
+    public function setEditPatient(Request $request)
+    {
+       if(!$request->ajax()) return redirect('/');
+
+       $idPatient      = $request->idPatient;
+       $run            = $request->run;
+       $dv             = $request->dv; 
+       $name           = $request->name;
+       $fathers_family = $request->fathers_family;
+       $mothers_family = $request->mothers_family;
+       $gender         = $request->gender;
+       $birthday       = $request->birthday;
+       $telephone      = $request->telephone;
+       $address        = $request->address;
+       
+
+       $idPatient      = ($idPatient == NULL) ? ($idPatient = 0) : $idPatient;
+       $run            = ($run == NULL) ? ($run = '') : $run;
+       $dv             = ($dv == NULL) ? ($dv = '') : $dv;
+       $name           = ($name == NULL) ? ($name = '') : $name;
+       $fathers_family = ($fathers_family == NULL) ? ($fathers_family = '') : $fathers_family;
+       $mothers_family = ($mothers_family == NULL) ? ($mothers_family = '') : $mothers_family;
+       $gender         = ($gender == NULL) ? ($gender = '') : $gender;
+       $birthday       = ($birthday == NULL) ? ($birthday = '') : $birthday;
+       $telephone      = ($telephone == NULL) ? ($telephone = '') : $telephone;
+       $address        = ($address == NULL) ? ($address = '') : $address;
+
+       $patient = Patient::find($idPatient);
+       $patient->run   = $run;
+       $patient->dv   = $dv;
+       $patient->name   = $name;
+       $patient->fathers_family   = $fathers_family;
+       $patient->mothers_family   = $mothers_family;
+       $patient->gender   = $gender;
+       $patient->birthday   = $birthday;
+       $patient->telephone   = $telephone;
+       $patient->address   = $address;
+       $patient->updated_at  = date("Y-m-d");
+       $patient->save();
+
+       //return $user;
     }
 
     public function showPatient(Request $request)

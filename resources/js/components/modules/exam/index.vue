@@ -87,7 +87,7 @@
                     <tbody>
                       <tr v-for="(item, index) in listarUsuariosPaginated" :key="index">
                         <td v-text="item.id"></td>
-                        <td v-text="item.date_exam_order"></td>
+                        <td v-text="item.date_exam"></td>
                         <td v-text="item.patients.run+'-'+item.patients.dv"></td>
                         <td v-text="item.patients.fathers_family+' '+item.patients.mothers_family"></td>
                         <td v-text="item.patients.name"></td>

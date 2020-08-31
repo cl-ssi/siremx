@@ -87,6 +87,7 @@
                       <th>Edad</th>
                       <th>Dirección</th>
                       <th>Telefóno</th>
+                      <th></th>
                     </thead>
                     <tbody>
                       <tr v-for="(item, index) in listarUsuariosPaginated" :key="index">
@@ -96,6 +97,13 @@
                         <td v-text="item.age"></td>
                         <td v-text="item.address"></td>
                         <td v-text="item.telephone"></td>
+                        <td>
+                          <!--<template v-if="listRolePermissionsByUser.includes('user.edit')">-->
+                              <router-link class="btn btb-flat btn-xs btn-default" :to="{name: 'patient.edit', params: {id: item.id}}">
+                                <i class="fas fa-pencil-alt"></i> 
+                              </router-link>
+                           <!-- </template>-->
+                        </td>
                       </tr>
                     </tbody>
                   </table>

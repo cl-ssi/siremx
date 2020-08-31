@@ -194,7 +194,36 @@ class ReportController extends Controller
       
                     //dd($sql);
 
-      $patient = DB::select($sql,array(1));
+      $patient = DB::select($sql);
+
+   /*$patient = DB::table('exams AS T0')
+        ->leftjoin('patients AS T1', 'T0.patient_id', '=', 'T1.id')
+        ->leftjoin('communes AS CO', 'T0.comuna', '=', 'CO.code_deis')
+        ->leftjoin('establishments AS ES', 'T0.cesfam', '=', 'ES.new_code_deis')
+        ->leftjoin('establishments AS ES2', 'T0.establecimiento_realiza_examen', '=', 'ES2.new_code_deis')
+        ->select( 'T1.run',
+        'T1.dv',
+        'T1.name',
+        'T1.fathers_family',
+        'T1.mothers_family',
+        'T1.gender',
+        'T1.telephone',
+        'DATE_FORMAT(T1.birthday, \'%d/%m/%Y\') AS birthday',
+        'YEAR(CURDATE())-YEAR(T1.birthday) AS age',
+        'T1.address',
+        'DATE_FORMAT(T0.date_exam_order, \'%d/%m/%Y\') AS date_exam_order',
+        'DATE_FORMAT(T0.date_exam, \'%d/%m/%Y\') AS date_exam',
+        'DATE_FORMAT(T0.date_exam_reception, \'%d/%m/%Y\') AS date_exam_reception',
+        'T0.birards_mamografia',
+        'T0.birards_ecografia',
+        'T0.diagnostico',
+        'ES2.alias AS establecimiento_realiza_examen',
+        'T0.profesional_solicita',
+        'T0.medico',
+        'T0.servicio_salud',
+        'CO.name AS comuna_name',
+        'ES.alias AS cesfam_name')->paginate(20);
+      dd($patient);*/
 
        return $patient;
     }

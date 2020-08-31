@@ -76,7 +76,6 @@
                     'email'  : this.fillLogin.email,
                     'pass'   : this.fillLogin.pass,
                 }).then(response => {
-                    //console.log(response);
                     if(response.data.code == 401){
                         this.loginFailed();
                     }

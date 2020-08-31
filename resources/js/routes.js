@@ -145,6 +145,15 @@ export default new Router({
           }
         },
 
+        { path: '/patient/edit/:id',
+          name: 'patient.edit',
+          component: require('./components/modules/patient/edit').default,
+          beforeEnter: (to, from, next) => {
+            verifyAccess(to, from, next);
+          },
+          props: true
+         },
+
         { path: '/patient/create',
           name: 'patient.create',
           component: require('./components/modules/patient/create').default,

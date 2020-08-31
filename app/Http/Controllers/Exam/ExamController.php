@@ -35,8 +35,8 @@ class ExamController extends Controller
 
         
        $exams = Exam::with("patients")
-                    ->whereIn('patient_id',$patients_list)
-                    ->get();
+                    ->whereIn('patient_id',$patients_list)->orderBy('date_exam','DESC')
+                    ->take(1200)->get();
 
        return $exams;
     }
@@ -113,7 +113,9 @@ class ExamController extends Controller
 
         foreach($exams['exams'] as $exam) {
            
-            list($run,$dv) = explode('-',str_replace(".", "", $exam['RUN']));
+            //list($run,$dv) = explode('-',str_replace(".", "", $exam['RUN']));
+
+            list($run,$dv) = array_pad(explode('-',str_replace(".", "",$exam['RUN'])),2,null);
             //dd($dv);
             $patient_id = Patient::Where('run','LIKE','%'.$run.'%')->first('id');
             //dd($patient_id);
@@ -170,7 +172,9 @@ class ExamController extends Controller
 
                 $apellidos  = ($apellidos == NULL) ? ($apellidos = '') : $apellidos;
 
-                list($run,$dv) = explode('-',str_replace(".", "", trim($exam['RUN'])));
+                list($run,$dv) = array_pad(explode('-',str_replace(".", "",$exam['RUN'])),2,null);
+
+                //list($run,$dv) = explode('-',str_replace(".", "", trim($exam['RUN'])));
 
                 
                 $date_birthday = date('Y-m-d',strtotime(str_replace('/', '-',$exam['FECHA NAC'])));

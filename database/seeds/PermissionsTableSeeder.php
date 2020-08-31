@@ -42,7 +42,7 @@ class PermissionsTableSeeder extends Seeder
         ]);
         Permission::create([
             'name' => 'Permisos asociados al usuario',
-            'slug' => 'permission.index'
+            'slug' => 'user.permission'
         ]);
 
         Permission::create([
