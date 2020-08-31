@@ -7,7 +7,6 @@
             return {
                 fillLogin : {
                     userToken: this.$attrs.token
-
                 },
                 listRolePermissionsByUser: [],
                 listRolePermissionsByUserFilter: [],
@@ -23,7 +22,7 @@
             login() {
               
                 this.fullscreenLoading = true;
-                var  url = '/authenticate/logincu/'+this.fillLogin.userToken
+                var  url = '/authenticate/logincu/'+this.fillLogin.userToken;
                 axios.get(url).then(response => {
                     if(response.data.code == 401){
                         this.loginFailed();
