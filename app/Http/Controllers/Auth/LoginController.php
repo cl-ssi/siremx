@@ -49,10 +49,13 @@ class LoginController extends Controller
             $user_cu = json_decode($response);
 
             $u = User::where('run',$user_cu->RolUnico->numero)->first();
-            dd($u);
+            //dd($u);
             if($u) {
                 //$resp = Auth::login($u, true);
-                $resp = Auth::attempt(['email' => $u->email, 'password' => $u->password,'run' => $user_cu->RolUnico->numero, 'state' => 'A']);
+                if ($u->password == Request::getPassword()) {
+                    $resp = Auth::login($u->id);
+                }
+                //$resp = Auth::attempt(['email' => $u->email, 'password' => $u->password,'run' => $user_cu->RolUnico->numero, 'state' => 'A']);
                 if($resp) {
                     return response()->json([
                         'authUser' => Auth::user(),
