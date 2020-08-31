@@ -22,7 +22,7 @@
             login() {
               
                 this.fullscreenLoading = true;
-                var  url = '/authenticate/logincu/d6aa2fa7189d49379fac4de9eefb7ee3'+this.fillLogin.userToken;
+                var  url = '/authenticate/logincu/'+this.fillLogin.userToken;
                 axios.get(url).then(response => {
                     if(response.data.code == 401){
                         this.loginFailed();
