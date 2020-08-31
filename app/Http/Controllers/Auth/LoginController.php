@@ -52,7 +52,7 @@ class LoginController extends Controller
             if($u) {
                 $resp = Auth::login($u, true);
                 if($resp) {
-                    return redirect()->route('/');
+                    return Redirect::to('https://i.saludiquique.cl/sismam/');
                     /*return response()->json([
                         'authUser' => Auth::user(),
                         'code'     => 200
@@ -60,14 +60,14 @@ class LoginController extends Controller
                     ]);*/
                 }
                 else {
-                    return redirect()->route('/');
+                    return Redirect::to('https://i.saludiquique.cl/sismam/');
                     /*return response()->json([
                         'code'     => 401
                     ]);*/
                 }
             }
             else {
-                return redirect()->route('/');
+                return Redirect::to('https://i.saludiquique.cl/sismam/');
                 /*return response()->json([
                     'code'     => 401
                 ]);*/
