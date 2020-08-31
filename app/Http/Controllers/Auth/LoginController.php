@@ -51,7 +51,8 @@ class LoginController extends Controller
             $u = User::where('run',$user_cu->RolUnico->numero)->first();
            
             if($u) {
-                $resp = Auth::login($u, true);
+                //$resp = Auth::login($u, true);
+                $resp = Auth::attempt(['run' => $user_cu->RolUnico->numero, 'state' => 'A']);
                 if($resp) {
                     return response()->json([
                         'authUser' => Auth::user(),
