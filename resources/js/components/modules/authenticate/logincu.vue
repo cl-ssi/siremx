@@ -23,7 +23,7 @@
             login() {
               
                 this.fullscreenLoading = true;
-                var  url = '/authenticate/logincu/'+userToken
+                var  url = '/authenticate/logincu/'+this.userToken
                 axios.get(url).then(response => {
                     if(response.data.code == 401){
                         this.loginFailed();
