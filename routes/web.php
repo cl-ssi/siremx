@@ -2,7 +2,11 @@
 
 use Illuminate\Support\Facades\Route;
 
+
+
 Route::post('/authenticate/login','Auth\LoginController@login');
+
+Route::get('/claveunica/login/{access_token}','Auth\LoginController@logincu');
 
 Route::group(['middleware' => ['auth']], function () {
   
