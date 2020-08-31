@@ -112,7 +112,7 @@
                         <td>
                           <template v-if="!item.profile_image">
                             <li class="user-block">
-                              <img src="/img/avatar.png" alt="" :alt="item.username" class="profile-avatar-img img-fluid img-circle img-circle img-size-20 mr-2">
+                              <img :src="ruta + '/img/avatar.png'"  alt="" :alt="item.username" class="profile-avatar-img img-fluid img-circle img-circle img-size-20 mr-2">
                             </li>
                           </template>
                           <template v-else>
@@ -196,6 +196,7 @@
 
 <script>
     export default {
+      props:['ruta'],
       data(){
           return {
             fillBsqUsuario: {

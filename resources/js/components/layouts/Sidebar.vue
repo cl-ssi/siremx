@@ -2,7 +2,7 @@
     <aside class="main-sidebar sidebar-dark-info elevation-4">
         <!-- Brand Logo -->
         <a href="/dashboard" class="brand-link">
-          <img :src="ruta + '/img/avatar.png'"
+          <img :src="ruta + '/img/adminLteLogo.png'"
                alt="siremx logo"
                class="brand-image ">
           <span class="brand-text font-weight">SIREMX</span>

@@ -8,7 +8,7 @@
         <!-- Main Content Container -->
         <div  class="content-wrapper">
             <transition name="slide-fade" mode="out-in">
-                <router-view></router-view>
+                <router-view :ruta="ruta"></router-view>
             </transition>
         </div>
 
