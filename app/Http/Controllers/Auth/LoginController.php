@@ -60,14 +60,14 @@ class LoginController extends Controller
                     ]);*/
                 }
                 else {
-                    return redirect()->route('/login');
+                    return redirect()->route('/');
                     /*return response()->json([
                         'code'     => 401
                     ]);*/
                 }
             }
             else {
-                return redirect()->route('/login');
+                return redirect()->route('/');
                 /*return response()->json([
                     'code'     => 401
                 ]);*/
