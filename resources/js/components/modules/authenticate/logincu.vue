@@ -5,9 +5,7 @@
     export default {
         data() {
             return {
-                fillLogin : {
-                    userToken: this.$attrs.token
-                },
+                
                 listRolePermissionsByUser: [],
                 listRolePermissionsByUserFilter: [],
                 fullscreenLoading: false,
