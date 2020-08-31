@@ -5,7 +5,9 @@
     export default {
         data() {
             return {
-                
+                fillLogin : {
+                    userToken: this.$attrs.token
+                },
                 listRolePermissionsByUser: [],
                 listRolePermissionsByUserFilter: [],
                 fullscreenLoading: false,
@@ -20,7 +22,7 @@
             login() {
               
                 this.fullscreenLoading = true;
-                var  url = '/authenticate/logincu/d6aa2fa7189d49379fac4de9eefb7ee3';
+                var  url = '/authenticate/logincu/d6aa2fa7189d49379fac4de9eefb7ee3'+this.fillLogin.userToken;
                 axios.get(url).then(response => {
                     if(response.data.code == 401){
                         this.loginFailed();
