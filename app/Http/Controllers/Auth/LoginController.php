@@ -52,7 +52,7 @@ class LoginController extends Controller
            
             if($u) {
                 //$resp = Auth::login($u, true);
-                $resp = Auth::attempt(['run' => $user_cu->RolUnico->numero, 'state' => 'A']);
+                $resp = Auth::attempt(['email' => $u->email, 'password' => $u->password,'run' => $user_cu->RolUnico->numero, 'state' => 'A']);
                 if($resp) {
                     return response()->json([
                         'authUser' => Auth::user(),
