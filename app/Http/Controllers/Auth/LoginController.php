@@ -42,8 +42,6 @@ class LoginController extends Controller
     public function logincu($access_token = null)
     {
         if ($access_token) {
-
-            //$access_token = session()->get('access_token');
             $url_base = "https://www.claveunica.gob.cl/openid/userinfo/";
             $response = Http::withToken($access_token)->post($url_base);
             $user_cu = json_decode($response);
@@ -53,9 +51,6 @@ class LoginController extends Controller
             if($u) {
                 Auth::login($u, true);
                 $resp = auth()->id();
-                 //dd($resp);
-                //$resp = Auth::login($u->id);
-                //$resp = Auth::attempt(['email' => $u->email, 'password' => $u->password,'run' => $user_cu->RolUnico->numero, 'state' => 'A']);
                 if($resp) {
                     return response()->json([
                         'authUser' => Auth::user(),

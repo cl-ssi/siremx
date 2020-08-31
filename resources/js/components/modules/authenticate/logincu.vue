@@ -50,21 +50,6 @@
                 sessionStorage.setItem('authUser', JSON.stringify(authUser));
                 this.loginSuccess();
             },
-            validateLogin() {
-                this.error = 0;
-                this.messageError = [];
-
-                if(!this.fillLogin.email) {
-                    this.messageError.push("Email es un campo obligatorio")
-                }
-                if(!this.fillLogin.pass) {
-                    this.messageError.push("Password es un campo obligatorio")
-                }
-                if(this.messageError.length) {
-                    this.error = 1;
-                }
-                return this.error;
-            },
             loginFailed() {
                 this.$router.push({name: 'login'})
             },

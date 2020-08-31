@@ -2,7 +2,7 @@
     <aside class="main-sidebar sidebar-dark-info elevation-4">
         <!-- Brand Logo -->
         <a href="/dashboard" class="brand-link">
-          <img :src="ruta + '/img/adminLteLogo.png'"
+          <img :src="ruta + '/img/avatar.png'"
                alt="siremx logo"
                class="brand-image ">
           <span class="brand-text font-weight">SIREMX</span>
@@ -183,8 +183,8 @@
           var  url = '/authenticate/logout'
           axios.post(url).then(response => {
             if(response.data.code == 204){
-              this.$router.push({name: 'login'})
               location.reload();
+              this.$router.push({name: 'login'})
               sessionStorage.clear();
               this.fullscreenLoading = false;
             }
