@@ -94,7 +94,7 @@
                   <div class="form-row">
                       <fieldset class="form-group col-4">
                           <label>Servicio de Salud</label>
-                           <el-select v-model="fillCreateExam.ServicioSalud" 
+                           <el-select v-model="fillCreateExam.servicioSalud" 
                               placeholder="Seleccione"
                               clearable>
                                 <el-option
@@ -105,6 +105,21 @@
                                 </el-option>
                            </el-select>
                       </fieldset>
+
+                      <fieldset class="form-group col-4">
+                          <label>Comuna</label>
+                          <el-select v-model="fillCreateExam.commune" filterable
+                            placeholder="Seleccione"
+                            clearable>
+                              <el-option
+                                v-for="item in listCommunes"
+                                :key="item.id"
+                                :label="item.code_deis+' - '+item.name"
+                                :value="item.code_deis">
+                              </el-option>
+                          </el-select>
+                      </fieldset>
+
                   </div>
                   <hr>
                   <div class="form-row">
@@ -116,8 +131,8 @@
                                 <el-option
                                   v-for="item in listEstablishments"
                                   :key="item.id"
-                                  :label="item.alias"
-                                  :value="item.id">
+                                  :label="item.new_code_deis+' - '+item.alias"
+                                  :value="item.new_code_deis">
                                 </el-option>
                            </el-select>
                       </fieldset>
@@ -146,8 +161,8 @@
                                 <el-option
                                   v-for="item in listEstablishments"
                                   :key="item.id"
-                                  :label="item.alias"
-                                  :value="item.id">
+                                  :label="item.new_code_deis+' - '+item.alias"
+                                  :value="item.new_code_deis">
                                 </el-option>
                            </el-select>
                       </fieldset>
@@ -236,8 +251,8 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title"> Sismam</h5>
-                    <button class="close" @click="abrirModal"></button>
+                    <h5 class="modal-title"> Siremx</h5>
+                    <button class="close" @click="abrirModal"><i class="fas fa-times"></i> </button>
                 </div>
                 <div class="modal-body">
                     <div class="callout callout-danger" v-for="(item, index) in mensajeError" :key="index" v-text="item">
@@ -267,7 +282,7 @@
               gender: '',
               telephone: '',
               age: '',
-              listServicioSalud: '',
+              servicioSalud: '',
               establishmentRequest: '',
               professional: '',
               date_exam_order: '',
@@ -279,8 +294,10 @@
               listBIRADSEcoMam: '',
               date_exam_reception: '',
               diagnostic: '',
-              exams: ''
+              exams: '',
+              commune: ''
             },
+            listCommunes: [],
             listEstablishments: [],
             listGender: [
               {value: 'female', label: 'Femenino'},
@@ -298,14 +315,14 @@
               {value: 'noduloBilateral', label: 'NODULO BILATERAL'}
             ],
             listBIRADS: [
-              {value: 'I', label: 'I'},
-              {value: 'II', label: 'II'},
-              {value: 'III', label: 'III'},
-              {value: 'IV', label: 'IV'},
-              {value: 'V', label: 'V'},
-              {value: 'VI', label: 'VI'},
-              {value: 'NSP', label: 'NSP'},
-              {value: '0', label: '0'}
+              {value: '0', label: '0'},
+              {value: '1', label: 'I'},
+              {value: '2', label: 'II'},
+              {value: '3', label: 'III'},
+              {value: '4', label: 'IV'},
+              {value: '5', label: 'V'},
+              {value: '6', label: 'VI'},
+              {value: 'NSP', label: 'NSP'}
             ],
             form: new FormData,
             fullscreenLoading: false,
@@ -326,6 +343,7 @@
       },
       mounted(){
         this.getListEstablishments();
+        this.getListCommunes();
       },
       methods: {
         limpiarCriterios(){
@@ -425,17 +443,43 @@
             this.fullscreenLoading = false;
           })*/
         },
+        getListCommunes() {
+          var route = '/administracion/communes/getListCommunes'
+          axios.get(route).then( response => {
+            this.listCommunes = response.data;
+          }).catch(error => {
+              if(error.response.status == 401){
+                this.$router.push({name: 'login'})
+                location.reload();
+                sessionStorage.clear();
+                this.fullscreenLoading = false;
+              }
+          })
+        },
         setRegisterExam() {
             
-            /*if(this.validarRegistrarUsuario()) {
-                console.log("en agregar");
+            if(this.validForm()) {
                 this.modalShow = true;
                 return;
-            }*/
-            this.fullscreenLoading = true;
-            this.setStoreExam();
+            }
+            
+            
+            Swal.fire({
+            title: '¿Desea cargar el registro?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Si, cargar'
+          }).then((result) => {
+              if (result.value) {
+                this.setStoreExam();
+            }
+          })
+            
         },
         setStoreExam(){
+          this.fullscreenLoading = true;
           var  url = '/exam/setStoreExam'
           axios.post(url, {
             'idPatient'      : this.fillCreateExam.idPatient,
@@ -448,7 +492,8 @@
             'birthday'       : this.fillCreateExam.birthday,
             'telephone'      : this.fillCreateExam.telephone,
             'age': this.fillCreateExam.teleagephone,
-            'listServicioSalud': this.fillCreateExam.listServicioSalud,
+            'servicioSalud': this.fillCreateExam.servicioSalud,
+            'commune': this.fillCreateExam.commune,
             'establishmentRequest': this.fillCreateExam.establishmentRequest,
             'professional': this.fillCreateExam.professional,
             'date_exam_order': this.fillCreateExam.date_exam_order,
@@ -474,14 +519,11 @@
               }
           })
         },
-        validarRegistrarUsuario() {
+        validForm() {
             this.error = 0;
             this.mensajeError = [];
             if(!this.fillCreateExam.run) {
                 this.mensajeError.push("Run campo obligatorio")
-            }
-            if(!this.fillCreateExam.dv) {
-                this.mensajeError.push("Digito Verificador es un campo obligatorio")
             }
             if(!this.fillCreateExam.name) {
                 this.mensajeError.push("Nombre es un campo obligatorio")
@@ -489,14 +531,32 @@
             if(!this.fillCreateExam.fathers_family) {
                 this.mensajeError.push("Apellido Paterno es un campo obligatorio")
             }
-            if(!this.fillCreateExam.mothers_family) {
-                this.mensajeError.push("Apellido Materno es un campo obligatorio")
+            if(!this.fillCreateExam.servicioSalud) {
+                this.mensajeError.push("Servicio de Salud es un campo obligatorio")
             }
-            if(!this.fillCreateExam.gender) {
-                this.mensajeError.push("El Genero es un campo obligatorio")
+            if(!this.fillCreateExam.establishmentRequest) {
+                this.mensajeError.push("Establecimiento que solicita es un campo obligatorio")
             }
-            if(!this.fillCreateExam.birthday) {
-                this.mensajeError.push("Fecha de Nacimiento es un campo obligatorio")
+            if(!this.fillCreateExam.professional) {
+                this.mensajeError.push("Profesional que solicita es un campo obligatorio")
+            }
+            if(!this.fillCreateExam.date_exam_order) {
+                this.mensajeError.push("Fecha de solicitud de exámen es un campo obligatorio")
+            }
+            if(!this.fillCreateExam.establishmentExam) {
+                this.mensajeError.push("Establecimiento donde toma exámen es un campo obligatorio")
+            }
+            if(!this.fillCreateExam.doctor) {
+                this.mensajeError.push("Médico es un campo obligatorio")
+            }
+            if(!this.fillCreateExam.date_exam) {
+                this.mensajeError.push("Fecha de toma de exámen es un campo obligatorio")
+            }
+            if(!this.fillCreateExam.listBIRADSMam) {
+                this.mensajeError.push("Birard Mamografía es un campo obligatorio")
+            }
+            if(!this.fillCreateExam.listBIRADSEcoMam) {
+                this.mensajeError.push("Birards Eco-Mamografía es un campo obligatorio")
             }
 
             //console.log("en Validar"+this.mensajeError)

@@ -163,7 +163,7 @@
                       <td v-text="item.date_exam_reception"></td>
                       <td v-text="item.birards_mamografia"></td>
                       <td v-text="item.birards_ecografia"></td>
-                      <td v-text="item.Médico"></td>
+                      <td v-text="item.medico"></td>
                     </tr>
                  
                   </table>

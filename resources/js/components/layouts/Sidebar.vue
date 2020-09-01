@@ -71,6 +71,14 @@
                         </router-link>
                       </template>
                     </li>
+                    <li class="nav-item">
+                      <template v-if="listPermissions.includes('examLoadHistory.load')">
+                        <router-link class="nav-link" :to="'/examLoadHistory'" >
+                          <i class="far fa-circle nav-icon"></i>
+                          <p>Historial de Cargas</p>
+                        </router-link>
+                      </template>
+                    </li>
                   </ul>
                 </li>
               </template>

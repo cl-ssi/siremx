@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Exam;
 
 use App\Exam;
 use App\Patient;
+use App\Load;
 
 use Carbon\Carbon;
 
@@ -12,6 +13,73 @@ use Illuminate\Http\Request;
 
 class ExamController extends Controller
 {
+    public function getExamById(Request $request)
+    {
+       if(!$request->ajax()) return redirect('/');
+    
+       $idExam  = $request->idExam;
+       $idExam  = ($idExam == NULL) ? ($idExam = '') : $idExam;
+
+       //dd($idExam );
+       
+       $exam = Exam::Where('id','=',$idExam)->get();
+
+       return $exam;
+    }
+
+    public function setEditExam(Request $request)
+    {
+       if(!$request->ajax()) return redirect('/');
+
+       $idExam      = $request->idExam;
+       $servicioSalud            = $request->servicioSalud;
+       $commune             = $request->commune; 
+       $establishmentRequest           = $request->establishmentRequest;
+       $date_exam_order = $request->date_exam_order;
+       $establishmentExam = $request->establishmentExam;
+       $doctor         = $request->doctor;
+       $date_exam       = $request->date_exam;
+       $derivation      = $request->derivation;
+       $listBIRADSMam        = $request->listBIRADSMam;
+       $listBIRADSEcoMam        = $request->listBIRADSEcoMam;
+       $date_exam_reception        = $request->date_exam_reception;
+       $diagnostic        = $request->diagnostic;
+       
+
+       $idExam      = ($idExam == NULL) ? ($idExam = 0) : $idExam;
+       $servicioSalud            = ($servicioSalud == NULL) ? ($servicioSalud = '') : $servicioSalud;
+       $commune             = ($commune == NULL) ? ($commune = '') : $commune;
+       $establishmentRequest           = ($establishmentRequest == NULL) ? ($establishmentRequest = '') : $establishmentRequest;
+       $date_exam_order = ($date_exam_order == NULL) ? ($date_exam_order = '') : $date_exam_order;
+       $establishmentExam = ($establishmentExam == NULL) ? ($establishmentExam = '') : $establishmentExam;
+       $doctor         = ($doctor == NULL) ? ($doctor = '') : $doctor;
+       $date_exam       = ($date_exam == NULL) ? ($date_exam = '') : $date_exam;
+       $derivation      = ($derivation == NULL) ? ($derivation = '') : $derivation;
+       $listBIRADSMam        = ($listBIRADSMam == 0) ? ($listBIRADSMam = NULL) : $listBIRADSMam;
+       $listBIRADSEcoMam        = ($listBIRADSEcoMam == 0) ? ($listBIRADSEcoMam = NULL) : $listBIRADSEcoMam;
+       $date_exam_reception        = ($date_exam_reception == NULL) ? ($date_exam_reception = '') : $date_exam_reception;
+       $diagnostic        = ($diagnostic == NULL) ? ($diagnostic = '') : $diagnostic;
+
+       $exam = Exam::find($idExam);
+       $exam->servicio_salud   = $servicioSalud;
+       $exam->comuna   = $commune;
+       $exam->cesfam   = $establishmentRequest;
+       $exam->date_exam_order   = $date_exam_order;
+       $exam->establecimiento_realiza_examen   = $establishmentExam;
+       $exam->medico   = $doctor;
+       $exam->date_exam   = $date_exam;
+       $exam->derivation_reason   = $derivation;
+       $exam->birards_mamografia   = $listBIRADSMam;
+       $exam->birards_ecografia   = $listBIRADSEcoMam;
+       $exam->date_exam_reception   = $date_exam_reception;
+       $exam->diagnostico   = $diagnostic;
+       $exam->updated_at  = date("Y-m-d");
+       $exam->save();
+
+
+       //return $user;
+    }
+
     public function getListExams(Request $request)
     {
        if(!$request->ajax()) return redirect('/');
@@ -54,7 +122,8 @@ class ExamController extends Controller
        $gender                = $request->gender;
        $birthday              = $request->birthday;
        $telephone             = $request->telephone;
-       $servicioSalud         = $request->listServicioSalud;
+       $servicioSalud         = $request->servicioSalud;
+       $commune         = $request->commune;
        $establishmentRequest  = $request->establishmentRequest;
        $professional          = $request->professional;
        $date_exam_order       = $request->date_exam_order;
@@ -62,11 +131,13 @@ class ExamController extends Controller
        $doctor                = $request->doctor;
        $date_exam             = $request->date_exam;
        $derivation            = $request->derivation;
-       $birardsMam         = $request->listBIRADSMam;
-       $birardsEco      = $request->listBIRADSEcoMam;
+       $birardsMam            = $request->listBIRADSMam;
+       $birardsEco            = $request->listBIRADSEcoMam;
        $date_exam_reception   = $request->date_exam_reception;
        $diagnostic            = $request->diagnostic;
 
+       $birardsMam  = ($birardsMam == 0) ? ($birardsMam = NULL) : $birardsMam;
+       $birardsEco  = ($birardsEco == 0) ? ($birardsEco = NULL) : $birardsEco;
 
       /* $cName  = ($cName == NULL) ? ($cName = '') : $cName;
        $cFathers_family = ($cFathers_family == NULL) ? ($cFathers_family = '') : $cFathers_family;
@@ -83,6 +154,7 @@ class ExamController extends Controller
         $exams = new Exam();
         $exams->servicio_salud   = $servicioSalud;
         $exams->profesional_solicita   = $professional;
+        $exams->comuna   = $commune;
         $exams->establecimiento_realiza_examen   = $establishmentExam;
         $exams->cesfam   = $establishmentRequest;
         $exams->medico   = $doctor;
@@ -91,8 +163,10 @@ class ExamController extends Controller
         $exams->date_exam_order      = $date_exam_order;
         $exams->date_exam            = $date_exam;
         $exams->date_exam_reception  = $date_exam_reception;
+        $exams->derivation_reason    = $derivation;
         $exams->birards_mamografia   = $birardsMam;
         $exams->birards_ecografia    = $birardsEco;
+        $exams->diagnostico          = $diagnostic;
         $exams->load_source          = 'app';
         $exams->load_id              = 1;
         $exams->user_id              = 1;
@@ -104,12 +178,18 @@ class ExamController extends Controller
 
     public function setLoadExams(Request $request)
     {
-        //dd($request['exams']);
-        //dd(json_decode($request->getContent(), true));
-        //DB::statement('DELETE FROM cambio_turnos');
 
-        $exams = json_decode($request->getContent(), true);
-        //dd($turnos['operadores']);
+        if(!$request->ajax()) return redirect('/');
+
+        $title        = $request->title;
+        $description  = $request->description;
+        $exams        = json_decode($request->getContent(), true);
+
+        $load = new Load();
+        $load->title       = $title;
+        $load->description = $description;
+        $load->save();
+        
 
         foreach($exams['exams'] as $exam) {
            
@@ -245,7 +325,7 @@ class ExamController extends Controller
             $examDet->birards_mamografia   = $birardsMam;
             $examDet->birards_ecografia    = $birardsEco;
             $examDet->load_source          = 'excel';
-            $examDet->load_id              = 1;
+            $examDet->load_id              = $load->id;
             $examDet->user_id              = 1;
             $examDet->patient_id           = $idInsertPatient;
             $examDet->save();

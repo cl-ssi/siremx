@@ -89,6 +89,10 @@ class PermissionsTableSeeder extends Seeder
             'slug' => 'exam.index'
         ]);
         Permission::create([
+            'name' => 'Editar Exámen',
+            'slug' => 'exam.edit'
+        ]);
+        Permission::create([
             'name' => 'Crear Exámen',
             'slug' => 'exam.create'
         ]);
@@ -99,6 +103,10 @@ class PermissionsTableSeeder extends Seeder
         Permission::create([
             'name' => 'Cargar Exámenes Masivamente',
             'slug' => 'exam.load'
+        ]);
+        Permission::create([
+            'name' => 'Listado de Cargas Exámenes Masivamente',
+            'slug' => 'examLoadHistory.load'
         ]);
         // REPORTES
         Permission::create([

@@ -5,7 +5,7 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0 text-dark">Ordenes de Exámen</h1>
+            <h1 class="m-0 text-dark">Historial de carga masiva</h1>
           </div><!-- /.col -->
         </div><!-- /.row -->
       </div><!-- /.container-fluid -->
@@ -16,16 +16,13 @@
       <div class="card">
         <div class="card-header">
           <div class="card-tools">
-            <router-link class="btn btn-info btn-sm" :to="'/exam/create'">
-              <i class="fas fa-plus-square"></i> Registrar Exámen
-            </router-link>
           </div>
         </div>
         <div class="card-body">
           <div class="container-fluid">
             <div class="card card-secondary">
               <div class="card-header">
-                <h3 class="card-title">Criterios de Búsqueda</h3>
+                <h3 class="card-title">Búsqueda</h3>
                 <div class="card-tools">
                     <button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip" title="Collapse">
                           <i class="fas fa-minus"></i>
@@ -34,35 +31,22 @@
               </div>
               <div class="card-body">
                 <form role="form">
-                    <div class="form-row">
-                      <fieldset class="form-group col-4">
-                          <label>Run</label>
-                          <input type="text" class="form-control" v-model="fillBsqUsuario.nRun" @keyup.enter="getListarUsuarios">
-                          <small class="form-text text-muted">Utilizar: 11111111-1</small>
-                      </fieldset>
-                      <fieldset class="form-group col-1">
-                        <label>DV</label>
-                          <input type="text" class="form-control" v-model="fillBsqUsuario.dv" @keyup.enter="getListarUsuarios">
-                      </fieldset>
+                  <div class="row">
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label class="col-md-3 col-form-label">Título</label>
+                        <div class="col-md-9">
+                          <input type="text" class="form-control" v-model="fillBsqPermission.name" @keyup.enter="getlistLoads">
+                        </div>
+                      </div>
+                    </div>
                   </div>
-
-                  <div class="form-row">
-                      <fieldset class="form-group col-4">
-                          <label>Nombre</label>
-                           <input type="text" class="form-control" v-model="fillBsqUsuario.cName" @keyup.enter="getListarUsuarios">
-                      </fieldset>
-                      <fieldset class="form-group col-4">
-                        <label>Apellido Paterno</label>
-                           <input type="text" class="form-control" v-model="fillBsqUsuario.cFathers_family" @keyup.enter="getListarUsuarios">
-                      </fieldset>
-                  </div>
-
                 </form>
               </div>
               <div class="card-footer">
                 <div class="row">
                   <div class="col-md-4 offset-4">
-                    <button class="btn btn-flat btn-info btnWidth" @click.prevent="getListarUsuarios">Buscar</button>
+                    <button class="btn btn-flat btn-info btnWidth" @click.prevent="getlistLoads">Buscar</button>
                     <button class="btn btn-flat btn-default btnWidth" @click.prevent="limpiarCriteriosBsq">Limpiar</button>
                   </div>
                 </div>
@@ -73,36 +57,25 @@
                 <h3 class="card-title">Bandeja de Resultados</h3>
               </div>
               <div class="card-body table-responsive">
-                <template v-if="listarUsuariosPaginated.length">
+                <template v-if="listPermissionsPaginated.length">
                   <table class="table table-hover table-sm  table-striped table-header-fixed text-nowrap table-valign-middle projects">
                     <thead>
-                      <th>Nº Orden</th>
-                      <th>Fecha Orden</th>
-                      <th>Rut</th>
-                      <th>Apellidos</th>
-                      <th>Nombre</th>
-                      <th>F. Nacimiento</th>
-                      <th></th>
+                      <th>ID</th>
+                      <th>Título</th>
+                      <th>Descripción</th>
+                      <th>Fecha carga</th>
+                      <th class="text-right"></th>
                     </thead>
                     <tbody>
-                      <tr v-for="(item, index) in listarUsuariosPaginated" :key="index">
+                      <tr v-for="(item, index) in listPermissionsPaginated" :key="index">
                         <td v-text="item.id"></td>
-                        <td v-text="item.date_exam"></td>
-                        <td v-text="item.patients.run+'-'+item.patients.dv"></td>
-                        <td v-text="item.patients.fathers_family+' '+item.patients.mothers_family"></td>
-                        <td v-text="item.patients.name"></td>
-                        <td v-text="item.patients.birthday"></td>
+                        <td v-text="item.title"></td>
+                        <td v-text="item.description"></td>
+                        <td >{{ item.updated_at | moment("DD-MM-YYYY h:mm") }}</td>
                         <td class="text-right">
-                          <template v-if="listRolePermissionsByUser.includes('exam.view')"> 
-                              <router-link class="btn btn-xs btn-default" :to="{name: 'exam.view', params: {id: item.patient_id}}">
-                                <i class="fas fa-history"></i> 
-                              </router-link>
-                          </template>
-                          <template v-if="listRolePermissionsByUser.includes('exam.edit')">
-                              <router-link class="btn btb-flat btn-xs btn-default" :to="{name: 'exam.edit', params: {id: item.id}}">
-                                <i class="fas fa-pencil-alt"></i> 
-                              </router-link>
-                          </template>
+                           <button class="btn btb-flat btn-xs btn-default"  @click.prevent="setDelete(item.id)">
+                                <i class="fas fa-trash text-danger"></i> 
+                            </button>
                         </td>
                       </tr>
                     </tbody>
@@ -140,36 +113,30 @@
     export default {
       data(){
           return {
-            fillBsqUsuario: {
-              nRun: '',
-              cName: '',
-              cFathers_family: ''
+            fillBsqPermission: {
+              name: '',
+              url: ''
             },
-            listUsuarios: [],
-            listRolePermissionsByUser: JSON.parse(sessionStorage.getItem('listRolePermissionsByUser')),
-            listEstados: [
-              {value: 'A', label: 'Activo'},
-              {value: 'I', label: 'Inactivo'}
-            ],
+            listPermissions: [],
             pageNumber: 0,
-            perPage: 50
+            perPage: 10
           }
       },
       computed: {
         //  Obtener el número de páginas
         pageCount() {
-          let a = this.listUsuarios.length,
+          let a = this.listPermissions.length,
               b = this.perPage;
               return Math.ceil(a/b);
         },
         // Obtener registros paginados
-        listarUsuariosPaginated() {
+        listPermissionsPaginated() {
           let inicio = this.pageNumber * this.perPage,
               fin    = inicio + this.perPage;
-          return this.listUsuarios.slice(inicio,fin)
+          return this.listPermissions.slice(inicio,fin)
         },
         pagesList() {
-          let a = this.listUsuarios.length,
+          let a = this.listPermissions.length,
               b = this.perPage;
               let pageCount = Math.ceil(a/b);
               let count = 0;
@@ -182,27 +149,27 @@
               return pagesArray;
         },
       },
+      mounted() {
+        this.getlistLoads();
+      },
       methods: {
         limpiarCriteriosBsq(){
-          this.fillBsqUsuario.nRun  = '';
-          this.fillBsqUsuario.cName = '';
-          this.fillBsqUsuario.cFathers_family  = '';
+          this.fillBsqPermission.name  = '';
         },
         limpiarBandejaUsuarios(){
-          this.listUsuarios = [];
+          this.listPermissions = [];
         },
-        getListarUsuarios(){
-          var url = '/exam/getListExams'
+        getlistLoads(){
+          var url = '/load/getListLoads'
           axios.get(url, {
             params: {
-              'nRun' : this.fillBsqUsuario.nRun,
-              'cName' : this.fillBsqUsuario.cName,
-              'cFathers_family': this.fillBsqUsuario.cFathers_family,
+              'title' : this.fillBsqPermission.name,
+              'url'  : this.fillBsqPermission.url,
             }
           }).then(response => {
             console.log(response.data);
-            this.inicializarPaginacion();
-            this.listUsuarios = response.data;
+            this.initPaginated();
+            this.listPermissions = response.data;
           }).catch(error => {
               if(error.response.status == 401){
                 this.$router.push({name: 'login'})
@@ -211,6 +178,9 @@
                 this.fullscreenLoading = false;
               }
           })
+        },
+        setDelete(id){
+          console.log(id)
         },
         nextPage() {
           this.pageNumber++;
@@ -221,7 +191,7 @@
         selectPage(page) {
           this.pageNumber = page;
         },
-        inicializarPaginacion() {
+        initPaginated() {
           this.pageNumber = 0;
         }
       }

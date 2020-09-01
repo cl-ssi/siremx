@@ -176,6 +176,15 @@ export default new Router({
           }
         },
 
+        { path: '/exam/edit/:id',
+          name: 'exam.edit',
+          component: require('./components/modules/exam/edit').default,
+          beforeEnter: (to, from, next) => {
+            verifyAccess(to, from, next);
+          },
+          props: true
+         },
+
         { path: '/exam/create',
           name: 'exam.create',
           component: require('./components/modules/exam/create').default,
@@ -196,6 +205,24 @@ export default new Router({
         { path: '/examLoad',
           name: 'exam.load',
          component: require('./components/modules/exam/load').default
+         ,
+         beforeEnter: (to, from, next) => {
+           let authUser = JSON.parse(sessionStorage.getItem('authUser'));
+           if(authUser) {
+             let listRolePermissionsByUser = JSON.parse(sessionStorage.getItem('listRolePermissionsByUser'));
+             if(listRolePermissionsByUser.includes(to.name)) {
+               next();
+             }
+             else {
+               next(from.path);
+             }
+           }
+         }
+        },
+
+        { path: '/examLoadHistory',
+          name: 'examLoadHistory.load',
+         component: require('./components/modules/exam/loadHistory').default
          ,
          beforeEnter: (to, from, next) => {
            let authUser = JSON.parse(sessionStorage.getItem('authUser'));

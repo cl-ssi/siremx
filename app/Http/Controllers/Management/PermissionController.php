@@ -27,8 +27,6 @@ class PermissionController extends Controller
        else{
          $permissions = Permission::Where('id','=',$idPermission)->orderBy('slug', 'asc')->get();
        }
-       
-       
 
        return $permissions->toArray();
     }

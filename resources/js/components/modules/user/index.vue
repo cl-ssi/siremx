@@ -57,7 +57,7 @@
                   <div class="row">
                     <div class="col-md-6">
                       <div class="form-group">
-                        <label class="col-md-3 col-form-label">Correo Electronico</label>
+                        <label class="col-md-4 col-form-label">Correo Electronico</label>
                         <div class="col-md-9">
                           <input type="text" class="form-control" v-model="fillBsqUsuario.cCorreo" @keyup.enter="getListarUsuarios">
                         </div>
@@ -121,7 +121,7 @@
                             </li>
                           </template>
                         </td>
-                        <td v-text="item.fullname"></td>
+                         <td v-text="item.firstname+' '+item.secondname+' '+item.lastname"></td>
                         <td v-text="item.email"></td>
                         <td v-text="item.username"></td>
                         <td>

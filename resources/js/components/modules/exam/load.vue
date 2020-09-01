@@ -105,6 +105,23 @@
         </div>
       </div>
     </div>
+    <div class="modal fade" :class="{show: modalShow}" :style=" modalShow ? mostrarModal : ocultarModal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"> Siremx</h5>
+                    <button class="close" @click="abrirModal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="callout callout-danger" v-for="(item, index) in mensajeError" :key="index" v-text="item">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" @click="abrirModal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
   </div>
   
 </template>
@@ -123,7 +140,18 @@
               file: '',
               title: '',
               description: ''
-            }
+            },
+            fullscreenLoading: false,
+            modalShow: false,
+            mostrarModal: {
+              display: 'block',
+              background: '#0000006b',
+            },
+            ocultarModal: {
+                display: 'none',
+            },
+            error: 0,
+            mensajeError: []
           }
       },
       computed: {
@@ -132,6 +160,10 @@
       methods: {
         limpiarCriteriosBsq(){
           this.fillSetLoad.file  = '';
+        },
+
+        abrirModal(){
+            this.modalShow = !this.modalShow;
         },
         limpiarBandejaUsuarios(){
           this.examsData = [];
@@ -239,6 +271,11 @@
         },
 
         storeExcel() {
+          if(this.validForm()) {
+            this.modalShow = true;
+            return;
+          }
+
           Swal.fire({
             title: '¿Está Seguro de desea cargar el archivo?',
             icon: 'warning',
@@ -248,9 +285,13 @@
             confirmButtonText: 'Cargar'
           }).then((result) => {
               if (result.value) {
+
                 let post = {
                   exams: this.examsData,
+                  title: this.fillSetLoad.title,
+                  description: this.fillSetLoad.description,
                 };
+
                 // AQUI IRA LA CONFIRMACIÓN DEL BOTON Y PETICIÓN DEL SERVIDOR
                 var  url = '/exam/setLoadExams'
 
@@ -275,6 +316,25 @@
           }) 
 
         },
+        validForm() {
+            this.error = 0;
+            this.mensajeError = [];
+
+            if(!this.fillSetLoad.title) {
+                this.mensajeError.push("Ingrese un título para cargar")
+            }
+            if(!this.fillSetLoad.description) {
+                this.mensajeError.push("Ingrese una descripción de la carga")
+            }
+            if(!this.examsData.length) {
+                this.mensajeError.push("Debe ingresar un archivo de carga")
+            }
+        
+            if(this.mensajeError.length) {
+                this.error = 1;
+            }
+            return this.error;
+        }
 
       }
     }

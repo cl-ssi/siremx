@@ -69,7 +69,7 @@
                     </div>
                     <div class="col-md-6">
                       <div class="form-group">
-                        <label class="col-md-3 col-form-label">Correo Electronico</label>
+                        <label class="col-md-4 col-form-label">Correo Electronico</label>
                         <div class="col-md-9">
                           <input type="text" class="form-control" v-model="fillCrearUsuario.cCorreo" @keyup.enter="setRegistrarUsuario">
                         </div>

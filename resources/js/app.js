@@ -12,7 +12,10 @@ import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 import locale from 'element-ui/lib/locale/lang/es'
 
+//Vue.config.performance = true;
+
 Vue.use(ElementUI, { locale })
+Vue.use(require('vue-moment'));
 
 import Swal from 'sweetalert2';
 window.Swal = Swal;
