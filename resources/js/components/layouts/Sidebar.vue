@@ -50,16 +50,24 @@
                   <a href="#" class="nav-link">
                     <i class="nav-icon fas fa-notes-medical"></i>
                     <p>
-                      Mamografías
+                      Examen Mamario
                       <i class="right fas fa-angle-left"></i>
                     </p>
                   </a>
                   <ul class="nav nav-treeview" style="display: none;">
                     <li class="nav-item">
+                      <template v-if="listPermissions.includes('exam.create')">
+                        <router-link class="nav-link" :to="'/examCreate'" >
+                          <i class="far fa-circle nav-icon"></i>
+                          <p>Hito1 - Ingreso</p>
+                        </router-link>
+                      </template>
+                    </li>
+                    <li class="nav-item">
                       <template v-if="listPermissions.includes('exam.index')">
                         <router-link class="nav-link" :to="'/exam'" >
                           <i class="far fa-circle nav-icon"></i>
-                          <p>Ingreso de Exámen</p>
+                          <p>Hito2 - Ingreso Resultado</p>
                         </router-link>
                       </template>
                     </li>
@@ -94,17 +102,25 @@
                 </li>
               </template>
               
-              <template v-if="listPermissions.includes('patientHistory.index','reportMX.index','reportMXBirards.index','reportBirardsAge.index')">
+              <template v-if="listPermissions.includes('patientHistoryClinical.index')">
                 <li class="nav-header">REPORTES</li>
                 <li class="nav-item has-treeview">
                   <a href="#" class="nav-link">
                     <i class="nav-icon fas fa-notes-medical"></i>
                     <p>
-                      Mamografías
+                      Examenes Mamarios
                       <i class="right fas fa-angle-left"></i>
                     </p>
                   </a>
                   <ul class="nav nav-treeview" style="display: none;">
+                    <li class="nav-item">
+                      <template v-if="listPermissions.includes('patientHistoryClinical.index')">
+                        <router-link class="nav-link" :to="'/patientHistoryClinical'" >
+                          <i class="fas fa-file-contract nav-icon"></i>
+                          <p>Cartola Paciente</p>
+                        </router-link>
+                      </template>
+                    </li>
                     <li class="nav-item">
                       <template v-if="listPermissions.includes('patientHistory.index')">
                         <router-link class="nav-link" :to="'/patientHistory'" >

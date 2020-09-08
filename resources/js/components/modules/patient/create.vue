@@ -203,9 +203,9 @@
                 return;
             }
             this.fullscreenLoading = true;
-            this.setGuardarUsuario();
+            this.setStorePatient();
         },
-        setGuardarUsuario(){
+        setStorePatient(){
           var  url = '/administracion/patient/setStorePatient'
           axios.post(url, {
             'run'            : this.fillCreatePatient.run,

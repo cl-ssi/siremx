@@ -22,6 +22,8 @@ class CreateEstablishmentsTable extends Migration
             $table->string('new_code_deis');
             $table->string('service');
             $table->string('dependency');
+            $table->string('exam_emits')->nullable()->default('N');
+            $table->string('exam_center')->nullable()->default('N');
 
             $table->unsignedBigInteger('commune_id');
 

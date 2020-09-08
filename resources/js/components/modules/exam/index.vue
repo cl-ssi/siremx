@@ -5,7 +5,7 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0 text-dark">Ordenes de Exámen</h1>
+            <h1 class="m-0 text-dark">Hito 2 - Ingreso de Resultado</h1>
           </div><!-- /.col -->
         </div><!-- /.row -->
       </div><!-- /.container-fluid -->
@@ -77,7 +77,7 @@
                   <table class="table table-hover table-sm  table-striped table-header-fixed text-nowrap table-valign-middle projects">
                     <thead>
                       <th>Nº Orden</th>
-                      <th>Fecha Orden</th>
+                      <th>Fecha Toma Examen</th>
                       <th>Rut</th>
                       <th>Apellidos</th>
                       <th>Nombre</th>
@@ -102,6 +102,11 @@
                               <router-link class="btn btb-flat btn-xs btn-default" :to="{name: 'exam.edit', params: {id: item.id}}">
                                 <i class="fas fa-pencil-alt"></i> 
                               </router-link>
+                          </template>
+                          <template v-if="item.path">
+                              <a class="btn btb-flat btn-xs btn-default" target="_blank" :href="item.path" >
+                                  <i class="fas fa-search text-dark"></i> Ver Informe
+                              </a>
                           </template>
                         </td>
                       </tr>
@@ -154,6 +159,9 @@
             pageNumber: 0,
             perPage: 50
           }
+      }, 
+      mounted(){
+        this.getListarUsuarios();
       },
       computed: {
         //  Obtener el número de páginas

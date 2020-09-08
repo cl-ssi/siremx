@@ -31,5 +31,10 @@ class RolesTableSeeder extends Seeder
             'name' => 'Referente Establecimiento',
             'slug' => 'referenteEstablecimiento'
         ]);
+
+        Role::create([
+            'name' => 'Some',
+            'slug' => 'some'
+        ]);
     }
 }

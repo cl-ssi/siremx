@@ -7,9 +7,11 @@ use App\Patient;
 use App\Load;
 
 use Carbon\Carbon;
-
+use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+
+use Illuminate\Support\Str;
 
 class ExamController extends Controller
 {
@@ -31,80 +33,127 @@ class ExamController extends Controller
     {
        if(!$request->ajax()) return redirect('/');
 
-       $idExam      = $request->idExam;
-       $servicioSalud            = $request->servicioSalud;
-       $commune             = $request->commune; 
-       $establishmentRequest           = $request->establishmentRequest;
-       $date_exam_order = $request->date_exam_order;
-       $establishmentExam = $request->establishmentExam;
-       $doctor         = $request->doctor;
-       $date_exam       = $request->date_exam;
-       $derivation      = $request->derivation;
-       $listBIRADSMam        = $request->listBIRADSMam;
-       $listBIRADSEcoMam        = $request->listBIRADSEcoMam;
-       $date_exam_reception        = $request->date_exam_reception;
-       $diagnostic        = $request->diagnostic;
+       $idExam                = $request->idExam;
+       $servicioSalud         = $request->servicioSalud;
+       $commune               = $request->commune; 
+       $establishmentRequest  = $request->establishmentRequest;
+       $date_exam_order       = $request->date_exam_order;
+       $establishmentExam     = $request->establishmentExam;
+       $doctor                = $request->doctor;
+       $date_exam             = $request->date_exam;
+       $derivation            = $request->derivation;
+       $examType              = $request->examType;
+       $birards               = $request->birards;
+       $listBIRADSEcoMam      = $request->listBIRADSEcoMam;
+       $date_exam_reception   = $request->date_exam_reception;
+       $diagnostic            = $request->diagnostic;
+
+       
        
 
-       $idExam      = ($idExam == NULL) ? ($idExam = 0) : $idExam;
-       $servicioSalud            = ($servicioSalud == NULL) ? ($servicioSalud = '') : $servicioSalud;
-       $commune             = ($commune == NULL) ? ($commune = '') : $commune;
-       $establishmentRequest           = ($establishmentRequest == NULL) ? ($establishmentRequest = '') : $establishmentRequest;
-       $date_exam_order = ($date_exam_order == NULL) ? ($date_exam_order = '') : $date_exam_order;
-       $establishmentExam = ($establishmentExam == NULL) ? ($establishmentExam = '') : $establishmentExam;
-       $doctor         = ($doctor == NULL) ? ($doctor = '') : $doctor;
-       $date_exam       = ($date_exam == NULL) ? ($date_exam = '') : $date_exam;
-       $derivation      = ($derivation == NULL) ? ($derivation = '') : $derivation;
-       $listBIRADSMam        = ($listBIRADSMam == 0) ? ($listBIRADSMam = NULL) : $listBIRADSMam;
-       $listBIRADSEcoMam        = ($listBIRADSEcoMam == 0) ? ($listBIRADSEcoMam = NULL) : $listBIRADSEcoMam;
-       $date_exam_reception        = ($date_exam_reception == NULL) ? ($date_exam_reception = '') : $date_exam_reception;
-       $diagnostic        = ($diagnostic == NULL) ? ($diagnostic = '') : $diagnostic;
+       if($examType == 'mam'){
+            $birards_mam = $birards;
+       }
+       else {
+            $birards_mam = NULL;
+       }
+       if($examType == 'eco'){
+            $birards_eco = $birards;
+       } 
+       else {
+            $birards_eco = NULL;
+       } 
+       if($examType == 'pro'){
+            $birards_pro = $birards;
+       }
+       else {
+            $birards_pro = NULL;
+       }
+
+       $idExam               = ($idExam == NULL) ? ($idExam = 0) : $idExam;
+       $servicioSalud        = ($servicioSalud == NULL) ? ($servicioSalud = '') : $servicioSalud;
+       $commune              = ($commune == NULL) ? ($commune = '') : $commune;
+       $establishmentRequest = ($establishmentRequest == NULL) ? ($establishmentRequest = '') : $establishmentRequest;
+       $date_exam_order      = ($date_exam_order) ? ($date_exam_order = NULL) : $date_exam_order; // SE QUITO NULL
+       $establishmentExam    = ($establishmentExam == NULL) ? ($establishmentExam = '') : $establishmentExam;
+       $doctor               = ($doctor == NULL) ? ($doctor = '') : $doctor;
+       $date_exam            = ($date_exam == NULL) ? ($date_exam = NULL) : $date_exam;
+       $derivation           = ($derivation == NULL) ? ($derivation = '') : $derivation;
+       $date_exam_reception  = ($date_exam_reception ==  NULL) ? ($date_exam_reception = NULL) : $date_exam_reception;
+       $diagnostic           = ($diagnostic == NULL) ? ($diagnostic = '') : $diagnostic;
 
        $exam = Exam::find($idExam);
-       $exam->servicio_salud   = $servicioSalud;
-       $exam->comuna   = $commune;
-       $exam->cesfam   = $establishmentRequest;
-       $exam->date_exam_order   = $date_exam_order;
+       $exam->servicio_salud       = $servicioSalud;
+       $exam->comuna               = $commune;
+       $exam->cesfam               = $establishmentRequest;
+       $exam->date_exam_order      = $date_exam_order;
        $exam->establecimiento_realiza_examen   = $establishmentExam;
-       $exam->medico   = $doctor;
-       $exam->date_exam   = $date_exam;
-       $exam->derivation_reason   = $derivation;
-       $exam->birards_mamografia   = $listBIRADSMam;
-       $exam->birards_ecografia   = $listBIRADSEcoMam;
-       $exam->date_exam_reception   = $date_exam_reception;
-       $exam->diagnostico   = $diagnostic;
-       $exam->updated_at  = date("Y-m-d");
+       $exam->medico               = $doctor;
+       $exam->date_exam            = $date_exam;
+       $exam->derivation_reason    = $derivation;
+       $exam->birards_mamografia   = $birards_mam;
+       $exam->birards_ecografia    = $birards_eco;
+       $exam->birards_proyeccion   = $birards_pro;
+       $exam->date_exam_reception  = $date_exam_reception;
+       $exam->diagnostico          = $diagnostic;
+       //dd($exam->filename);
+       if($request->hasFile('file')){
+        $file                  = $request->file;
+        $flag                  = $idExam;
+        $filename              = $file->getClientOriginalName();
+        $fileserver            = $flag.'_'.$filename;
+        Storage::delete('public/reports/'.$flag.'_'.$exam->filename);
+        $exam->path                 = asset('storage/reports/'.$fileserver);
+        $exam->filename             = $filename;
+        Storage::putFileAs('public/reports',$file, $fileserver);
+       }
+       else {
+        $exam->path                 = $exam->path;
+        $exam->filename             = $exam->filename;
+       }
+
+       //$exam->updated_at           = date("Y-m-d");
        $exam->save();
 
 
-       //return $user;
+       return $exam;
     }
 
     public function getListExams(Request $request)
     {
-       if(!$request->ajax()) return redirect('/');
+        if(!$request->ajax()) return redirect('/');
     
-       $cName           = $request->cName;
-       $cFathers_family = $request->cFathers_family;
-       $nRun            = $request->nRun;
+        $cName           = $request->cName;
+        $cFathers_family = $request->cFathers_family;
+        $nRun            = $request->nRun;
 
 
-       $cName  = ($cName == NULL) ? ($cName = '') : $cName;
-       $cFathers_family = ($cFathers_family == NULL) ? ($cFathers_family = '') : $cFathers_family;
-       $nRun  = ($nRun == NULL) ? ($nRun = '') : $nRun;
+        $cName           = ($cName == NULL) ? ($cName = '') : $cName;
+        $cFathers_family = ($cFathers_family == NULL) ? ($cFathers_family = '') : $cFathers_family;
+        $nRun            = ($nRun == NULL) ? ($nRun = '') : $nRun;
        
+        if($cName || $cFathers_family || $nRun ){
+
+            $patients_list = Patient::Where('run','LIKE','%'.$nRun.'%')
+                                ->Where('name','LIKE','%'.$cName.'%')
+                                ->Where('fathers_family','LIKE','%'.$cFathers_family.'%')
+                                ->get('id');
+            
+            $exams = Exam::with("patients")
+                    ->whereIn('patient_id',$patients_list)
+                    ->orderBy('id','DESC')
+                    ->take(1200)->get();
+        }
+        else {
+            $exams = Exam::with("patients")
+                    ->whereNull('date_exam_reception')
+                    ->Where('load_source','app')
+                    ->orderBy('id','DESC')
+                    ->take(1200)->get();
+        }
 
        // Se obtiene el listado de Id de pacientes conforme el request.
-       $patients_list = Patient::Where('run','LIKE','%'.$nRun.'%')
-                               ->Where('name','LIKE','%'.$cName.'%')
-                               ->Where('fathers_family','LIKE','%'.$cFathers_family.'%')
-                               ->get('id');
-       
-
         
-       $exams = Exam::with("patients")
-                    ->whereIn('patient_id',$patients_list)->orderBy('date_exam','DESC')
-                    ->take(1200)->get();
 
        return $exams;
     }

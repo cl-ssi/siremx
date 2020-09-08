@@ -185,6 +185,14 @@ export default new Router({
           props: true
          },
 
+         { path: '/examCreate',
+          name: 'exam.create',
+          component: require('./components/modules/exam/create').default,
+          beforeEnter: (to, from, next) => {
+            verifyAccess(to, from, next);
+          }
+        },
+
         { path: '/exam/create',
           name: 'exam.create',
           component: require('./components/modules/exam/create').default,
@@ -242,6 +250,7 @@ export default new Router({
         { path: '/report', component: require('./components/modules/report/index').default },
         { path: '/reportMX', component: require('./components/modules/report/mx').default },
         { path: '/reportBirardsAge', component: require('./components/modules/report/birardsAge').default },
+        { path: '/patientHistoryClinical', component: require('./components/modules/report/patientHistoryClinical').default },
         { path: '/patientHistory', component: require('./components/modules/report/patientHistory').default },
         { path: '/reportMXBirards', component: require('./components/modules/report/mxBirards').default },
 

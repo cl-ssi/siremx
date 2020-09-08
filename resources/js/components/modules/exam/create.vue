@@ -5,7 +5,7 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0 text-dark">Registrar orden de exámen</h1>
+            <h1 class="m-0 text-dark">Hito 1 - Ingreso orden de Examen</h1>
           </div><!-- /.col -->
         </div><!-- /.row -->
       </div><!-- /.container-fluid -->
@@ -25,7 +25,7 @@
           <div class="container-fluid">
             <div class="card card-secondary">
               <div class="card-header">
-                <h3 class="card-title">Registrar Orden</h3>
+                <h3 class="card-title">Registrar Orden - Paso 1</h3>
                 <div class="card-tools">
                     <button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip" title="Collapse">
                           <i class="fas fa-minus"></i>
@@ -38,7 +38,7 @@
                   <div class="form-row">
                       <fieldset class="form-group col-4">
                           <label>Run</label>
-                          <input type="text" class="form-control" v-model="fillCreateExam.run" @keyup.enter="setRegisterExam">
+                          <input type="text" class="form-control" v-model="fillCreateExam.run">
                           <small class="form-text text-muted">Utilizar: 12213213-1</small>
                          
                       </fieldset>
@@ -51,15 +51,15 @@
                   <div class="form-row">
                       <fieldset class="form-group col-4">
                           <label>Nombre</label>
-                           <input type="text" class="form-control" v-model="fillCreateExam.name" @keyup.enter="setRegisterExam">
+                           <input type="text" class="form-control" v-model="fillCreateExam.name" disabled>
                       </fieldset>
                       <fieldset class="form-group col-4">
                         <label>Apellido Paterno</label>
-                           <input type="text" class="form-control" v-model="fillCreateExam.fathers_family" @keyup.enter="setRegisterExam">
+                           <input type="text" class="form-control" v-model="fillCreateExam.fathers_family" disabled>
                       </fieldset>
                       <fieldset class="form-group col-4">
                         <label>Apellido Materno</label>
-                          <input type="text" class="form-control" v-model="fillCreateExam.mothers_family" @keyup.enter="setRegisterExam">
+                          <input type="text" class="form-control" v-model="fillCreateExam.mothers_family" disabled>
                       </fieldset>
                   </div>
 
@@ -73,24 +73,27 @@
                                   v-for="item in listGender"
                                   :key="item.value"
                                   :label="item.label"
-                                  :value="item.value">
+                                  :value="item.value"
+                                  :disabled="true">
                                 </el-option>
                            </el-select>
                       </fieldset>
                       <fieldset class="form-group col-4">
                         <label>Telefóno</label>
-                          <input type="text" class="form-control" v-model="fillCreateExam.telephone" @keyup.enter="setRegisterExam">
+                          <input type="text" class="form-control" v-model="fillCreateExam.telephone" disabled>
                       </fieldset>
                       <fieldset class="form-group col-2">
                           <label>Fecha Nacimiento</label>
-                           <input type="text"  class="form-control" v-model="fillCreateExam.birthday" @keyup.enter="setRegisterExam">
+                           <input type="text"  class="form-control" v-model="fillCreateExam.birthday" disabled>
                       </fieldset>
                        <fieldset class="form-group col-2">
                           <label>Edad</label>
-                           <input type="text" class="form-control" v-model="fillCreateExam.age" @keyup.enter="setRegisterExam">
+                           <input type="text" class="form-control" v-model="fillCreateExam.age" disabled>
                       </fieldset>
                   </div>
-                  <hr>
+
+                  <el-divider content-position="left">Ingreso de Examen</el-divider>
+                  
                   <div class="form-row">
                       <fieldset class="form-group col-4">
                           <label>Servicio de Salud</label>
@@ -121,10 +124,11 @@
                       </fieldset>
 
                   </div>
-                  <hr>
+                  
+
                   <div class="form-row">
                       <fieldset class="form-group col-4">
-                          <label>Establecimiento solicita Exámen</label>
+                          <label>Establecimiento solicita Examen</label>
                            <el-select v-model="fillCreateExam.establishmentRequest" filterable
                               placeholder="Seleccione"
                               clearable>
@@ -137,8 +141,17 @@
                            </el-select>
                       </fieldset>
                       <fieldset class="form-group col-4">
-                          <label>Profesional solicita Exámen</label>
-                            <input type="text" class="form-control" v-model="fillCreateExam.professional" @keyup.enter="setRegisterExam">
+                          <label>Profesional solicita Examen</label>
+                           <el-select v-model="fillCreateExam.professional" filterable
+                              placeholder="Seleccione"
+                              clearable>
+                                <el-option
+                                  v-for="item in listProfessional"
+                                  :key="item.value"
+                                  :label="item.label"
+                                  :value="item.value">
+                                </el-option>
+                           </el-select>
                       </fieldset>
                       <fieldset class="form-group col-4">
                           <label>Fecha Solicitud</label>
@@ -154,7 +167,7 @@
                   <hr>
                   <div class="form-row">
                       <fieldset class="form-group col-4">
-                          <label>Establecimiento donde toma Exámen</label>
+                          <label>Establecimiento donde toma Examen</label>
                            <el-select v-model="fillCreateExam.establishmentExam" filterable
                               placeholder="Seleccione"
                               clearable>
@@ -167,11 +180,11 @@
                            </el-select>
                       </fieldset>
                       <fieldset class="form-group col-4">
-                          <label>Médico</label>
+                          <label>Profesional toma Examen</label>
                             <input type="text" class="form-control" v-model="fillCreateExam.doctor" @keyup.enter="setRegisterExam">
                       </fieldset>
                       <fieldset class="form-group col-4">
-                          <label>Fecha Toma Exámen</label>
+                          <label>Fecha Toma Examen</label>
                           <el-date-picker
                             v-model="fillCreateExam.date_exam"
                             type="date"
@@ -184,52 +197,18 @@
                   <div class="form-row">
                        <fieldset class="form-group col-6">
                           <label>Motivo Derivación</label>
-                          <input type="text" class="form-control" v-model="fillCreateExam.derivation" @keyup.enter="setRegisterExam">
-                      </fieldset>
-                      <fieldset class="form-group col-3">
-                          <label>BIRADS - Exámen Mamario</label>
-                           <el-select v-model="fillCreateExam.listBIRADSMam" 
-                              placeholder="Seleccione"
-                              clearable>
-                                <el-option
-                                  v-for="item in listBIRADS"
-                                  :key="item.value"
-                                  :label="item.label"
-                                  :value="item.value">
-                                </el-option>
-                           </el-select>
-                      </fieldset>
-                      <fieldset class="form-group col-3">
-                          <label>BIRADS - Exámen EcoMamario</label>
-                           <el-select v-model="fillCreateExam.listBIRADSEcoMam" 
-                              placeholder="Seleccione"
-                              clearable>
-                                <el-option
-                                  v-for="item in listBIRADS"
-                                  :key="item.value"
-                                  :label="item.label"
-                                  :value="item.value">
-                                </el-option>
-                           </el-select>
+                          <el-select v-model="fillCreateExam.derivation" filterable
+                            placeholder="Seleccione"
+                            clearable>
+                              <el-option
+                                v-for="item in listDerivations"
+                                :key="item.id"
+                                :label="item.id+' - '+item.title"
+                                :value="item.id">
+                              </el-option>
+                          </el-select>
                       </fieldset>
                   </div>
-                  <hr>
-                  <div class="form-row">
-                       <fieldset class="form-group col-4">
-                          <label>Fecha de Recepción</label>
-                           <el-date-picker
-                            v-model="fillCreateExam.date_exam_reception"
-                            type="date"
-                            placeholder="Fecha"
-                            value-format="yyyy-MM-dd">
-                          </el-date-picker>
-                      </fieldset>
-                  </div>
-                  
-                  <div class="form-group">
-                        <label>Observaciones</label>
-                        <textarea v-model="fillCreateExam.diagnostic" class="form-control" rows="3" placeholder="Redactar ..."></textarea>
-                      </div>
                 </form>
               </div>
               <div class="card-footer">
@@ -246,6 +225,89 @@
         </div>
       </div>
     </div>
+
+    <!--<div class="content container-fluid">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-tools">
+            <router-link class="btn btn-info btn-sm" :to="'/exam'">
+              <i class="fas fa-arrow-left"></i> Regresar
+            </router-link>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="container-fluid">
+            <div class="card card-secondary">
+              <div class="card-header">
+                <h3 class="card-title">Registrar Orden -  Paso 2</h3>
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip" title="Collapse">
+                          <i class="fas fa-minus"></i>
+                    </button>
+                </div>
+              </div>
+              <div class="card-body">
+                <form role="form">
+
+                  <div class="form-row">
+                        <fieldset class="form-group col-4">
+                          <label>Fecha de Recepción</label>
+                           <el-date-picker
+                            v-model="fillCreateExam.date_exam_reception"
+                            type="date"
+                            placeholder="Fecha"
+                            value-format="yyyy-MM-dd">
+                          </el-date-picker>
+                      </fieldset>
+                      <fieldset class="form-group col-4">
+                          <label>Tipo de Examen</label>
+                           <el-select v-model="fillCreateExam.examType" 
+                              placeholder="Seleccione"
+                              clearable>
+                                <el-option
+                                  v-for="item in listExamType"
+                                  :key="item.value"
+                                  :label="item.label"
+                                  :value="item.value">
+                                </el-option>
+                           </el-select>
+                      </fieldset>
+                      <fieldset class="form-group col-4">
+                          <label>BIRADS - Examen Mamario</label>
+                           <el-select v-model="fillCreateExam.listBIRADSMam" 
+                              placeholder="Seleccione"
+                              clearable>
+                                <el-option
+                                  v-for="item in listBIRADS"
+                                  :key="item.value"
+                                  :label="item.label"
+                                  :value="item.value">
+                                </el-option>
+                           </el-select>
+                      </fieldset>
+                  </div>
+                  <hr>
+                  
+                  <div class="form-group">
+                        <label>Observaciones</label>
+                        <textarea v-model="fillCreateExam.diagnostic" class="form-control" rows="3" placeholder="Redactar ..."></textarea>
+                  </div>
+                </form>
+              </div>
+              <div class="card-footer">
+                <div class="row">
+                  <div class="col-md-4 offset-4">
+                    <button class="btn btn-flat btn-info btnWidth" @click.prevent="setRegisterExam" 
+                    v-loading.fullscreen.lock="fullscreenLoading">Registrar</button>
+                    <button class="btn btn-flat btn-default btnWidth" @click.prevent="limpiarCriterios">Limpiar</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>-->
 
     <div class="modal fade" :class="{show: modalShow}" :style=" modalShow ? mostrarModal : ocultarModal">
         <div class="modal-dialog" role="document">
@@ -295,8 +357,11 @@
               date_exam_reception: '',
               diagnostic: '',
               exams: '',
-              commune: ''
+              commune: '',
+              examType: ''
             },
+
+            listDerivations: [],
             listCommunes: [],
             listEstablishments: [],
             listGender: [
@@ -308,11 +373,15 @@
             listServicioSalud: [
               {value: 'IQUIQUE', label: 'IQUIQUE'}
             ],
-            listDerivation: [
-              {value: 'mastalgia', label: 'MASTALGIA'},
-              {value: 'quisteMamaIzquierda', label: 'QUISTE MAMA IZQUIERDA'},
-              {value: 'screening', label: 'SCREENING'},
-              {value: 'noduloBilateral', label: 'NODULO BILATERAL'}
+            listProfessional: [
+              {value: 'Matrona', label: 'Matrona'},
+              {value: 'Medico', label: 'Médico'},
+              {value: 'Otro', label: 'Otro Profesional'}
+            ],
+            listExamType: [
+              {value: 'mam', label: 'Mamografía'},
+              {value: 'eco', label: 'Ecografía'},
+              {value: 'pro', label: 'Proyección Mamaria'}
             ],
             listBIRADS: [
               {value: '0', label: '0'},
@@ -344,6 +413,7 @@
       mounted(){
         this.getListEstablishments();
         this.getListCommunes();
+        this.getListDerivations();
       },
       methods: {
         limpiarCriterios(){
@@ -376,29 +446,159 @@
           })
         },
         getListPatients(){
+          if(this.validRunForm()) {
+                this.modalShow = true;
+                return;
+          }
+
+          var run = this.fillCreateExam.run.split('-');
+          console.log(run);
           var url = '/administracion/patient/getPatient'
-          console.log("id "+this.fillCreateExam.run,);
           axios.get(url, {
             params: {
-              'idPatient' : this.fillCreateExam.run,
+              'run' : run[0],
+              'dv'  : run[1]
             }
           }).then(response => {
-            console.log(response.data);
+            if(response.data.code == 204){
+                this.responseFailed();
+              
+            }
+            else {
+              this.fillCreateExam.idPatient = response.data.id;
+              this.fillCreateExam.name = response.data.name;
+              this.fillCreateExam.run = response.data.run+'-'+response.data.dv;
+              this.fillCreateExam.fathers_family = response.data.fathers_family;
+              this.fillCreateExam.mothers_family = response.data.mothers_family;
+          
+              this.fillCreateExam.address = response.data.address;
+              this.fillCreateExam.birthday = response.data.birthday;
+              this.fillCreateExam.gender = response.data.gender;
+              this.fillCreateExam.age = response.data.age;
+              this.fillCreateExam.exams = response.data.exams;
+
+              this.fillCreateExam.telephone = response.data.telephone;
+
+              this.fullscreenLoading = false;
+            } 
+          }).catch(error => {
+            console.log("Pasa a API");
+            this.getListPatientsApi();
+          });
+        },
+        getListPatientsApi(){
+          var run = this.fillCreateExam.run.split('-');
+          console.log(run);
+          var session_url = 'https://i.saludiquique.cl/monitor/api/webservices/fonasa?run='+run[0]+'&dv='+run[1];
+          var username = 'api@redsalud.gob.cl';
+          var password = 'apiesmeralda';
+          var basicAuth = 'Basic ' + btoa(username + ':' + password);
+
+          const res =  axios.get(session_url, {
+            auth: {
+              username: username,
+              password: password
+            }
+          }).then(response => {
+            
+            console.log(response);
+
+            var data = JSON.stringify(response.data);
+            if(response.data.run)
+            {
+             
+              
+              Swal.fire({
+              title: '¿El paciente se ha encontrado en sistema monitor, desea cargarlo?',
+              icon: 'warning',
+              showCancelButton: true,
+              confirmButtonColor: '#3085d6',
+              cancelButtonColor: '#d33',
+              confirmButtonText: 'Si, cargar'
+              }).then((result) => {
+                  if (result.value) {
+                    this.fullscreenLoading = true;
+                    this.fillCreateExam.name = response.data.name;
+                    this.fillCreateExam.run = response.data.run+'-'+response.data.dv;
+                    this.fillCreateExam.dv = response.data.dv;
+                    this.fillCreateExam.fathers_family = response.data.fathers_family;
+                    this.fillCreateExam.mothers_family = response.data.mothers_family;
+                    this.fillCreateExam.birthday = response.data.birthday;
+                    if(response.data.gender== 'Masculino'){
+                      this.fillCreateExam.gender = 'male';
+                    }
+                    else if(response.data.gender== 'Femenino'){
+                      this.fillCreateExam.gender = 'female';
+                    }
+                    else {
+                      this.fillCreateExam.gender = 'other'
+                    }
+                    // SE LLAMA A FUNCION PARA RESGISTRAR PACIENTE OBTENIDO DE LA API
+                    this.setStorePatient();
+                  }
+              })
+              
+            }
+            else {
+              console.log("error no se encontro registro");
+              Swal.fire({
+                icon: 'warning',
+                title: 'El paciente no se encuentra en los registros del sistema monitor',
+                showConfirmButton: false,
+                timer: 1500
+              })
+            }
+            
+            
+
+            console.log(data);
+
+          }).catch(error => {
+            console.log("Error en autenticacion");
+          });
+        },
+        setStorePatient(){
+          var run = this.fillCreateExam.run.split('-');
+          var url = '/administracion/patient/setStorePatient'
+          axios.post(url, {
+            'run'            : run[0],
+            'dv'             : run[1],
+            'name'           : this.fillCreateExam.name,
+            'fathers_family' : this.fillCreateExam.fathers_family,
+            'mothers_family' : this.fillCreateExam.mothers_family,
+            'gender'         : this.fillCreateExam.gender,
+            'birthday'       : this.fillCreateExam.birthday,
+
+          }).then(response => {
+            console.log(response);
             this.fillCreateExam.idPatient = response.data.id;
-            this.fillCreateExam.name = response.data.name;
-            this.fillCreateExam.run = response.data.run;
-            this.fillCreateExam.fathers_family = response.data.fathers_family;
-            this.fillCreateExam.mothers_family = response.data.mothers_family;
-        
-            this.fillCreateExam.address = response.data.address;
-            this.fillCreateExam.birthday = response.data.birthday;
-            this.fillCreateExam.gender = response.data.gender;
-            this.fillCreateExam.age = response.data.age;
-            this.fillCreateExam.exams = response.data.exams;
-
-            this.fillCreateExam.telephone = response.data.telephone;
-
+            Swal.fire({
+                icon: 'success',
+                title: 'Registro Paciente exitosamente',
+                showConfirmButton: false,
+                timer: 1500
+              })
             this.fullscreenLoading = false;
+          })
+        },
+        /*Swal.fire({
+              title: '¿El paciente no se encuentra en los registros de Siremx, dese cargarlo desde monitor?',
+              icon: 'warning',
+              showCancelButton: true,
+              confirmButtonColor: '#3085d6',
+              cancelButtonColor: '#d33',
+              confirmButtonText: 'Si, cargar'
+              }).then((result) => {
+                  if (result.value) {
+                    //this.setStoreExam();
+                }
+              })*/
+        getListCommunes() {
+          
+          var route = '/administracion/communes/getListCommunes'
+          axios.get(route).then( response => {
+            console.log(response.data)
+            this.listCommunes = response.data;
           }).catch(error => {
               if(error.response.status == 401){
                 this.$router.push({name: 'login'})
@@ -408,45 +608,12 @@
               }
           })
         },
-        getListPatientsApi(){
-          var session_url = 'https://i.saludiquique.cl/monitor/api/webservices/fonasa?run=15287582&dv=7';
-          var username = 'api@redsalud.gob.cl';
-          var password = 'apiesmeralda';
-          var basicAuth = 'Basic ' + btoa(username + ':' + password);
-
-          axios.get(session_url, {}, {
-            headers: { 'Authorization': + basicAuth }
-          }).then(function(response) {
-            console.log('Authenticated');
-          }).catch(function(error) {
-            console.log('Error on Authentication');
-          });
-                    /*console.log("id "+this.fillCreateExam.run,);
-          axios.get(url, {
-            params: {
-              'idPatient' : this.fillCreateExam.run,
-            }
-          }).then(response => {
-            console.log(response.data);
-            this.fillCreateExam.name = response.data.name;
-            this.fillCreateExam.run = response.data.run;
-            this.fillCreateExam.fathers_family = response.data.fathers_family;
-            this.fillCreateExam.mothers_family = response.data.mothers_family;
-        
-            this.fillCreateExam.address = response.data.address;
-            this.fillCreateExam.birthday = response.data.birthday;
-            this.fillCreateExam.gender = response.data.gender;
-            this.fillCreateExam.exams = response.data.exams;
-
-            this.fillCreateExam.telephone = response.data.telephone;
-
-            this.fullscreenLoading = false;
-          })*/
-        },
-        getListCommunes() {
-          var route = '/administracion/communes/getListCommunes'
+        getListDerivations() {
+          
+          var route = '/administracion/derivations/getListDerivations'
           axios.get(route).then( response => {
-            this.listCommunes = response.data;
+            console.log(response.data)
+            this.listDerivations = response.data;
           }).catch(error => {
               if(error.response.status == 401){
                 this.$router.push({name: 'login'})
@@ -491,17 +658,17 @@
             'gender'         : this.fillCreateExam.gender,
             'birthday'       : this.fillCreateExam.birthday,
             'telephone'      : this.fillCreateExam.telephone,
-            'age': this.fillCreateExam.teleagephone,
-            'servicioSalud': this.fillCreateExam.servicioSalud,
-            'commune': this.fillCreateExam.commune,
+            'age'            : this.fillCreateExam.teleagephone,
+            'servicioSalud'  : this.fillCreateExam.servicioSalud,
+            'commune'        : this.fillCreateExam.commune,
             'establishmentRequest': this.fillCreateExam.establishmentRequest,
-            'professional': this.fillCreateExam.professional,
+            'professional'   : this.fillCreateExam.professional,
             'date_exam_order': this.fillCreateExam.date_exam_order,
             'establishmentExam': this.fillCreateExam.establishmentExam,
-            'doctor': this.fillCreateExam.doctor,
-            'date_exam': this.fillCreateExam.date_exam,
-            'derivation': this.fillCreateExam.derivation,
-            'listBIRADSMam': this.fillCreateExam.listBIRADSMam,
+            'doctor'         : this.fillCreateExam.doctor,
+            'date_exam'      : this.fillCreateExam.date_exam,
+            'derivation'     : this.fillCreateExam.derivation,
+            'listBIRADSMam'  : this.fillCreateExam.listBIRADSMam,
             'listBIRADSEcoMam': this.fillCreateExam.listBIRADSEcoMam,
             'date_exam_reception': this.fillCreateExam.date_exam_reception,
             'diagnostic': this.fillCreateExam.diagnostic,
@@ -509,7 +676,7 @@
           }).then(response => {
             console.log("Registro Paciente exitosamente");
             this.fullscreenLoading = false;
-            this.$router.push('/patient');
+            this.$router.push('/exam');
           }).catch(error => {
               if(error.response.status == 401){
                 this.$router.push({name: 'login'})
@@ -518,6 +685,17 @@
                 this.fullscreenLoading = false;
               }
           })
+        },
+        validRunForm() {
+            this.error = 0;
+            this.mensajeError = [];
+            if(!this.fillCreateExam.run) {
+                this.mensajeError.push("Run campo obligatorio")
+            }
+            if(this.mensajeError.length) {
+                this.error = 1;
+            }
+            return this.error;
         },
         validForm() {
             this.error = 0;
@@ -541,29 +719,43 @@
                 this.mensajeError.push("Profesional que solicita es un campo obligatorio")
             }
             if(!this.fillCreateExam.date_exam_order) {
-                this.mensajeError.push("Fecha de solicitud de exámen es un campo obligatorio")
+                this.mensajeError.push("Fecha de solicitud de Examen es un campo obligatorio")
             }
             if(!this.fillCreateExam.establishmentExam) {
-                this.mensajeError.push("Establecimiento donde toma exámen es un campo obligatorio")
+                this.mensajeError.push("Establecimiento donde toma Examen es un campo obligatorio")
             }
             if(!this.fillCreateExam.doctor) {
                 this.mensajeError.push("Médico es un campo obligatorio")
             }
             if(!this.fillCreateExam.date_exam) {
-                this.mensajeError.push("Fecha de toma de exámen es un campo obligatorio")
+                this.mensajeError.push("Fecha de toma de Examen es un campo obligatorio")
             }
-            if(!this.fillCreateExam.listBIRADSMam) {
+           /* if(!this.fillCreateExam.listBIRADSMam) {
                 this.mensajeError.push("Birard Mamografía es un campo obligatorio")
             }
             if(!this.fillCreateExam.listBIRADSEcoMam) {
                 this.mensajeError.push("Birards Eco-Mamografía es un campo obligatorio")
-            }
+            }*/
 
             //console.log("en Validar"+this.mensajeError)
             if(this.mensajeError.length) {
                 this.error = 1;
             }
             return this.error;
+        },
+        responseFailed() {
+          Swal.fire({
+              title: '¿El paciente no se encuentra en los registros de Siremx, desea buscarlo en sitema monitor?',
+              icon: 'warning',
+              showCancelButton: true,
+              confirmButtonColor: '#3085d6',
+              cancelButtonColor: '#d33',
+              confirmButtonText: 'Si, Buscar'
+              }).then((result) => {
+                  if (result.value) {
+                    this.getListPatientsApi();
+                  }
+          })
         }
       }
     }

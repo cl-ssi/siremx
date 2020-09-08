@@ -148,14 +148,25 @@ class PatientController extends Controller
     {
        if(!$request->ajax()) return redirect('/');
        //dd($request);
-       $idPatient  = $request->idPatient;
-       $idPatient  = ($idPatient == NULL) ? ($idPatient = '') : $idPatient;
-       
+       $run  = $request->run;
+       $dv  = $request->dv;
+
+       $run  = ($run == NULL) ? ($run = '') : $run;
+       $dv  = ($dv == NULL) ? ($dv = '') : $dv;
       
  
-       $patients = Patient::with("exams")->Where('run','=',$idPatient)->first();
-        
-
-       return $patients->toArray();
+       $patients = Patient::with("exams")
+                          ->Where('run','=',$run)
+                          ->Where('dv','=',$dv)
+                          ->first();
+                          
+      if($patients == null) {
+         return response()->json([
+            'code'     => 204
+        ]);
+      }
+      else{
+       return $patients;
+      }
     }
 }

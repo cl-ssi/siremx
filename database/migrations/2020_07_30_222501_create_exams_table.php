@@ -29,10 +29,16 @@ class CreateExamsTable extends Migration
             $table->date('date_exam_order')->nullable(); // Fecha de Solicitud
             $table->date('date_exam')->nullable(); // Fecha Exámen
             $table->date('date_exam_reception')->nullable();
+            $table->date('date_exam_informs')->nullable();
             $table->string('derivation_reason')->nullable();
             $table->string('birards_mamografia')->nullable();
             $table->string('birards_ecografia')->nullable();
-            $table->string('result')->nullable();
+            $table->string('birards_proyeccion')->nullable();
+            $table->string('observations')->nullable();
+
+            $table->string('path')->nullable();
+            $table->string('filename')->nullable();
+            $table->string('ref_order_number')->nullable();
 
             // VARIABLES DE CONTROL
             $table->enum('load_source',['excel', 'app', 'other']);

@@ -18,7 +18,10 @@ class EstablishmentController extends Controller
        $name  = ($name == NULL) ? ($name = '') : $name;
        
        $establishment = Establishment::Where('name','LIKE','%'.$name.'%')
-                    ->Where('id','LIKE','%'.$idRole.'%')->Wherein('commune_id',['5', '6','7', '8','9', '10', '11'])->get();
+                    ->Where('id','LIKE','%'.$idRole.'%')
+                    ->Where('exam_emits','LIKE','Y')
+                    ->Where('exam_center','LIKE','Y')
+                    ->Wherein('commune_id',['5', '6','7', '8','9', '10', '11'])->get();
 
        return $establishment->toArray();
     }

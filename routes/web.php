@@ -37,6 +37,8 @@ Route::group(['middleware' => ['auth']], function () {
 
   Route::get('/administracion/establishments/getListEstablishments','Management\EstablishmentController@getListEstablishments');
 
+  Route::get('/administracion/derivations/getListDerivations','Management\DerivationController@getListDerivations');
+
   Route::post('/archivo/setRegistrarArchivo','FileController@setRegistrarArchivo');
 
   Route::get('/administracion/patient/getListarPatients','PatientController@getListarPatients');
@@ -54,6 +56,7 @@ Route::group(['middleware' => ['auth']], function () {
 
   Route::get('/load/getListLoads','Management\LoadController@getListLoads');
 
+  Route::get('/report/exams/getPatientHistoryClinical','Report\ReportController@getPatientHistoryClinical');
   Route::get('/report/exams/getPatientHistory','Report\ReportController@getPatientHistory');
   Route::get('/report/exams/getMX','Report\ReportController@getMX');
   Route::get('/report/exams/getBirardsAgeMX','Report\ReportController@getBirardsAgeMX');

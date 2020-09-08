@@ -16,6 +16,54 @@ use Illuminate\Support\Facades\Auth;
 
 class ReportController extends Controller
 {
+
+  public function getPatientHistoryClinical(Request $request)
+  {
+    if(!$request->ajax()) return redirect('/');
+
+    $run = $request->run;
+    $run  = ($run == NULL) ? ($run = '') : $run;
+    
+    list($run,$dv) = array_pad(explode('-',str_replace(".", "", $run)),2,null);
+
+     $sql=" SELECT 
+                  T1.run,
+                  T1.dv,
+                  T1.name,
+                  T1.fathers_family,
+                  T1.mothers_family,
+                  T1.gender,
+                  T1.telephone,
+                  DATE_FORMAT(T1.birthday, '%d/%m/%Y') AS birthday,
+                  YEAR(CURDATE())-YEAR(T1.birthday) AS age,
+                  T1.address,
+                  DATE_FORMAT(T0.date_exam_order, '%d/%m/%Y') AS date_exam_order,
+                  DATE_FORMAT(T0.date_exam, '%d/%m/%Y') AS date_exam,
+                  DATE_FORMAT(T0.date_exam_reception, '%d/%m/%Y') AS date_exam_reception,
+                  T0.birards_mamografia,
+                  T0.birards_ecografia,
+                  T0.birards_proyeccion,
+                  T0.diagnostico,
+                  ES2.alias AS establecimiento_realiza_examen,
+                  T0.profesional_solicita,
+                  T0.medico,
+                  T0.servicio_salud,
+                  T0.path,
+                  CO.name AS comuna_name,
+                  ES.alias AS cesfam_name
+             FROM exams T0
+             LEFT JOIN patients T1 ON T0.patient_id = T1.id
+             LEFT JOIN communes CO  ON T0.comuna = CO.code_deis
+             LEFT JOIN establishments ES  ON T0.cesfam = ES.new_code_deis
+             LEFT JOIN establishments ES2  ON T0.establecimiento_realiza_examen = ES2.new_code_deis
+             WHERE T1.run = '".$run."' 
+             ORDER BY T0.id DESC ";
+
+     $patient = DB::select($sql,array(1));
+
+     return $patient;
+  }
+    
     public function getPatientHistory(Request $request)
     {
       if(!$request->ajax()) return redirect('/');
@@ -84,7 +132,8 @@ class ReportController extends Controller
                WHERE T1.run = '".$run."'
                      ".$code_deis_request ."
                      ".$code_deis ."
-                     ".$commune." ";
+                     ".$commune." 
+               ORDER BY T0.id DESC";
 
        $patient = DB::select($sql,array(1));
 

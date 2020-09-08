@@ -89,10 +89,6 @@ class PermissionsTableSeeder extends Seeder
             'slug' => 'exam.index'
         ]);
         Permission::create([
-            'name' => 'Editar Exámen',
-            'slug' => 'exam.edit'
-        ]);
-        Permission::create([
             'name' => 'Crear Exámen',
             'slug' => 'exam.create'
         ]);
@@ -124,6 +120,10 @@ class PermissionsTableSeeder extends Seeder
         Permission::create([
             'name' => 'Reporte Historial de paciente',
             'slug' => 'patientHistory.index'
+        ]);
+        Permission::create([
+            'name' => 'Reporte Cartola de paciente clinico',
+            'slug' => 'patientHistoryClinical.index'
         ]);
         // FILTROS patientHistory.index
         Permission::create([
