@@ -39,7 +39,8 @@
                             type="date"
                             placeholder="Fecha"
                             value-format="yyyy-MM-dd"
-                            default-value="2019-01-02">
+                            format="dd/MM/yyyy"
+                            default-value="2020-07-02">
                           </el-date-picker>
                           <small class="form-text text-muted"> * Considera fecha de toma de exámen</small>
                         </div>
@@ -54,7 +55,8 @@
                             type="date"
                             placeholder="Fecha"
                             value-format="yyyy-MM-dd"
-                            default-value="2019-01-31">
+                            format="dd/MM/yyyy"
+                            default-value="2020-07-31">
                           </el-date-picker>
                           <small class="form-text text-muted"> * Considera fecha de toma de exámen</small>
                         </div>
@@ -167,8 +169,8 @@
               </div>
               <div class="card-body table-responsive">
                 <template v-if="listarUsuariosPaginated.length">
-                 <table class="table table-hover table-sm  table-striped table-header-fixed text-nowrap table-valign-middle projects">
-                    <tr>
+                 <table id="data-table" class="table table-hover table-sm table-bordered  table-striped table-header-fixed table-valign-middle projects">
+                    <tr class="small text-nowrap">
                       <th>S. Salud</th>
                       <th>Cesfam Solicita</th>
                       <th>Profesional Solicita</th>
@@ -186,7 +188,7 @@
                       <th>Eco Mamografía</th>
                       <th>Médico</th>
                     </tr>
-                    <tr v-for="(item, index) in listarUsuariosPaginated" :key="index">
+                    <tr  class="small" v-for="(item, index) in listarUsuariosPaginated" :key="index">
                       <td v-text="item.servicio_salud"></td>
                       <td v-text="item.cesfam_name"></td>
                       <td v-text="item.profesional_solicita"></td>

@@ -159,6 +159,7 @@
                             v-model="fillCreateExam.date_exam_order"
                             type="date"
                             placeholder="Fecha"
+                            format="dd/MM/yyyy"
                             value-format="yyyy-MM-dd">
                           </el-date-picker>
                           <small class="form-text text-muted"></small>
@@ -189,6 +190,7 @@
                             v-model="fillCreateExam.date_exam"
                             type="date"
                             placeholder="Fecha"
+                            format="dd/MM/yyyy"
                             value-format="yyyy-MM-dd">
                           </el-date-picker>
                       </fieldset>
@@ -744,7 +746,8 @@
             return this.error;
         },
         responseFailed() {
-          Swal.fire({
+          this.getListPatientsApi();
+         /* Swal.fire({
               title: '¿El paciente no se encuentra en los registros de Siremx, desea buscarlo en sitema monitor?',
               icon: 'warning',
               showCancelButton: true,
@@ -755,7 +758,7 @@
                   if (result.value) {
                     this.getListPatientsApi();
                   }
-          })
+          })*/
         }
       }
     }

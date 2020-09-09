@@ -64,6 +64,10 @@ Route::group(['middleware' => ['auth']], function () {
   Route::get('/report/exam/export','Report\ReportController@export');
   Route::get('/report/exams/getMXBirards','Report\ReportController@getMXBirards');
 
+  Route::get('/dashboard/getExamYear','DashboardController@getExamYear');
+  Route::get('/dashboard/getHistYear','DashboardController@getHistYear');
+  Route::get('/dashboard/getIndicators','DashboardController@getIndicators');
+
 }); // END MIDDLEWARE
 
 

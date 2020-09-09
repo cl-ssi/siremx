@@ -3,11 +3,11 @@
     <div class="content-header">
       <div class="container-fluid">
         <div class="row">
-          <div class="col-lg-4 col-6">
+          <div class="col-lg-3 col-6">
             <!-- small box -->
             <div class="small-box bg-default">
               <div class="inner">
-                <h3>15.023</h3>
+                <h3>{{listIndicators.total_exam}}</h3>
 
                 <p>Exámenes Aplicados</p>
               </div>
@@ -18,11 +18,11 @@
             </div>
           </div>
           <!-- ./col -->
-          <div class="col-lg-4 col-6">
+          <div class="col-lg-3 col-6">
             <!-- small box -->
             <div class="small-box bg-default">
               <div class="inner">
-                <h3>9.853<sup style="font-size: 20px"></sup></h3>
+                <h3>{{listIndicators.total_mam}}<sup style="font-size: 20px"></sup></h3>
 
                 <p>Mamografías</p>
               </div>
@@ -33,13 +33,13 @@
             </div>
           </div>
           <!-- ./col -->
-          <div class="col-lg-4 col-6">
+          <div class="col-lg-3 col-6">
             <!-- small box -->
             <div class="small-box bg-default">
               <div class="inner">
-                <h3>4.134</h3>
+                <h3>{{listIndicators.total_eco}}</h3>
 
-                <p>Eco Mamografías</p>
+                <p>Ecografías</p>
               </div>
               <div class="icon">
                 <i class="fas fa-chart-bar"></i>
@@ -47,7 +47,24 @@
               <a href="#" class="small-box-footer"><i class=""></i></a>
             </div>
           </div>
+
+          <!-- ./col -->
+          <div class="col-lg-3 col-6">
+            <!-- small box -->
+            <div class="small-box bg-default">
+              <div class="inner">
+                <h3>{{listIndicators.total_pro}}</h3>
+
+                <p>Proyecciones</p>
+              </div>
+              <div class="icon">
+                <i class="fas fa-chart-pie"></i>
+              </div>
+              <a href="#" class="small-box-footer"><i class=""></i></a>
+            </div>
+          </div>
         </div>
+        
 
         <div class="row">
           <div class="col-lg-4 col-4">
@@ -55,7 +72,7 @@
             <div class="card">
                 <div class="card-header border-0">
                   <div class="d-flex justify-content-between">
-                    <h3 class="card-title">Distribución por Edad</h3>
+                    <h3 class="card-title">Distribución cantidad de exámenes por Comuna</h3>
                   </div>
                 </div>
                 <div class="card-body">
@@ -71,7 +88,7 @@
             <div class="card">
                 <div class="card-header border-0">
                   <div class="d-flex justify-content-between">
-                    <h3 class="card-title">Exámenes en el Año</h3>
+                    <h3 class="card-title">Cantidad de exámenes aplicados en el año actual distribuido por mes.</h3>
                   </div>
                 </div>
                 <div class="card-body">
@@ -91,24 +108,97 @@
 <script>
     import Chart from 'chart.js';
     export default {
+      data() {
+        return {
+          listExamYear: {
+            all:[],
+            name: [],
+            month_name: [],
+            quantity: [],
+            color:[]
+          },
+          listHistCommuneYear: {
+            all:[],
+            name_label: [],
+            quantity: []
+          },
+          listIndicators: {
+            total_exam:'',
+            total_mam: '',
+            total_eco: '',
+            total_pro: ''
+          }
+        }
+      },
       mounted(){
         this.getGraphBar();
-        this.getGraphLine();
-        console.log("montado");
+        this.getExamYear();
+        this.getHistCommuneYear();
+        this.getIndicators();
       },
       methods:{
+        getIndicators() {
+          var url = '/dashboard/getIndicators'
+          axios.get(url).then(response => {
+            this.listIndicators.total_exam = response.data[0].quantity;
+            this.listIndicators.total_mam = response.data[1].quantity;
+            this.listIndicators.total_eco = response.data[2].quantity;
+            this.listIndicators.total_pro = response.data[3].quantity;
+            this.getIndicatorsFilter();
+          })
+        },
+        getIndicatorsFilter() {
+          let me = this;
+          this. listExamYear.all.map(function(x,y){
+            me.listExamYear.name.push(x.month);
+            me.listExamYear.month_name.push(x.month_name);
+            me.listExamYear.quantity.push(x.exam_quantity);
+          })
+        },
+        getExamYear() {
+          var url = '/dashboard/getExamYear'
+          axios.get(url).then(response => {
+            this.listExamYear.all = response.data;
+            this.getExamYearFilter();
+          })
+        },
+        getExamYearFilter() {
+          let me = this;
+          this. listExamYear.all.map(function(x,y){
+            me.listExamYear.name.push(x.month);
+            me.listExamYear.month_name.push(x.month_name);
+            me.listExamYear.quantity.push(x.exam_quantity);
+          })
+          this.getGraphLine();
+        },
+        getHistCommuneYear() {
+          var url = '/dashboard/getHistYear'
+          axios.get(url).then(response => {
+            this.listHistCommuneYear.all = response.data;
+            this.getHistCommuneYearFilter();
+          })
+        },
+        getHistCommuneYearFilter() {
+          let me = this;
+          this.listHistCommuneYear.all.map(function(x,y){
+            me.listHistCommuneYear.name_label.push(x.name_label);
+            me.listHistCommuneYear.quantity.push(x.exam_quantity);
+          })
+          this.getGraphBar();
+        },
         getGraphBar() {
+          let me = this;
           var ctx = document.getElementById("myChart").getContext('2d');
-          var dataValues = [22, 59, 73, 46, 20,10];
-          var dataLabels = [0, 20, 30, 40, 50, 60];
+          var dataValues = me.listHistCommuneYear.quantity;
+          var dataLabels = me.listHistCommuneYear.name_label;
           var myChart = new Chart(ctx, {
             type: 'bar',
             data: {
               labels: dataLabels,
               datasets: [{
-                label: 'Distribución por Edad',
+                label: 'Distribución por Comuna',
                 data: dataValues,
-                backgroundColor: 'rgba(201, 201, 201, 1)',
+                backgroundColor: 'rgba(235, 214, 148)',
               }]
             },
             options: {
@@ -136,6 +226,7 @@
           });
         },
         getGraphLine() {
+          let me = this;
           var ctx = document.getElementById('myChart2').getContext('2d');
           var chart = new Chart(ctx, {
               // The type of chart we want to create
@@ -143,12 +234,12 @@
 
               // The data for our dataset
               data: {
-                  labels: ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio"],
+                  labels: me.listExamYear.month_name,
                   datasets: [{
-                      label: "Exámenes",
+                      label: "Cantidad",
                       backgroundColor: 'rgb(99, 99, 132)',
                       borderColor: 'rgb(99, 99, 132)',
-                      data: [0, 10, 5, 2, 20, 30, 45],
+                      data: me.listExamYear.quantity,
                   }]
               },
 

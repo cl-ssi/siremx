@@ -110,7 +110,7 @@
                            </el-select>
                       </fieldset>
                       <fieldset class="form-group col-4">
-                          <label>Médico</label>
+                          <label>Profesional toma Examen</label>
                             <input type="text" class="form-control" v-model="fillEditExam.doctor" @keyup.enter="setRegisterExam">
                       </fieldset>
                       <fieldset class="form-group col-4">
@@ -244,7 +244,7 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title"> Sismam</h5>
+                    <h5 class="modal-title"> SireMX</h5>
                     <button class="close" @click="abrirModal"></button>
                 </div>
                 <div class="modal-body">

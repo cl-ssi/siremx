@@ -39,7 +39,8 @@
                             type="date"
                             placeholder="Fecha"
                             value-format="yyyy-MM-dd"
-                            default-value="2019-01-02">
+                            format="dd/MM/yyyy"
+                            default-value="2020-07-02">
                           </el-date-picker>
                           <small class="form-text text-muted"> * Considera fecha de toma de exámen</small>
                         </div>
@@ -54,33 +55,14 @@
                             type="date"
                             placeholder="Fecha"
                             value-format="yyyy-MM-dd"
-                            default-value="2019-01-31">
+                            format="dd/MM/yyyy"
+                            default-value="2020-07-31">
                           </el-date-picker>
                           <small class="form-text text-muted"> * Considera fecha de toma de exámen</small>
                         </div>
                       </div>
                     </div>
                   </div>
-
-                 <!-- <div class="row">
-                    <div class="col-md-6">
-                      <div class="form-group">
-                        <label class="col-md-3 col-form-label">Estado</label>
-                        <div class="col-md-9">
-                          <el-select v-model="fillBsqReport.listStatus" 
-                              placeholder="Seleccione"
-                              clearable>
-                                <el-option
-                                  v-for="item in listStatus"
-                                  :key="item.value"
-                                  :label="item.label"
-                                  :value="item.value">
-                                </el-option>
-                           </el-select>
-                        </div>
-                      </div>
-                    </div>
-                  </div>-->
                   
                 </form>
               </div>
@@ -98,15 +80,15 @@
                 <h3 class="card-title">
                     <template v-if="listarUsuariosPaginated.length">
                         <el-tooltip class="item" effect="dark" content="Descargar en Excel" placement="bottom-start">
-                            <i class="fas fa-file-excel" @click.prevent="exportExcel"></i>
+                            <i class="fas fa-file-excel text-success" @click.prevent="tableExcel"></i>
                         </el-tooltip>
                     </template>
                     Bandeja de Resultados</h3>
               </div>
               <div class="card-body table-responsive">
                 <template v-if="listarUsuariosPaginated.length">
-                 <table class="table table-hover table-sm  table-striped table-header-fixed text-nowrap table-valign-middle projects">
-                   <thead>
+                 <table id="data-table" class="table table-hover table-sm table-bordered  table-striped table-header-fixed table-valign-middle projects">
+                   <tr class="small text-nowrap">
                       <th>S. Salud</th>
                       <th>Cesfam</th>
                       <th>Profesional Solicita</th>
@@ -122,8 +104,8 @@
                       <th>Mamografía</th>
                       <th>Eco Mamografía</th>
                       <th>Médico</th>
-                    </thead>
-                    <tbody>
+                    </tr>
+                    <tr class="small ">
                       <tr v-for="(item, index) in listarUsuariosPaginated" :key="index">
                         <td v-text="item.servicio_salud"></td>
                         <td v-text="item.cesfam"></td>
@@ -141,7 +123,7 @@
                         <td v-text="item.birards_ecografia"></td>
                         <td v-text="item.medico"></td>
                       </tr>
-                    </tbody>
+                    </tr>
                   </table>
                   <div class="card-footer clearfix">
                     <ul class="pagination pagination-sm pagination-secondary m-0 float-right">
@@ -274,6 +256,14 @@ import XLSX from 'xlsx'
         const filename = 'reporte-sismam'
         XLSX.utils.book_append_sheet(workbook, data, filename)
         XLSX.writeFile(workbook, `${filename}.xlsx`)
+        },
+        tableExcel(type, fn, dl) {
+          var elt = document.getElementById('data-table');
+          const filename = 'reporte-sismam'
+          var wb = XLSX.utils.table_to_book(elt, {sheet:"Sheet JS"});
+          return dl ?
+            XLSX.write(wb, {bookType:type, bookSST:true, type: 'base64'}) :
+            XLSX.writeFile(wb, `${filename}.xlsx`)
         },
         nextPage() {
           this.pageNumber++;

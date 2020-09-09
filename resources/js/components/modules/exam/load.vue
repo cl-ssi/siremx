@@ -75,7 +75,7 @@
             </div>
             <div class="card card-secondary">
               <div class="card-header">
-                <h3 class="card-title">Bandeja de Resultados</h3>
+                <h3 class="card-title">Bandeja de Previsualización</h3>
               </div>
               <div class="card-body table-responsive">
                 <template >
@@ -203,7 +203,7 @@
      */
         importExcel(e) {
             const files = e.target.files;
-            console.log(files);
+            //console.log(files);
             if (!files.length) {
                 return ;
             } else if (!/\.(xls|xlsx)$/.test(files[0].name.toLowerCase())) {
@@ -228,11 +228,11 @@
                     this.examsData.push(ws[i]);
                     
                 }
-                console.log("Read results", excellist); // At this point, you get an array containing objects that need to be processed
+                //console.log("Read results", excellist); // At this point, you get an array containing objects that need to be processed
                 // Get header2-1
                 const a = workbook.Sheets[workbook.SheetNames[0]];
                 const headers = this.getHeader(a);
-                console.log('headers', headers);
+                //console.log('headers', headers);
                 this.setTable(headers, excellist);
                 // Get header2-2
                 } catch (e) {
@@ -255,7 +255,7 @@
                 width: 100
                 });
             });
-            console.log("tableTitleData", tableTitleData);
+            //console.log("tableTitleData", tableTitleData);
             // Mapping table content attribute name is English
             const newTableData = [];
             excellist.forEach(_ => {
@@ -265,7 +265,7 @@
                 });
                 newTableData.push(newObj);
             });
-            console.log('newTableData',newTableData);
+            //console.log('newTableData',newTableData);
             this.tableColumn = tableTitleData;
             this.dataArr = newTableData;
         },

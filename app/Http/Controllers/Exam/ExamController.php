@@ -285,14 +285,15 @@ class ExamController extends Controller
                         $apellidos  = $names[1];
                         break;
                     case 3:
-                        $apellidos = $names[0] . ' ' . $names[1];
-                        $nombres   = $names[2];
+                        $apellidos = $names[1] . ' ' . $names[2];
+                        $nombres   = $names[0];
                     default:
-                        $apellidos = $names[0] . ' '. $names[1];
-                        unset($names[0]);
+                        $apellidos = $names[1] . ' '. $names[2];
+                        $nombres   = $names[0];
+                        /*unset($names[0]);
                         unset($names[1]);
                         
-                        $nombres = implode(' ', $names);
+                        $nombres = implode(' ', $names);*/
                         break;
                 }
                 
@@ -358,6 +359,16 @@ class ExamController extends Controller
             $birardsMam  = ($birardsMam == NULL) ? ($birardsMam = '') : $birardsMam;
             $birardsEco = $exam['BIRADS ECO'];
             $birardsEco  = ($birardsEco == NULL) ? ($birardsEco = '') : $birardsEco;
+            $birardsPro = $exam['BIRADS PRO'];
+            $birardsPro  = ($birardsPro == NULL) ? ($birardsPro = '') : $birardsPro;
+
+            $mDerivation = $exam['MDERIVACION'];
+            $mDerivation  = ($mDerivation == NULL) ? ($mDerivation = '') : $mDerivation;
+
+            $diagnostic = $exam['DIAGNOSTICO'];
+            $diagnostic  = ($diagnostic == NULL) ? ($diagnostic = '') : $diagnostic;
+            
+            
 
             $examDet = new Exam();
             $examDet->servicio_salud   = $exam['SERVICIO SALUD'];
@@ -370,9 +381,12 @@ class ExamController extends Controller
 
             $examDet->date_exam_order      = $date_exam_order;
             $examDet->date_exam            = $date_exam;
+            $examDet->diagnostico            = $diagnostic;
             $examDet->date_exam_reception  = $date_exam_reception;
             $examDet->birards_mamografia   = $birardsMam;
             $examDet->birards_ecografia    = $birardsEco;
+            $examDet->birards_proyeccion   = $birardsPro;
+            $examDet->derivation_reason    = $mDerivation;
             $examDet->load_source          = 'excel';
             $examDet->load_id              = $load->id;
             $examDet->user_id              = 1;

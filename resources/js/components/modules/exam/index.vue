@@ -40,10 +40,10 @@
                           <input type="text" class="form-control" v-model="fillBsqUsuario.nRun" @keyup.enter="getListarUsuarios">
                           <small class="form-text text-muted">Utilizar: 11111111-1</small>
                       </fieldset>
-                      <fieldset class="form-group col-1">
+                      <!--<fieldset class="form-group col-1">
                         <label>DV</label>
                           <input type="text" class="form-control" v-model="fillBsqUsuario.dv" @keyup.enter="getListarUsuarios">
-                      </fieldset>
+                      </fieldset>-->
                   </div>
 
                   <div class="form-row">
