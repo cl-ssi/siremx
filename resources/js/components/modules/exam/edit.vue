@@ -98,7 +98,7 @@
                   <div class="form-row">
                       <fieldset class="form-group col-4">
                           <label>Establecimiento donde toma Exámen</label>
-                           <el-select v-model="fillEditExam.establishmentExam" filterable
+                           <el-select v-on:change="onChange" v-model="fillEditExam.establishmentExam" filterable
                               placeholder="Seleccione"
                               clearable>
                                 <el-option
@@ -230,7 +230,7 @@
                 <div class="row">
                   <div class="col-md-4 offset-4">
                     <button class="btn btn-flat btn-info btnWidth" @click.prevent="setEditExam" 
-                    v-loading.fullscreen.lock="fullscreenLoading">Editar</button>
+                    v-loading.fullscreen.lock="fullscreenLoading">Guardar</button>
                   </div>
                 </div>
               </div>
@@ -337,9 +337,15 @@
         this.getPatientById();
         this.getListEstablishments();
         this.getListCommunes();
-        this.getListDerivations();
       },
       methods: {
+        onChange: function (event)
+        {
+            console.log(this.fillEditExam.establishmentExam)
+            this.fillEditExam.derivation = '';
+            var code_deis = this.fillEditExam.establishmentExam;
+            this.getListDerivations(code_deis);
+        },
         getFile(e) {
             this.fillEditExam.fileInform = e.target.files[0];
         },
@@ -369,10 +375,14 @@
               }
           })
         },
-        getListDerivations() {
+        getListDerivations(code_deis) {
           
-          var route = '/administracion/derivations/getListDerivations'
-          axios.get(route).then( response => {
+          var route = '/administracion/derivations/getListDerivationsSelect'
+          axios.get(route,{
+            params: {
+              'establishment_code_deis' : code_deis
+            }
+          }).then( response => {
             console.log(response.data)
             this.listDerivations = response.data;
           }).catch(error => {
@@ -400,7 +410,7 @@
             this.fillEditExam.establishmentExam    = (response.data[0].establecimiento_realiza_examen)? response.data[0].establecimiento_realiza_examen : ''; 
             this.fillEditExam.doctor               = response.data[0].medico;
             this.fillEditExam.date_exam            = response.data[0].date_exam;
-            this.fillEditExam.derivation           = (response.data[0].derivation_reason)? response.data[0].derivation_reason : ''; 
+            this.fillEditExam.derivation           = (Number(response.data[0].derivation_reason))? Number(response.data[0].derivation_reason) : ''; 
             this.fillEditExam.date_exam_reception  = response.data[0].date_exam_reception;
             this.fillEditExam.diagnostic           = response.data[0].diagnostico? response.data[0].diagnostico : ''; 
             this.fillEditExam.path                 = response.data[0].path;
@@ -417,7 +427,11 @@
                 this.fillEditExam.examType = 'pro';
                 this.fillEditExam.birards  = response.data[0].birards_proyeccion;
             }
+            else {
+                this.fillEditExam.examType = response.data[0].exam_type;
+            }
 
+            this.getListDerivations(this.fillEditExam.establishmentExam );
             this.fullscreenLoading = false; 
           }).catch(error => {
               if(error.response.status == 401){
@@ -465,11 +479,12 @@
 
           var  url = '/exam/setEditExam'
           axios.post(url,this.form, config).then(response => {
+            this.fillEditExam.path = response.path;
             console.log(response);
             this.fullscreenLoading = false;
              Swal.fire({
                 icon: 'success',
-                title: 'Actualizado',
+                title: 'Guardado Correctamente',
                 showConfirmButton: false,
                 timer: 1500
               })

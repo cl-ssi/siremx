@@ -28,5 +28,26 @@ class DerivationsTableSeeder extends Seeder
             'title' => 'Control Anual',
             'description' => 'Control Anual'
         ]);
+        Derivation::create([
+            'title' => 'Nódulo',
+            'description' => 'Nódulo',
+            'establishment_code_deis' => '102100'
+        ]);
+        Derivation::create([
+            'title' => 'Dolor',
+            'description' => 'Dolor',
+            'establishment_code_deis' => '102100'
+        ]);
+        Derivation::create([
+            'title' => 'Microcalcificaciones',
+            'description' => 'NódMicrocalcificacionesulo',
+            'establishment_code_deis' => '102100'
+        ]);
+        Derivation::create([
+            'title' => 'Biopsias',
+            'description' => 'Biopsias',
+            'establishment_code_deis' => '102100'
+        ]);
+
     }
 }

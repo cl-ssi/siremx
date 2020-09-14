@@ -16,7 +16,8 @@ class CreateDerivationsTable extends Migration
         Schema::create('derivations', function (Blueprint $table) {
             $table->id();
             $table->string('title');
-            $table->string('description');
+            $table->string('description')->nullable();
+            $table->string('establishment_code_deis')->nullable();
             $table->timestamps();
         });
     }

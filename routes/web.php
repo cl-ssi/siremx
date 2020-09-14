@@ -38,6 +38,7 @@ Route::group(['middleware' => ['auth']], function () {
   Route::get('/administracion/establishments/getListEstablishments','Management\EstablishmentController@getListEstablishments');
 
   Route::get('/administracion/derivations/getListDerivations','Management\DerivationController@getListDerivations');
+  Route::get('/administracion/derivations/getListDerivationsSelect','Management\DerivationController@getListDerivationsSelect');
 
   Route::post('/archivo/setRegistrarArchivo','FileController@setRegistrarArchivo');
 

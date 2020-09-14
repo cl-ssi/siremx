@@ -38,7 +38,7 @@
                   <div class="form-row">
                       <fieldset class="form-group col-4">
                           <label>Run</label>
-                          <input type="text" class="form-control" v-model="fillCreateExam.run">
+                          <input ref="run" type="text" class="form-control" v-model="fillCreateExam.run">
                           <small class="form-text text-muted">Utilizar: 12213213-1</small>
                          
                       </fieldset>
@@ -169,7 +169,7 @@
                   <div class="form-row">
                       <fieldset class="form-group col-4">
                           <label>Establecimiento donde toma Examen</label>
-                           <el-select v-model="fillCreateExam.establishmentExam" filterable
+                           <el-select  v-on:change="onChange" v-model="fillCreateExam.establishmentExam" filterable
                               placeholder="Seleccione"
                               clearable>
                                 <el-option
@@ -210,57 +210,6 @@
                               </el-option>
                           </el-select>
                       </fieldset>
-                  </div>
-                </form>
-              </div>
-              <div class="card-footer">
-                <div class="row">
-                  <div class="col-md-4 offset-4">
-                    <button class="btn btn-flat btn-info btnWidth" @click.prevent="setRegisterExam" 
-                    v-loading.fullscreen.lock="fullscreenLoading">Registrar</button>
-                    <button class="btn btn-flat btn-default btnWidth" @click.prevent="limpiarCriterios">Limpiar</button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!--<div class="content container-fluid">
-      <div class="card">
-        <div class="card-header">
-          <div class="card-tools">
-            <router-link class="btn btn-info btn-sm" :to="'/exam'">
-              <i class="fas fa-arrow-left"></i> Regresar
-            </router-link>
-          </div>
-        </div>
-        <div class="card-body">
-          <div class="container-fluid">
-            <div class="card card-secondary">
-              <div class="card-header">
-                <h3 class="card-title">Registrar Orden -  Paso 2</h3>
-                <div class="card-tools">
-                    <button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip" title="Collapse">
-                          <i class="fas fa-minus"></i>
-                    </button>
-                </div>
-              </div>
-              <div class="card-body">
-                <form role="form">
-
-                  <div class="form-row">
-                        <fieldset class="form-group col-4">
-                          <label>Fecha de Recepción</label>
-                           <el-date-picker
-                            v-model="fillCreateExam.date_exam_reception"
-                            type="date"
-                            placeholder="Fecha"
-                            value-format="yyyy-MM-dd">
-                          </el-date-picker>
-                      </fieldset>
                       <fieldset class="form-group col-4">
                           <label>Tipo de Examen</label>
                            <el-select v-model="fillCreateExam.examType" 
@@ -274,34 +223,16 @@
                                 </el-option>
                            </el-select>
                       </fieldset>
-                      <fieldset class="form-group col-4">
-                          <label>BIRADS - Examen Mamario</label>
-                           <el-select v-model="fillCreateExam.listBIRADSMam" 
-                              placeholder="Seleccione"
-                              clearable>
-                                <el-option
-                                  v-for="item in listBIRADS"
-                                  :key="item.value"
-                                  :label="item.label"
-                                  :value="item.value">
-                                </el-option>
-                           </el-select>
-                      </fieldset>
                   </div>
-                  <hr>
-                  
-                  <div class="form-group">
-                        <label>Observaciones</label>
-                        <textarea v-model="fillCreateExam.diagnostic" class="form-control" rows="3" placeholder="Redactar ..."></textarea>
-                  </div>
+
                 </form>
               </div>
               <div class="card-footer">
                 <div class="row">
                   <div class="col-md-4 offset-4">
                     <button class="btn btn-flat btn-info btnWidth" @click.prevent="setRegisterExam" 
-                    v-loading.fullscreen.lock="fullscreenLoading">Registrar</button>
-                    <button class="btn btn-flat btn-default btnWidth" @click.prevent="limpiarCriterios">Limpiar</button>
+                    v-loading.fullscreen.lock="fullscreenLoading">Guardar</button>
+                    <button class="btn btn-flat btn-default btnWidth" @click.prevent="cleanForm">Limpiar</button>
                   </div>
                 </div>
               </div>
@@ -309,7 +240,7 @@
           </div>
         </div>
       </div>
-    </div>-->
+    </div>
 
     <div class="modal fade" :class="{show: modalShow}" :style=" modalShow ? mostrarModal : ocultarModal">
         <div class="modal-dialog" role="document">
@@ -415,10 +346,17 @@
       mounted(){
         this.getListEstablishments();
         this.getListCommunes();
-        this.getListDerivations();
+        this.$refs.run.focus();
       },
       methods: {
-        limpiarCriterios(){
+        onChange: function (event)
+        {
+            console.log(this.fillCreateExam.establishmentExam)
+            this.fillCreateExam.derivation = '';
+            var code_deis = this.fillCreateExam.establishmentExam;
+            this.getListDerivations(code_deis);
+        },
+        cleanForm(){
           this.fillCreateExam.run = '';
           this.fillCreateExam.dv  = '';
           this.fillCreateExam.name  = '';
@@ -427,6 +365,19 @@
           this.fillCreateExam.gender  = '';
           this.fillCreateExam.birthday  = '';
           this.fillCreateExam.telephone  = '';
+          this.fillCreateExam.age = '';
+          this.fillCreateExam.servicioSalud = '';
+          this.fillCreateExam.servicioSalud = '';  
+          this.fillCreateExam.commune = '';          
+          this.fillCreateExam.establishmentRequest = '';
+          this.fillCreateExam.professional = '';      
+          this.fillCreateExam.date_exam_order = '';   
+          this.fillCreateExam.establishmentExam = ''; 
+          this.fillCreateExam.doctor = '';          
+          this.fillCreateExam.date_exam = '';         
+          this.fillCreateExam.derivation = '';
+          this.fillCreateExam.examType = '';
+          this.$refs.run.focus();
         },
         abrirModal(){
             this.modalShow = !this.modalShow;
@@ -610,10 +561,14 @@
               }
           })
         },
-        getListDerivations() {
+        getListDerivations(code_deis) {
           
-          var route = '/administracion/derivations/getListDerivations'
-          axios.get(route).then( response => {
+          var route = '/administracion/derivations/getListDerivationsSelect'
+          axios.get(route,{
+            params: {
+              'establishment_code_deis' : code_deis
+            }
+          }).then( response => {
             console.log(response.data)
             this.listDerivations = response.data;
           }).catch(error => {
@@ -660,7 +615,7 @@
             'gender'         : this.fillCreateExam.gender,
             'birthday'       : this.fillCreateExam.birthday,
             'telephone'      : this.fillCreateExam.telephone,
-            'age'            : this.fillCreateExam.teleagephone,
+            'age'            : this.fillCreateExam.age,
             'servicioSalud'  : this.fillCreateExam.servicioSalud,
             'commune'        : this.fillCreateExam.commune,
             'establishmentRequest': this.fillCreateExam.establishmentRequest,
@@ -674,6 +629,7 @@
             'listBIRADSEcoMam': this.fillCreateExam.listBIRADSEcoMam,
             'date_exam_reception': this.fillCreateExam.date_exam_reception,
             'diagnostic': this.fillCreateExam.diagnostic,
+            'examType':  this.fillCreateExam.examType,
 
           }).then(response => {
             console.log("Registro Paciente exitosamente");
@@ -727,19 +683,12 @@
                 this.mensajeError.push("Establecimiento donde toma Examen es un campo obligatorio")
             }
             if(!this.fillCreateExam.doctor) {
-                this.mensajeError.push("Médico es un campo obligatorio")
+                this.mensajeError.push("Profesional toma Examen es un campo obligatorio")
             }
             if(!this.fillCreateExam.date_exam) {
                 this.mensajeError.push("Fecha de toma de Examen es un campo obligatorio")
             }
-           /* if(!this.fillCreateExam.listBIRADSMam) {
-                this.mensajeError.push("Birard Mamografía es un campo obligatorio")
-            }
-            if(!this.fillCreateExam.listBIRADSEcoMam) {
-                this.mensajeError.push("Birards Eco-Mamografía es un campo obligatorio")
-            }*/
 
-            //console.log("en Validar"+this.mensajeError)
             if(this.mensajeError.length) {
                 this.error = 1;
             }

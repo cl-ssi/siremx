@@ -212,47 +212,75 @@ export default new Router({
 
         { path: '/examLoad',
           name: 'exam.load',
-         component: require('./components/modules/exam/load').default
-         ,
-         beforeEnter: (to, from, next) => {
-           let authUser = JSON.parse(sessionStorage.getItem('authUser'));
-           if(authUser) {
-             let listRolePermissionsByUser = JSON.parse(sessionStorage.getItem('listRolePermissionsByUser'));
-             if(listRolePermissionsByUser.includes(to.name)) {
-               next();
-             }
-             else {
-               next(from.path);
-             }
-           }
-         }
+          component: require('./components/modules/exam/load').default,
+          beforeEnter: (to, from, next) => {
+            verifyAccess(to, from, next);
+          },
         },
 
         { path: '/examLoadHistory',
           name: 'examLoadHistory.load',
-         component: require('./components/modules/exam/loadHistory').default
-         ,
-         beforeEnter: (to, from, next) => {
-           let authUser = JSON.parse(sessionStorage.getItem('authUser'));
-           if(authUser) {
-             let listRolePermissionsByUser = JSON.parse(sessionStorage.getItem('listRolePermissionsByUser'));
-             if(listRolePermissionsByUser.includes(to.name)) {
-               next();
-             }
-             else {
-               next(from.path);
-             }
-           }
-         }
+          component: require('./components/modules/exam/loadHistory').default,
+          beforeEnter: (to, from, next) => {
+            verifyAccess(to, from, next);
+          },
         },
 
+        /* REPORTS ROUTER */
+        { path: '/report',
+          name: 'report.index',
+          component: require('./components/modules/report/index').default,
+          beforeEnter: (to, from, next) => {
+            verifyAccess(to, from, next);
+          },
+        },
 
-        { path: '/report', component: require('./components/modules/report/index').default },
+        { path: '/reportMX',
+          name: 'reportMX.index',
+          component: require('./components/modules/report/mx').default,
+          beforeEnter: (to, from, next) => {
+            verifyAccess(to, from, next);
+          },
+        },
+
+        { path: '/reportBirardsAge',
+          name: 'reportBirardsAge.index',
+          component: require('./components/modules/report/birardsAge').default,
+          beforeEnter: (to, from, next) => {
+            verifyAccess(to, from, next);
+          },
+        },
+
+        { path: '/patientHistoryClinical',
+          name: 'patientHistoryClinical.index',
+          component: require('./components/modules/report/patientHistoryClinical').default,
+          beforeEnter: (to, from, next) => {
+            verifyAccess(to, from, next);
+          },
+        },
+
+        { path: '/patientHistory',
+          name: 'patientHistory.index',
+          component: require('./components/modules/report/patientHistory').default,
+          beforeEnter: (to, from, next) => {
+            verifyAccess(to, from, next);
+          },
+        },
+
+        { path: '/reportMXBirards',
+          name: 'reportMXBirards.index',
+          component: require('./components/modules/report/mxBirards').default,
+          beforeEnter: (to, from, next) => {
+            verifyAccess(to, from, next);
+          },
+        },
+
+        /*{ path: '/report', component: require('./components/modules/report/index').default },
         { path: '/reportMX', component: require('./components/modules/report/mx').default },
         { path: '/reportBirardsAge', component: require('./components/modules/report/birardsAge').default },
         { path: '/patientHistoryClinical', component: require('./components/modules/report/patientHistoryClinical').default },
         { path: '/patientHistory', component: require('./components/modules/report/patientHistory').default },
-        { path: '/reportMXBirards', component: require('./components/modules/report/mxBirards').default },
+        { path: '/reportMXBirards', component: require('./components/modules/report/mxBirards').default },*/
 
         { path: '*',
           component: require('./components/layouts/404').default

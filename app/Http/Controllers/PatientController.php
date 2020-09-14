@@ -27,7 +27,8 @@ class PatientController extends Controller
        $patients = Patient::Where('run','LIKE','%'.$nRun.'%')
                           ->Where('name','LIKE','%'.$cName.'%')
                           ->Where('fathers_family','LIKE','%'.$cFathers_family.'%')
-                          ->get();
+                          ->orderBy('id','DESC')
+                          ->take(1200)->get();
 
    
 

@@ -89,14 +89,14 @@
                         <label class="col-md-3 col-form-label">Establecimiento</label>
                         <div class="col-md-9">
                           <el-select v-model="fillEditUser.establishment" 
-                          placeholder="Seleccione Rol" filterable
-                          clearable>
-                            <el-option
-                              v-for="item in listEstablishments"
-                              :key="item.id"
-                              :label="item.new_code_deis+' - '+item.alias"
-                              :value="item.new_code_deis">
-                            </el-option>
+                          placeholder="Seleccione"
+                            clearable>
+                              <el-option
+                                v-for="item in listEstablishments"
+                                :key="item.id"
+                                :label="item.new_code_deis+' - '+item.alias"
+                                :value="item.new_code_deis">
+                              </el-option>
                           </el-select>
                         </div>
                       </div>
@@ -107,14 +107,14 @@
                         <label class="col-md-3 col-form-label">Comuna</label>
                         <div class="col-md-9">
                           <el-select v-model="fillEditUser.commune" 
-                          placeholder="Seleccione Rol" filterable
-                          clearable>
-                            <el-option
-                              v-for="item2 in listCommunes"
-                              :key="item2.id"
-                              :label="item2.code_deis+' - '+item2.name"
-                              :value="item2.code_deis">
-                            </el-option>
+                           placeholder="Seleccione"
+                            clearable>
+                              <el-option
+                                v-for="item in listCommunes"
+                                :key="item.id"
+                                :label="item.code_deis+' - '+item.name"
+                                :value="item.code_deis">
+                              </el-option>
                           </el-select>
                         </div>
                       </div>
@@ -219,10 +219,10 @@
           }
       },
       mounted(){
-        this.getUserById();
         this.getListRoles();
         this.getListEstablishments();
         this.getListCommunes();
+        this.getUserById();
       },
       methods: {
         getUserById() {
@@ -240,6 +240,7 @@
             this.fillEditUser.cUsuario       = response.data[0].username;
             this.fillEditUser.cCorreo        = response.data[0].email;
             this.fillEditUser.commune        = (response.data[0].commune_id)? response.data[0].commune_id : ''; 
+            console.log(((response.data[0].commune_id)? response.data[0].commune_id : '') )
             this.fillEditUser.establishment  = (response.data[0].establishment_id)? response.data[0].establishment_id : ''; 
 
             this.fullscreenLoading = false; 

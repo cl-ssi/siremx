@@ -172,7 +172,7 @@ class ExamController extends Controller
        $birthday              = $request->birthday;
        $telephone             = $request->telephone;
        $servicioSalud         = $request->servicioSalud;
-       $commune         = $request->commune;
+       $commune               = $request->commune;
        $establishmentRequest  = $request->establishmentRequest;
        $professional          = $request->professional;
        $date_exam_order       = $request->date_exam_order;
@@ -180,45 +180,33 @@ class ExamController extends Controller
        $doctor                = $request->doctor;
        $date_exam             = $request->date_exam;
        $derivation            = $request->derivation;
-       $birardsMam            = $request->listBIRADSMam;
-       $birardsEco            = $request->listBIRADSEcoMam;
-       $date_exam_reception   = $request->date_exam_reception;
-       $diagnostic            = $request->diagnostic;
-
-       $birardsMam  = ($birardsMam == 0) ? ($birardsMam = NULL) : $birardsMam;
-       $birardsEco  = ($birardsEco == 0) ? ($birardsEco = NULL) : $birardsEco;
-
-      /* $cName  = ($cName == NULL) ? ($cName = '') : $cName;
-       $cFathers_family = ($cFathers_family == NULL) ? ($cFathers_family = '') : $cFathers_family;
-       $nRun  = ($nRun == NULL) ? ($nRun = '') : $nRun;*/
-       
+       $examType              = $request->examType;
+        
+        
+       //dd($request);
 
        // Se obtiene el listado de Id de pacientes conforme el request.
-       $patients_list = Patient::Where('run','LIKE','%'.$run.'%')
+       /*$patients_list = Patient::Where('run','LIKE','%'.$run.'%')
                                ->Where('name','LIKE','%'.$name.'%')
                                ->Where('fathers_family','LIKE','%'.$fathers_family.'%')
-                               ->get('id');
+                               ->get('id');*/
 
         
         $exams = new Exam();
-        $exams->servicio_salud   = $servicioSalud;
-        $exams->profesional_solicita   = $professional;
-        $exams->comuna   = $commune;
+        $exams->servicio_salud       = $servicioSalud;
+        $exams->profesional_solicita = $professional;
+        $exams->comuna               = $commune;
         $exams->establecimiento_realiza_examen   = $establishmentExam;
-        $exams->cesfam   = $establishmentRequest;
-        $exams->medico   = $doctor;
-        //$exams->fonasa   = $exam['FONASA'];
+        $exams->cesfam               = $establishmentRequest;
+        $exams->medico               = $doctor;
 
         $exams->date_exam_order      = $date_exam_order;
         $exams->date_exam            = $date_exam;
-        $exams->date_exam_reception  = $date_exam_reception;
         $exams->derivation_reason    = $derivation;
-        $exams->birards_mamografia   = $birardsMam;
-        $exams->birards_ecografia    = $birardsEco;
-        $exams->diagnostico          = $diagnostic;
+        $exams->exam_type            = $examType;
         $exams->load_source          = 'app';
         $exams->load_id              = 1;
-        $exams->user_id              = 1;
+        $exams->user_id              = 1; //Cambiar por usuario de sesión
         $exams->patient_id           = $idPatient;
         $exams->save();
 
