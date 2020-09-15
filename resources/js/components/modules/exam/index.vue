@@ -34,27 +34,30 @@
               </div>
               <div class="card-body">
                 <form role="form">
-                    <div class="form-row">
-                      <fieldset class="form-group col-4">
-                          <label>Run</label>
-                          <input type="text" class="form-control" v-model="fillBsqUsuario.nRun" @keyup.enter="getListarUsuarios">
-                          <small class="form-text text-muted">Utilizar: 11111111-1</small>
-                      </fieldset>
-                      <!--<fieldset class="form-group col-1">
-                        <label>DV</label>
-                          <input type="text" class="form-control" v-model="fillBsqUsuario.dv" @keyup.enter="getListarUsuarios">
-                      </fieldset>-->
+
+                  <div class="row">
+                    <div class="col-12 col-sm-4">
+                      <div class="form-group">
+                        <label>Run</label>
+                        <input type="text" class="form-control" v-model="fillBsqUsuario.nRun" @keyup.enter="getListarUsuarios">
+                        <small class="form-text text-muted">Utilizar: 11111111-1</small>
+                      </div>
+                    </div>
                   </div>
 
-                  <div class="form-row">
-                      <fieldset class="form-group col-4">
-                          <label>Nombre</label>
-                           <input type="text" class="form-control" v-model="fillBsqUsuario.cName" @keyup.enter="getListarUsuarios">
-                      </fieldset>
-                      <fieldset class="form-group col-4">
+                  <div class="row">
+                    <div class="col-12 col-sm-4">
+                      <div class="form-group">
+                        <label>Nombre</label>
+                        <input type="text" class="form-control" v-model="fillBsqUsuario.cName" @keyup.enter="getListarUsuarios">
+                      </div>
+                    </div>
+                    <div class="col-12 col-sm-4">
+                      <div class="form-group">
                         <label>Apellido Paterno</label>
-                           <input type="text" class="form-control" v-model="fillBsqUsuario.cFathers_family" @keyup.enter="getListarUsuarios">
-                      </fieldset>
+                        <input type="text" class="form-control" v-model="fillBsqUsuario.cFathers_family" @keyup.enter="getListarUsuarios">
+                      </div>
+                    </div>
                   </div>
 
                 </form>

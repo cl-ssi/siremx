@@ -65,10 +65,8 @@
           </div>
         </div>
         
-
         <div class="row">
-          <div class="col-lg-4 col-4">
-            <!-- small box -->
+          <div class="col-12 col-sm-4">
             <div class="card">
                 <div class="card-header border-0">
                   <div class="d-flex justify-content-between">
@@ -82,9 +80,7 @@
                 </div>
             </div>
           </div>
-          <!-- ./col -->
-          <div class="col-lg-8 col-8">
-            <!-- small box -->
+          <div class="col-12 col-sm-8">
             <div class="card">
                 <div class="card-header border-0">
                   <div class="d-flex justify-content-between">
@@ -93,12 +89,14 @@
                 </div>
                 <div class="card-body">
                   <div class="position-relative mb-4"><div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"><div class=""></div></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
-                    <canvas id="myChart2" width="400" height="142"></canvas>
+                    <canvas id="myChart2" width="400" height="150"></canvas>
                   </div>
                 </div>
             </div>
           </div>
         </div>
+
+     
         
       </div><!-- /.container-fluid -->
     </div>

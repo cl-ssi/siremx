@@ -44,6 +44,7 @@ class ExamController extends Controller
        $derivation            = $request->derivation;
        $examType              = $request->examType;
        $birards               = $request->birards;
+       $professional          = $request->professional;
        $listBIRADSEcoMam      = $request->listBIRADSEcoMam;
        $date_exam_reception   = $request->date_exam_reception;
        $diagnostic            = $request->diagnostic;
@@ -74,13 +75,14 @@ class ExamController extends Controller
        $servicioSalud        = ($servicioSalud == NULL) ? ($servicioSalud = '') : $servicioSalud;
        $commune              = ($commune == NULL) ? ($commune = '') : $commune;
        $establishmentRequest = ($establishmentRequest == NULL) ? ($establishmentRequest = '') : $establishmentRequest;
-       $date_exam_order      = ($date_exam_order) ? ($date_exam_order = NULL) : $date_exam_order; // SE QUITO NULL
+       $date_exam_order      = ($date_exam_order == NULL) ? ($date_exam_order = NULL) : $date_exam_order; // SE QUITO NULL
        $establishmentExam    = ($establishmentExam == NULL) ? ($establishmentExam = '') : $establishmentExam;
        $doctor               = ($doctor == NULL) ? ($doctor = '') : $doctor;
        $date_exam            = ($date_exam == NULL) ? ($date_exam = NULL) : $date_exam;
        $derivation           = ($derivation == NULL) ? ($derivation = '') : $derivation;
        $date_exam_reception  = ($date_exam_reception ==  NULL) ? ($date_exam_reception = NULL) : $date_exam_reception;
        $diagnostic           = ($diagnostic == NULL) ? ($diagnostic = '') : $diagnostic;
+       $professional         = ($professional == NULL) ? ($professional = '') : $professional;
 
        $exam = Exam::find($idExam);
        $exam->servicio_salud       = $servicioSalud;
@@ -88,6 +90,7 @@ class ExamController extends Controller
        $exam->cesfam               = $establishmentRequest;
        $exam->date_exam_order      = $date_exam_order;
        $exam->establecimiento_realiza_examen   = $establishmentExam;
+       $exam->profesional_solicita               = $professional;
        $exam->medico               = $doctor;
        $exam->date_exam            = $date_exam;
        $exam->derivation_reason    = $derivation;
@@ -369,7 +372,7 @@ class ExamController extends Controller
 
             $examDet->date_exam_order      = $date_exam_order;
             $examDet->date_exam            = $date_exam;
-            $examDet->diagnostico            = $diagnostic;
+            $examDet->diagnostico          = $diagnostic;
             $examDet->date_exam_reception  = $date_exam_reception;
             $examDet->birards_mamografia   = $birardsMam;
             $examDet->birards_ecografia    = $birardsEco;

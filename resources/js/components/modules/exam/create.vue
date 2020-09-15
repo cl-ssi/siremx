@@ -34,39 +34,49 @@
               </div>
               <div class="card-body">
                 <form role="form">
-                  
-                  <div class="form-row">
-                      <fieldset class="form-group col-4">
-                          <label>Run</label>
-                          <input ref="run" type="text" class="form-control" v-model="fillCreateExam.run">
-                          <small class="form-text text-muted">Utilizar: 12213213-1</small>
-                         
-                      </fieldset>
-                      <fieldset class="form-group col-1">
-                        <label>.</label>
+
+                  <div class="row">
+                    <div class="col-8 col-sm-4">
+                      <div class="form-group">
+                        <label>Run</label>
+                        <input ref="run" type="text" class="form-control" v-model="fillCreateExam.run" >
+                        <small class="form-text text-muted">Utilizar: 12213213-1</small>
+                      </div>
+                    </div>
+                    <div class="col-4 col-sm-1">
+                      <div class="form-group">
+                        <label>DV</label>
                          <button class="form-control btn btn-info btn-sm" @click.prevent="getListPatients" >Buscar</button>
-                      </fieldset>
+                      </div>
+                    </div>
                   </div>
 
-                  <div class="form-row">
-                      <fieldset class="form-group col-4">
-                          <label>Nombre</label>
-                           <input type="text" class="form-control" v-model="fillCreateExam.name" disabled>
-                      </fieldset>
-                      <fieldset class="form-group col-4">
+                  <div class="row">
+                    <div class="col-12 col-sm-4">
+                      <div class="form-group">
+                        <label>Nombre</label>
+                        <input type="text" class="form-control" v-model="fillCreateExam.name" disabled>
+                      </div>
+                    </div>
+                    <div class="col-12 col-sm-4">
+                      <div class="form-group">
                         <label>Apellido Paterno</label>
-                           <input type="text" class="form-control" v-model="fillCreateExam.fathers_family" disabled>
-                      </fieldset>
-                      <fieldset class="form-group col-4">
+                        <input type="text" class="form-control" v-model="fillCreateExam.fathers_family" disabled>
+                      </div>
+                    </div>
+                    <div class="col-12 col-sm-4">
+                      <div class="form-group">
                         <label>Apellido Materno</label>
-                          <input type="text" class="form-control" v-model="fillCreateExam.mothers_family" disabled>
-                      </fieldset>
+                        <input type="text" class="form-control" v-model="fillCreateExam.mothers_family" disabled>
+                      </div>
+                    </div>
                   </div>
 
-                  <div class="form-row">
-                      <fieldset class="form-group col-4">
-                          <label>Genero</label>
-                           <el-select v-model="fillCreateExam.gender" 
+                  <div class="row">
+                    <div class="col-12 col-sm-4">
+                      <div class="form-group">
+                        <label>Genero</label>
+                        <el-select v-model="fillCreateExam.gender" 
                               placeholder="Seleccione"
                               clearable>
                                 <el-option
@@ -76,28 +86,37 @@
                                   :value="item.value"
                                   :disabled="true">
                                 </el-option>
-                           </el-select>
-                      </fieldset>
-                      <fieldset class="form-group col-4">
+                        </el-select>
+                      </div>
+                    </div>
+                    <div class="col-12 col-sm-4">
+                      <div class="form-group">
                         <label>Telefóno</label>
-                          <input type="text" class="form-control" v-model="fillCreateExam.telephone" disabled>
-                      </fieldset>
-                      <fieldset class="form-group col-2">
-                          <label>Fecha Nacimiento</label>
-                           <input type="text"  class="form-control" v-model="fillCreateExam.birthday" disabled>
-                      </fieldset>
-                       <fieldset class="form-group col-2">
-                          <label>Edad</label>
-                           <input type="text" class="form-control" v-model="fillCreateExam.age" disabled>
-                      </fieldset>
+                        <input type="text" class="form-control" v-model="fillCreateExam.telephone" disabled>
+                      </div>
+                    </div>
+                    <div class="col-12 col-sm-2">
+                      <div class="form-group">
+                        <label>Fecha Nacimiento</label>
+                        <input type="text"  class="form-control" v-model="fillCreateExam.birthday" disabled>
+                      </div>
+                    </div>
+                    <div class="col-12 col-sm-2">
+                      <div class="form-group">
+                        <label>Edad</label>
+                        <input type="text" class="form-control" v-model="fillCreateExam.age" disabled>
+                      </div>
+                    </div>
                   </div>
+                  
 
                   <el-divider content-position="left">Ingreso de Examen</el-divider>
-                  
-                  <div class="form-row">
-                      <fieldset class="form-group col-4">
-                          <label>Servicio de Salud</label>
-                           <el-select v-model="fillCreateExam.servicioSalud" 
+
+                  <div class="row">
+                    <div class="col-12 col-sm-4">
+                      <div class="form-group">
+                        <label>Servicio de Salud</label>
+                        <el-select v-model="fillCreateExam.servicioSalud" 
                               placeholder="Seleccione"
                               clearable>
                                 <el-option
@@ -106,12 +125,13 @@
                                   :label="item.label"
                                   :value="item.value">
                                 </el-option>
-                           </el-select>
-                      </fieldset>
-
-                      <fieldset class="form-group col-4">
-                          <label>Comuna</label>
-                          <el-select v-model="fillCreateExam.commune" filterable
+                        </el-select>
+                      </div>
+                    </div>
+                    <div class="col-12 col-sm-4">
+                      <div class="form-group">
+                        <label>Comuna</label>
+                        <el-select v-model="fillCreateExam.commune" filterable
                             placeholder="Seleccione"
                             clearable>
                               <el-option
@@ -120,16 +140,16 @@
                                 :label="item.code_deis+' - '+item.name"
                                 :value="item.code_deis">
                               </el-option>
-                          </el-select>
-                      </fieldset>
-
+                        </el-select>
+                      </div>
+                    </div>
                   </div>
                   
-
-                  <div class="form-row">
-                      <fieldset class="form-group col-4">
-                          <label>Establecimiento solicita Examen</label>
-                           <el-select v-model="fillCreateExam.establishmentRequest" filterable
+                  <div class="row">
+                    <div class="col-12 col-sm-4">
+                      <div class="form-group">
+                        <label>Establecimiento solicita Examen</label>
+                        <el-select v-model="fillCreateExam.establishmentRequest" filterable
                               placeholder="Seleccione"
                               clearable>
                                 <el-option
@@ -138,11 +158,13 @@
                                   :label="item.new_code_deis+' - '+item.alias"
                                   :value="item.new_code_deis">
                                 </el-option>
-                           </el-select>
-                      </fieldset>
-                      <fieldset class="form-group col-4">
-                          <label>Profesional solicita Examen</label>
-                           <el-select v-model="fillCreateExam.professional" filterable
+                        </el-select>
+                      </div>
+                    </div>
+                    <div class="col-12 col-sm-4">
+                      <div class="form-group">
+                        <label>Profesional solicita Examen</label>
+                        <el-select v-model="fillCreateExam.professional" filterable
                               placeholder="Seleccione"
                               clearable>
                                 <el-option
@@ -151,25 +173,30 @@
                                   :label="item.label"
                                   :value="item.value">
                                 </el-option>
-                           </el-select>
-                      </fieldset>
-                      <fieldset class="form-group col-4">
-                          <label>Fecha Solicitud</label>
-                          <el-date-picker
+                        </el-select>
+                      </div>
+                    </div>
+                    <div class="col-12 col-sm-4">
+                      <div class="form-group">
+                        <label>Fecha Solicitud</label>
+                        <el-date-picker
                             v-model="fillCreateExam.date_exam_order"
                             type="date"
                             placeholder="Fecha"
                             format="dd/MM/yyyy"
                             value-format="yyyy-MM-dd">
-                          </el-date-picker>
-                          <small class="form-text text-muted"></small>
-                      </fieldset>
+                        </el-date-picker>
+                      </div>
+                    </div>
                   </div>
+                  
                   <hr>
-                  <div class="form-row">
-                      <fieldset class="form-group col-4">
-                          <label>Establecimiento donde toma Examen</label>
-                           <el-select  v-on:change="onChange" v-model="fillCreateExam.establishmentExam" filterable
+
+                  <div class="row">
+                    <div class="col-12 col-sm-4">
+                      <div class="form-group">
+                        <label>Establecimiento donde toma Examen</label>
+                        <el-select  v-on:change="onChange" v-model="fillCreateExam.establishmentExam" filterable
                               placeholder="Seleccione"
                               clearable>
                                 <el-option
@@ -178,28 +205,36 @@
                                   :label="item.new_code_deis+' - '+item.alias"
                                   :value="item.new_code_deis">
                                 </el-option>
-                           </el-select>
-                      </fieldset>
-                      <fieldset class="form-group col-4">
-                          <label>Profesional toma Examen</label>
-                            <input type="text" class="form-control" v-model="fillCreateExam.doctor" @keyup.enter="setRegisterExam">
-                      </fieldset>
-                      <fieldset class="form-group col-4">
-                          <label>Fecha Toma Examen</label>
-                          <el-date-picker
+                        </el-select>
+                      </div>
+                    </div>
+                    <div class="col-12 col-sm-4">
+                      <div class="form-group">
+                        <label>Profesional toma Examen</label>
+                        <input type="text" class="form-control" v-model="fillCreateExam.doctor" @keyup.enter="setRegisterExam">
+                      </div>
+                    </div>
+                    <div class="col-12 col-sm-4">
+                      <div class="form-group">
+                        <label>Fecha Toma Examen</label>
+                        <el-date-picker
                             v-model="fillCreateExam.date_exam"
                             type="date"
                             placeholder="Fecha"
                             format="dd/MM/yyyy"
                             value-format="yyyy-MM-dd">
-                          </el-date-picker>
-                      </fieldset>
+                        </el-date-picker>
+                      </div>
+                    </div>
                   </div>
+
                   <hr>
-                  <div class="form-row">
-                       <fieldset class="form-group col-6">
-                          <label>Motivo Derivación</label>
-                          <el-select v-model="fillCreateExam.derivation" filterable
+
+                   <div class="row">
+                    <div class="col-12 col-sm-4">
+                      <div class="form-group">
+                        <label>Motivo Derivación</label>
+                        <el-select v-model="fillCreateExam.derivation" filterable
                             placeholder="Seleccione"
                             clearable>
                               <el-option
@@ -208,11 +243,13 @@
                                 :label="item.id+' - '+item.title"
                                 :value="item.id">
                               </el-option>
-                          </el-select>
-                      </fieldset>
-                      <fieldset class="form-group col-4">
-                          <label>Tipo de Examen</label>
-                           <el-select v-model="fillCreateExam.examType" 
+                        </el-select>
+                      </div>
+                    </div>
+                    <div class="col-12 col-sm-4">
+                      <div class="form-group">
+                        <label>Tipo de Examen</label>
+                        <el-select v-model="fillCreateExam.examType" 
                               placeholder="Seleccione"
                               clearable>
                                 <el-option
@@ -221,8 +258,9 @@
                                   :label="item.label"
                                   :value="item.value">
                                 </el-option>
-                           </el-select>
-                      </fieldset>
+                        </el-select>
+                      </div>
+                    </div>
                   </div>
 
                 </form>

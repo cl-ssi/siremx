@@ -275,18 +275,11 @@ export default new Router({
           },
         },
 
-        /*{ path: '/report', component: require('./components/modules/report/index').default },
-        { path: '/reportMX', component: require('./components/modules/report/mx').default },
-        { path: '/reportBirardsAge', component: require('./components/modules/report/birardsAge').default },
-        { path: '/patientHistoryClinical', component: require('./components/modules/report/patientHistoryClinical').default },
-        { path: '/patientHistory', component: require('./components/modules/report/patientHistory').default },
-        { path: '/reportMXBirards', component: require('./components/modules/report/mxBirards').default },*/
-
         { path: '*',
           component: require('./components/layouts/404').default
         },
     ],
     mode: 'history',
-    base: '/sismam/',
+    base: '/siremx/',
     linkActiveClass: 'active'
 })

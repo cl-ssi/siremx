@@ -48,6 +48,8 @@ class UsersController extends Controller
     {
        if(!$request->ajax()) return redirect('/');
         
+       $run            = $request->run;
+       $dv             = $request->dv;
        $cNombre        = $request->cNombre;
        $cSegundoNombre = $request->cSegundoNombre;
        $cApellido      = $request->cApellido;
@@ -56,6 +58,8 @@ class UsersController extends Controller
        $cContrasena    = Hash::make($request->cContrasena);
        $oFototgrafia   = $request->oFotografia;
 
+       $run            = ($run == NULL) ? ($run = '') : $run;
+       $dv             = ($dv == NULL) ? ($dv = '') : $dv;
        $cNombre        = ($cNombre == NULL) ? ($cNombre = '') : $cNombre;
        $cSegundoNombre = ($cSegundoNombre == NULL) ? ($cSegundoNombre = '') : $cSegundoNombre;
        $cApellido      = ($cApellido == NULL) ? ($cApellido = '') : $cApellido;
@@ -64,8 +68,10 @@ class UsersController extends Controller
        $cContrasena    = ($cContrasena == NULL) ? ($cContrasena = '') : $cContrasena;
        $oFototgrafia   = ($oFototgrafia == NULL) ? ($oFototgrafia = NULL) : $oFototgrafia;
 
-       $rpta     = DB::select('call sp_Usuario_setRegistrarUsuario (?,?,?,?,?,?,?)',
+       $rpta     = DB::select('call sp_Usuario_setRegistrarUsuario (?,?,?,?,?,?,?,?,?)',
        [
+           $run,
+           $dv,
            $cNombre,
            $cSegundoNombre,
            $cApellido,
@@ -85,7 +91,9 @@ class UsersController extends Controller
     {
        if(!$request->ajax()) return redirect('/');
 
-       $idUser         = $request->idUser; 
+       $idUser         = $request->idUser;
+       $run            = $request->run;
+       $dv             = $request->dv;
        $cNombre        = $request->cNombre;
        $cSegundoNombre = $request->cSegundoNombre;
        $cApellido      = $request->cApellido;
@@ -101,6 +109,8 @@ class UsersController extends Controller
        $user = User::find($idUser);
 
        $cNombre        = ($cNombre == NULL) ? ($cNombre = '') : $cNombre;
+       $run            = ($run == NULL) ? ($run = '') : $run;
+       $dv             = ($dv == NULL) ? ($dv = '') : $dv;
        $cSegundoNombre = ($cSegundoNombre == NULL) ? ($cSegundoNombre = '') : $cSegundoNombre;
        $cApellido      = ($cApellido == NULL) ? ($cApellido = '') : $cApellido;
        $cUsuario       = ($cUsuario == NULL) ? ($cUsuario = '') : $cUsuario;
@@ -112,6 +122,8 @@ class UsersController extends Controller
 
   
        $user->firstname         = $cNombre;
+       $user->run               = $run;
+       $user->dv                = $dv;
        $user->secondname        = $cSegundoNombre;
        $user->lastname          = $cApellido;
        $user->username          = $cUsuario;

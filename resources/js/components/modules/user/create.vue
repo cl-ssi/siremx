@@ -34,60 +34,72 @@
               </div>
               <div class="card-body">
                 <form role="form">
+                
                   <div class="row">
-                    <div class="col-md-6">
+                    <div class="col-5 col-sm-5 col-xs-5">
                       <div class="form-group">
-                        <label class="col-md-3 col-form-label">Nombre</label>
-                        <div class="col-md-9">
-                          <input type="text" class="form-control" v-model="fillCrearUsuario.cNombre" @keyup.enter="setRegistrarUsuario">
-                        </div>
+                        <label>Run</label>
+                        <input type="text" class="form-control" v-model="fillCrearUsuario.run" @keyup.enter="setRegistrarUsuario">
                       </div>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-1 col-sm-1 col-xs-1">
                       <div class="form-group">
-                        <label class="col-md-3 col-form-label">Segundo Nombre</label>
-                        <div class="col-md-9">
-                          <input type="text" class="form-control" v-model="fillCrearUsuario.cSegundoNombre" @keyup.enter="setRegistrarUsuario">
-                        </div>
+                        <label>DV</label>
+                        <input type="text" class="form-control" v-model="fillCrearUsuario.dv" @keyup.enter="setRegistrarUsuario">
                       </div>
                     </div>
-                    <div class="col-md-6">
+                  </div>
+
+                  <div class="row">
+                    <div class="col-12 col-sm-6">
                       <div class="form-group">
-                        <label class="col-md-3 col-form-label">Apellido</label>
-                        <div class="col-md-9">
-                          <input type="text" class="form-control" v-model="fillCrearUsuario.cApellido" @keyup.enter="setRegistrarUsuario">
-                        </div>
+                        <label>Nombre</label>
+                        <input type="text" class="form-control" v-model="fillCrearUsuario.cNombre" @keyup.enter="setRegistrarUsuario">
                       </div>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-12 col-sm-6">
                       <div class="form-group">
-                        <label class="col-md-3 col-form-label">Usuario</label>
-                        <div class="col-md-9">
-                          <input type="text" class="form-control" v-model="fillCrearUsuario.cUsuario" @keyup.enter="setRegistrarUsuario">
-                        </div>
+                        <label>Segundo Nombre</label>
+                        <input type="text" class="form-control" v-model="fillCrearUsuario.cSegundoNombre" @keyup.enter="setRegistrarUsuario">
                       </div>
                     </div>
-                    <div class="col-md-6">
+                  </div>
+
+                  <div class="row">
+                    <div class="col-12 col-sm-6">
                       <div class="form-group">
-                        <label class="col-md-4 col-form-label">Correo Electronico</label>
-                        <div class="col-md-9">
-                          <input type="text" class="form-control" v-model="fillCrearUsuario.cCorreo" @keyup.enter="setRegistrarUsuario">
-                        </div>
+                        <label>Apellido</label>
+                        <input type="text" class="form-control" v-model="fillCrearUsuario.cApellido" @keyup.enter="setRegistrarUsuario">
                       </div>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-12 col-sm-6">
                       <div class="form-group">
-                        <label class="col-md-3 col-form-label">Contraseña</label>
-                        <div class="col-md-9">
-                          <el-input placeholder="Ingrese Password" v-model="fillCrearUsuario.cContrasena" @keyup.enter="setRegistrarUsuario" show-password></el-input>
-                       </div>
+                        <label>Usuario</label>
+                        <input type="text" class="form-control" v-model="fillCrearUsuario.cUsuario" @keyup.enter="setRegistrarUsuario">
                       </div>
                     </div>
-                    <div class="col-md-6">
+                  </div>
+
+                  <div class="row">
+                    <div class="col-12 col-sm-6">
                       <div class="form-group">
-                        <label class="col-md-3 col-form-label">Rol</label>
-                        <div class="col-md-9">
-                          <el-select v-model="fillCrearUsuario.idRole" 
+                        <label>Correo Electronico</label>
+                        <input type="text" class="form-control" v-model="fillCrearUsuario.cCorreo" @keyup.enter="setRegistrarUsuario">
+                      </div>
+                    </div>
+                    <div class="col-12 col-sm-6">
+                      <div class="form-group">
+                        <label>Contraseña</label>
+                        <el-input placeholder="Ingrese Password" v-model="fillCrearUsuario.cContrasena" @keyup.enter="setRegistrarUsuario" show-password></el-input>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-12 col-sm-6">
+                      <div class="form-group">
+                        <label>Rol</label>
+                        <el-select v-model="fillCrearUsuario.idRole" 
                           placeholder="Seleccione Rol"
                           clearable>
                             <el-option
@@ -97,18 +109,16 @@
                               :value="item.id">
                             </el-option>
                           </el-select>
-                        </div>
                       </div>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-12 col-sm-6">
                       <div class="form-group">
-                        <label class="col-md-3 col-form-label">Fotografía</label>
-                        <div class="col-md-9">
-                          <input type="file" class="form-control" @change="getFile">
-                        </div>
+                        <label>Fotografía</label>
+                        <input type="file" class="form-control " @change="getFile">
                       </div>
                     </div>
                   </div>
+
                 </form>
               </div>
               <div class="card-footer">
@@ -130,7 +140,7 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title"> Sismam</h5>
+                    <h5 class="modal-title"> SireMX</h5>
                     <button class="close" @click="abrirModal"></button>
                 </div>
                 <div class="modal-body">
@@ -151,6 +161,8 @@
       data(){
           return {
             fillCrearUsuario: {
+              run: '',
+              dv: '',
               cNombre: '',
               cSegundoNombre: '',
               cApellido: '',
@@ -183,6 +195,8 @@
       },
       methods: {
         limpiarCriterios(){
+          this.fillCrearUsuario.run  = '';
+          this.fillCrearUsuario.dv  = '';
           this.fillCrearUsuario.cNombre  = '';
           this.fillCrearUsuario.cSegundoNombre = '';
           this.fillCrearUsuario.cApellido  = '';
@@ -206,7 +220,7 @@
             }
             this.fullscreenLoading = true;
             if(!this.fillCrearUsuario.oFotografia || this.fillCrearUsuario.oFotografia == undefined) {
-              this.setGuardarUsuario(0);
+              this.setStoreUser(0);
             }
             else {
               this.setRegistrarArchivo();
@@ -219,7 +233,7 @@
             axios.post(url, this.form, config).then(response =>{
               console.log(response)
               var nIdFile = response.data[0].nIdFile;
-              this.setGuardarUsuario(nIdFile);
+              this.setStoreUser(nIdFile);
             }).catch(error => {
               if(error.response.status == 401){
                 this.$router.push({name: 'login'})
@@ -229,9 +243,11 @@
               }
           })
         },
-        setGuardarUsuario(nIdFile){
+        setStoreUser(nIdFile){
           var  url = '/administracion/usuario/setRegistrarUsuario'
           axios.post(url, {
+            'run'            : this.fillCrearUsuario.run,
+            'dv'             : this.fillCrearUsuario.dv,
             'cNombre'        : this.fillCrearUsuario.cNombre,
             'cSegundoNombre' : this.fillCrearUsuario.cSegundoNombre,
             'cApellido'      : this.fillCrearUsuario.cApellido,
@@ -243,6 +259,7 @@
 
           }).then(response => {
             console.log(response.data[0].nIdUsuario);
+            console.log(response);
             this.setEditRoleByUser(response.data[0].nIdUsuario);
           }).catch(error => {
               if(error.response.status == 401){
@@ -261,7 +278,6 @@
             'idRole' : this.fillCrearUsuario.idRole,
 
           }).then(response => {
-            console.log("hola"+response);
             this.fullscreenLoading = false;
             this.$router.push('/user');
           }).catch(error => {
@@ -290,11 +306,12 @@
             this.error = 0;
             this.mensajeError = [];
 
+
+            if(!this.fillCrearUsuario.run) {
+                this.mensajeError.push("Run es un campo obligatorio")
+            }
             if(!this.fillCrearUsuario.cNombre) {
                 this.mensajeError.push("Primer Nombre es un campo obligatorio")
-            }
-            if(!this.fillCrearUsuario.cSegundoNombre) {
-                this.mensajeError.push("Segundo Nombre es un campo obligatorio")
             }
             if(!this.fillCrearUsuario.cApellido) {
                 this.mensajeError.push("El Apellido es un campo obligatorio")

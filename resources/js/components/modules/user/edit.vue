@@ -34,61 +34,72 @@
               </div>
               <div class="card-body">
                 <form role="form">
-                  <div class="row">
-                    <div class="col-md-6">
-                      <div class="form-group">
-                        <label class="col-md-3 col-form-label">Nombre</label>
-                        <div class="col-md-9">
-                          <input type="text" class="form-control" v-model="fillEditUser.cNombre" @keyup.enter="setEditUser">
-                        </div>
-                      </div>
-                    </div>
-                    <div class="col-md-6">
-                      <div class="form-group">
-                        <label class="col-md-3 col-form-label">Segundo Nombre</label>
-                        <div class="col-md-9">
-                          <input type="text" class="form-control" v-model="fillEditUser.cSegundoNombre" @keyup.enter="setEditUser">
-                        </div>
-                      </div>
-                    </div>
-                    <div class="col-md-6">
-                      <div class="form-group">
-                        <label class="col-md-3 col-form-label">Apellido</label>
-                        <div class="col-md-9">
-                          <input type="text" class="form-control" v-model="fillEditUser.cApellido" @keyup.enter="setEditUser">
-                        </div>
-                      </div>
-                    </div>
-                    <div class="col-md-6">
-                      <div class="form-group">
-                        <label class="col-md-3 col-form-label">Usuario</label>
-                        <div class="col-md-9">
-                          <input type="text" class="form-control" v-model="fillEditUser.cUsuario" @keyup.enter="setEditUser">
-                        </div>
-                      </div>
-                    </div>
-                    <div class="col-md-6">
-                      <div class="form-group">
-                        <label class="col-md-5 col-form-label">Correo Electronico</label>
-                        <div class="col-md-9">
-                          <input type="text" class="form-control" v-model="fillEditUser.cCorreo" @keyup.enter="setEditUser">
-                        </div>
-                      </div>
-                    </div>
-                    <div class="col-md-6">
-                      <div class="form-group">
-                        <label class="col-md-3 col-form-label">Contraseña</label>
-                        <div class="col-md-9">
-                          <el-input placeholder="Ingrese Password" v-model="fillEditUser.cContrasena" @keyup.enter="setEditUser" show-password></el-input>
-                       </div>
-                      </div>
-                    </div>
 
-                    <div class="col-md-6">
+                  <div class="row">
+                    <div class="col-5 col-sm-5 col-xs-5">
                       <div class="form-group">
-                        <label class="col-md-3 col-form-label">Establecimiento</label>
-                        <div class="col-md-9">
-                          <el-select v-model="fillEditUser.establishment" 
+                        <label>Run</label>
+                        <input type="text" class="form-control" v-model="fillEditUser.run" @keyup.enter="setRegistrarUsuario">
+                      </div>
+                    </div>
+                    <div class="col-1 col-sm-1 col-xs-1">
+                      <div class="form-group">
+                        <label>DV</label>
+                        <input type="text" class="form-control" v-model="fillEditUser.dv" @keyup.enter="setRegistrarUsuario">
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-12 col-sm-6">
+                      <div class="form-group">
+                        <label>Nombre</label>
+                        <input type="text" class="form-control" v-model="fillEditUser.cNombre" @keyup.enter="setEditUser">
+                      </div>
+                    </div>
+                    <div class="col-12 col-sm-6">
+                      <div class="form-group">
+                        <label>Segundo Nombre</label>
+                        <input type="text" class="form-control" v-model="fillEditUser.cSegundoNombre" @keyup.enter="setEditUser">
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-12 col-sm-6">
+                      <div class="form-group">
+                        <label>Apellido</label>
+                        <input type="text" class="form-control" v-model="fillEditUser.cApellido" @keyup.enter="setEditUser">
+                      </div>
+                    </div>
+                    <div class="col-12 col-sm-6">
+                      <div class="form-group">
+                        <label>Usuario</label>
+                        <input type="text" class="form-control" v-model="fillEditUser.cUsuario" @keyup.enter="setEditUser">
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-12 col-sm-6">
+                      <div class="form-group">
+                        <label>Correo Electronico</label>
+                        <input type="text" class="form-control" v-model="fillEditUser.cCorreo" @keyup.enter="setEditUser">
+                      </div>
+                    </div>
+                    <div class="col-12 col-sm-6">
+                      <div class="form-group">
+                        <label>Contraseña</label>
+                          <el-input placeholder="Ingrese Password" v-model="fillEditUser.cContrasena" @keyup.enter="setEditUser" show-password></el-input>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-12 col-sm-6">
+                      <div class="form-group">
+                        <label>Establecimiento</label>
+                        <el-select v-model="fillEditUser.establishment" 
                           placeholder="Seleccione"
                             clearable>
                               <el-option
@@ -97,15 +108,12 @@
                                 :label="item.new_code_deis+' - '+item.alias"
                                 :value="item.new_code_deis">
                               </el-option>
-                          </el-select>
-                        </div>
+                        </el-select>
                       </div>
                     </div>
-
-                    <div class="col-md-6">
+                    <div class="col-12 col-sm-6">
                       <div class="form-group">
-                        <label class="col-md-3 col-form-label">Comuna</label>
-                        <div class="col-md-9">
+                        <label>Comuna</label>
                           <el-select v-model="fillEditUser.commune" 
                            placeholder="Seleccione"
                             clearable>
@@ -116,16 +124,15 @@
                                 :value="item.code_deis">
                               </el-option>
                           </el-select>
-                        </div>
                       </div>
                     </div>
+                  </div>
 
-
-                    <div class="col-md-6">
+                  <div class="row">
+                    <div class="col-12 col-sm-6">
                       <div class="form-group">
-                        <label class="col-md-3 col-form-label">Rol</label>
-                        <div class="col-md-9">
-                          <el-select v-model="fillEditUser.idRole" 
+                        <label>Rol</label>
+                        <el-select v-model="fillEditUser.idRole" 
                           placeholder="Seleccione Rol"
                           clearable>
                             <el-option
@@ -135,18 +142,16 @@
                               :value="item.id">
                             </el-option>
                           </el-select>
-                        </div>
                       </div>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-12 col-sm-6">
                       <div class="form-group">
-                        <label class="col-md-3 col-form-label">Fotografía</label>
-                        <div class="col-md-9">
+                        <label>Fotografía</label>
                           <input type="file" class="form-control" @change="getFile">
-                        </div>
                       </div>
                     </div>
                   </div>
+
                 </form>
               </div>
               <div class="card-footer">
@@ -190,6 +195,8 @@
           return {
             fillEditUser: {
               idUser: this.$attrs.id,
+              run: '',
+              dv: '',
               cNombre: '',
               cSegundoNombre: '',
               cApellido: '',
@@ -234,6 +241,8 @@
             }
           }).then(response => {
             console.log(response.data);
+            this.fillEditUser.run            = response.data[0].run;
+            this.fillEditUser.dv             = response.data[0].dv;
             this.fillEditUser.cNombre        = response.data[0].firstname;
             this.fillEditUser.cSegundoNombre = response.data[0].secondname;
             this.fillEditUser.cApellido      = response.data[0].lastname;
@@ -254,13 +263,13 @@
           })
         },
         limpiarCriterios(){
-          this.fillEditUser.cNombre  = '';
+          this.fillEditUser.cNombre        = '';
           this.fillEditUser.cSegundoNombre = '';
-          this.fillEditUser.cApellido  = '';
-          this.fillEditUser.cUsuario  = '';
-          this.fillEditUser.cCorreo  = '';
-          this.fillEditUser.cContrasena  = '';
-          this.fillEditUser.oFotografia  = '';
+          this.fillEditUser.cApellido      = '';
+          this.fillEditUser.cUsuario       = '';
+          this.fillEditUser.cCorreo        = '';
+          this.fillEditUser.cContrasena    = '';
+          this.fillEditUser.oFotografia    = '';
         },
         abrirModal(){
             this.modalShow = !this.modalShow;
@@ -302,6 +311,8 @@
         setSaveUser(nIdFile){
           var  url = '/administracion/usuario/setEditUser'
           axios.post(url, {
+            'run'            : this.fillEditUser.run,
+            'dv'             : this.fillEditUser.dv,
             'idUser'         : this.fillEditUser.idUser,
             'cNombre'        : this.fillEditUser.cNombre,
             'cSegundoNombre' : this.fillEditUser.cSegundoNombre,

@@ -1,12 +1,12 @@
 <template>
     <aside class="main-sidebar sidebar-dark-info elevation-4">
         <!-- Brand Logo -->
-        <a href="/dashboard" class="brand-link">
+        <router-link class="brand-link" :to="'/'" >
           <img :src="ruta + '/img/mxlogo.png'"
                alt="siremx logo"
                class="brand-image ">
           <span class="brand-text font-weight">SIREMX</span>
-        </a>
+        </router-link>
 
         <!-- Sidebar -->
         <div class="sidebar">
