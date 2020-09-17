@@ -45,7 +45,7 @@
                     </div>
                     <div class="col-4 col-sm-1">
                       <div class="form-group">
-                        <label>DV</label>
+                        <label class="text-light">.</label>
                          <button class="form-control btn btn-info btn-sm" @click.prevent="getListPatients" >Buscar</button>
                       </div>
                     </div>

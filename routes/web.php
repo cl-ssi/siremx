@@ -54,8 +54,10 @@ Route::group(['middleware' => ['auth']], function () {
   Route::post('/exam/setStoreExam','Exam\ExamController@setStoreExam');
   Route::post('/exam/setLoadExams','Exam\ExamController@setLoadExams');
   Route::post('/exam/setEditExam','Exam\ExamController@setEditExam');
+  Route::post('/exam/setDeleteExam','Exam\ExamController@setDeleteExam');
 
   Route::get('/load/getListLoads','Management\LoadController@getListLoads');
+  Route::post('/load/setDeleteLoad','Management\LoadController@setDeleteLoad');
 
   Route::get('/report/exams/getPatientHistoryClinical','Report\ReportController@getPatientHistoryClinical');
   Route::get('/report/exams/getPatientHistory','Report\ReportController@getPatientHistory');

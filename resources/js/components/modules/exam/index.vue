@@ -78,23 +78,38 @@
               <div class="card-body table-responsive">
                 <template v-if="listarUsuariosPaginated.length">
                   <table class="table table-hover table-sm  table-striped table-header-fixed text-nowrap table-valign-middle projects">
-                    <thead>
-                      <th>Nº Orden</th>
-                      <th>Fecha Toma Examen</th>
-                      <th>Rut</th>
-                      <th>Apellidos</th>
-                      <th>Nombre</th>
-                      <th>F. Nacimiento</th>
+                    <thead >
+                      <th></th>
+                      <th>Nº REG</th>
+                      <th>COMUNA</th>
+                      <th>EST. ORIGEN</th>
+                      <th>FECHA TOMA EXAMEN</th>
+                      <th>RUN</th>
+                      <th>APELLIDOS</th>
+                      <th>NOMBRE</th>
+                      <th>F. NACIMIENTO</th>
+                      <th>USUARIO</th>
                       <th></th>
                     </thead>
-                    <tbody>
+                    <tbody class="small">
                       <tr v-for="(item, index) in listarUsuariosPaginated" :key="index">
+                        <td>
+                          <button v-if="item.date_exam_reception  && item.exam_type &&  (item.birards_proyeccion || item.birards_ecografia || item.birards_mamografia  ) " class="btn btb-flat btn-xs  btn-default" >
+                            <i class="fas fa-check-double text-info"></i> 
+                          </button>
+                          <button v-else class="btn btb-flat btn-xs   btn-default" >
+                            <i class="fas fa-check text-secondary"></i> 
+                          </button>
+                        </td>
                         <td v-text="item.id"></td>
-                        <td v-text="item.date_exam"></td>
-                        <td v-text="item.patients.run+'-'+item.patients.dv"></td>
-                        <td v-text="item.patients.fathers_family+' '+item.patients.mothers_family"></td>
-                        <td v-text="item.patients.name"></td>
-                        <td v-text="item.patients.birthday"></td>
+                        <td v-text="item.commune"></td>
+                        <td class=" text-wrap" v-text="item.establishment_origin"></td>
+                        <td >{{ item.date_exam | moment("DD-MM-YYYY") }}</td>
+                        <td v-text="item.run+'-'+item.dv"></td>
+                        <td v-text="item.fathers_family+' '+item.mothers_family"></td>
+                        <td v-text="item.name"></td>
+                        <td >{{ item.birthday | moment("DD-MM-YYYY") }}</td>
+                        <td v-text="item.firstname+' '+item.lastname"></td>
                         <td class="text-right">
                           <template v-if="listRolePermissionsByUser.includes('exam.view')"> 
                               <router-link class="btn btn-xs btn-default" :to="{name: 'exam.view', params: {id: item.patient_id}}">
@@ -111,21 +126,34 @@
                                   <i class="fas fa-search text-dark"></i> Ver Informe
                               </a>
                           </template>
+                          <template v-if="listRolePermissionsByUser.includes('exam.delete')">
+                            <button v-if="item.user_id == authUser_id" class="btn btb-flat btn-xs btn-default"  @click.prevent="setDelete(item.id)">
+                                  <i class="fas fa-trash text-danger"></i> 
+                            </button>
+                            <button v-else class="btn btb-flat btn-xs btn-default">
+                                  <i class="fas fa-ban text-default"></i> 
+                            </button>
+                          </template>
+                          <template v-if="listRolePermissionsByUser.includes('admin.delete')">
+                            <button class="btn btb-flat btn-xs bg-gradient-secondary"  @click.prevent="setDelete(item.id)">
+                                  <i class="fas fa-trash text-default"></i> Eliminar
+                            </button>
+                          </template>
                         </td>
                       </tr>
                     </tbody>
                   </table>
                   <div class="card-footer clearfix">
-                    <ul class="pagination pagination-sm pagination-secondary m-0 float-right">
+                    <ul class="pagination pagination-sm pagination-info m-0 float-right">
                       <li class="page-item" v-if="pageNumber > 0">
-                        <a href="#" class="page-link" @click.prevent="prevPage">Ant</a>
+                        <a href="#" class="page-link bg-info" @click.prevent="prevPage">Ant</a>
                       </li>
                       <li class="page-item" v-for="(page, index) in pagesList" :key="index"
                         :class="[page == pageNumber ? 'active' : '']">
-                        <a href="#" class="page-link" @click.prevent="selectPage(page)">{{ page+1 }}</a>
+                        <a href="#" class="page-link bg-info" @click.prevent="selectPage(page)">{{ page+1 }}</a>
                       </li>
                       <li class="page-item" v-if="pageNumber < pageCount -1">
-                        <a href="#" class="page-link" @click.prevent="nextPage">Pos</a>
+                        <a href="#" class="page-link bg-info" @click.prevent="nextPage">Pos</a>
                       </li>
                     </ul>
                   </div>
@@ -153,8 +181,10 @@
               cName: '',
               cFathers_family: ''
             },
+            authUser_id: '',
             listUsuarios: [],
             listRolePermissionsByUser: JSON.parse(sessionStorage.getItem('listRolePermissionsByUser')),
+            authUser: JSON.parse(sessionStorage.getItem('authUser')), 
             listEstados: [
               {value: 'A', label: 'Activo'},
               {value: 'I', label: 'Inactivo'}
@@ -203,6 +233,7 @@
           this.listUsuarios = [];
         },
         getListarUsuarios(){
+          this.authUser_id = this.authUser.id;
           var url = '/exam/getListExams'
           axios.get(url, {
             params: {
@@ -222,6 +253,42 @@
                 this.fullscreenLoading = false;
               }
           })
+        },
+        setDelete(id){
+          console.log(id)
+          Swal.fire({
+            title: '¿Está Seguro de eliminar el registro?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#17a2b8',
+            cancelButtonColor: '#dc3545',
+            confirmButtonText: 'Sí, eliminar'
+          }).then((result) => {
+              if (result.value) {
+              // AQUI IRA LA CONFIRMACIÓN DEL BOTON Y PETICIÓN DEL SERVIDOR
+                var  url = '/exam/setDeleteExam'
+                axios.post(url, {
+                  'idExam' : id,
+
+                }).then(response => {
+                     Swal.fire({
+                      icon: 'success',
+                      title: 'Se elimino el registro',
+                      showConfirmButton: false,
+                      timer: 1500
+                    })
+                    this.getListarUsuarios();
+                }).catch(error => {
+                    if(error.response.status == 401){
+                      this.$router.push({name: 'login'})
+                      location.reload();
+                      sessionStorage.clear();
+                      this.fullscreenLoading = false;
+                    }
+                })
+              
+            }
+          })// end
         },
         nextPage() {
           this.pageNumber++;

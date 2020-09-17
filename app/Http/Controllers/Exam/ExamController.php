@@ -10,6 +10,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 use Illuminate\Support\Str;
 
@@ -129,11 +130,23 @@ class ExamController extends Controller
         $cName           = $request->cName;
         $cFathers_family = $request->cFathers_family;
         $nRun            = $request->nRun;
+        $code_deis_request  = $request->codeDeisRequest;
 
 
         $cName           = ($cName == NULL) ? ($cName = '') : $cName;
         $cFathers_family = ($cFathers_family == NULL) ? ($cFathers_family = '') : $cFathers_family;
         $nRun            = ($nRun == NULL) ? ($nRun = '') : $nRun;
+
+        if($code_deis_request == NULL) {
+            if(Auth::user()->establishment_id){
+              $code_deis_request = Auth::user()->establishment_id;//"AND T0.cesfam = ".Auth::user()->establishment_id;
+            }
+            else {
+              $code_deis_request = '';
+            }
+         }
+
+
        
         if($cName || $cFathers_family || $nRun ){
 
@@ -142,15 +155,63 @@ class ExamController extends Controller
                                 ->Where('fathers_family','LIKE','%'.$cFathers_family.'%')
                                 ->get('id');
             
-            $exams = Exam::with("patients")
+
+            $exams = Exam::select(
+                                  'exams.id'
+                                 ,'exams.date_exam'
+                                 ,'exams.date_exam'
+                                 ,'exams.date_exam_reception'
+                                 ,'exams.exam_type'
+                                 ,'exams.birards_mamografia'
+                                 ,'exams.birards_ecografia'
+                                 ,'exams.birards_proyeccion'
+                                 ,'exams.user_id'
+                                 ,'T1.run'
+                                 ,'T1.dv'
+                                 ,'T1.run'
+                                 ,'T1.name'
+                                 ,'T1.fathers_family'
+                                 ,'T1.mothers_family'
+                                 ,'T1.birthday'
+                                 ,'T2.alias AS establishment_origin'
+                                 ,'T3.name AS commune'
+                                 ,'T4.firstname'
+                                 ,'T4.secondname'
+                                 ,'T4.lastname')
+                    ->leftjoin('patients AS T1', 'exams.patient_id', '=', 'T1.id')
+                    ->leftjoin('establishments AS T2', 'exams.cesfam', '=', 'T2.new_code_deis')
+                    ->leftjoin('communes AS T3', 'exams.comuna', '=', 'T3.code_deis')
+                    ->leftjoin('users AS T4', 'exams.user_id', '=', 'T4.id')
                     ->whereIn('patient_id',$patients_list)
-                    ->orderBy('id','DESC')
-                    ->take(1200)->get();
+                    ->get();
         }
         else {
-            $exams = Exam::with("patients")
+            $exams = Exam::select(
+                                 'exams.id'
+                                ,'exams.date_exam'
+                                ,'exams.date_exam'
+                                ,'exams.date_exam_reception'
+                                ,'exams.exam_type'
+                                ,'exams.user_id'
+                                ,'T1.run'
+                                ,'T1.dv'
+                                ,'T1.run'
+                                ,'T1.name'
+                                ,'T1.fathers_family'
+                                ,'T1.mothers_family'
+                                ,'T1.birthday'
+                                ,'T2.alias AS establishment_origin'
+                                ,'T3.name AS commune'
+                                ,'T4.firstname'
+                                ,'T4.secondname'
+                                ,'T4.lastname')
+                    ->leftjoin('patients AS T1', 'exams.patient_id', '=', 'T1.id')
+                    ->leftjoin('establishments AS T2', 'exams.cesfam', '=', 'T2.new_code_deis')
+                    ->leftjoin('communes AS T3', 'exams.comuna', '=', 'T3.code_deis')
+                    ->leftjoin('users AS T4', 'exams.user_id', '=', 'T4.id')
                     ->whereNull('date_exam_reception')
                     ->Where('load_source','app')
+                    ->Where('cesfam','LIKE','%'.$code_deis_request.'%')
                     ->orderBy('id','DESC')
                     ->take(1200)->get();
         }
@@ -208,8 +269,8 @@ class ExamController extends Controller
         $exams->derivation_reason    = $derivation;
         $exams->exam_type            = $examType;
         $exams->load_source          = 'app';
-        $exams->load_id              = 1;
-        $exams->user_id              = 1; //Cambiar por usuario de sesión
+        $exams->load_id              = 0;
+        $exams->user_id              = Auth::id(); //Cambiar por usuario de sesión
         $exams->patient_id           = $idPatient;
         $exams->save();
 
@@ -380,7 +441,7 @@ class ExamController extends Controller
             $examDet->derivation_reason    = $mDerivation;
             $examDet->load_source          = 'excel';
             $examDet->load_id              = $load->id;
-            $examDet->user_id              = 1;
+            $examDet->user_id              = Auth::id();
             $examDet->patient_id           = $idInsertPatient;
             $examDet->save();
 
@@ -388,5 +449,18 @@ class ExamController extends Controller
         
         
         return $exams;
+    }
+
+    public function setDeleteExam(Request $request)
+    {
+       if(!$request->ajax()) return redirect('/');
+       $idExam   = $request->idExam;
+
+       $idExam = ($idExam == NULL) ? ($idExam = 0) : $idExam;
+
+       $exam = Exam::find($idExam);
+       $exam ->delete(); 
+
+       return $exam;
     }
 }

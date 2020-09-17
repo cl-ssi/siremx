@@ -73,9 +73,11 @@
                         <td v-text="item.description"></td>
                         <td >{{ item.updated_at | moment("DD-MM-YYYY h:mm") }}</td>
                         <td class="text-right">
-                           <button class="btn btb-flat btn-xs btn-default"  @click.prevent="setDelete(item.id)">
-                                <i class="fas fa-trash text-danger"></i> 
-                            </button>
+                          <template v-if="listRolePermissionsByUser.includes('admin.delete')">
+                              <button class="btn btb-flat btn-xs bg-gradient-secondary"  @click.prevent="setDelete(item.id)">
+                                    <i class="fas fa-trash text-default"></i> Eliminar
+                              </button>
+                          </template>
                         </td>
                       </tr>
                     </tbody>
@@ -83,14 +85,14 @@
                   <div class="card-footer clearfix">
                     <ul class="pagination pagination-sm pagination-secondary m-0 float-right">
                       <li class="page-item" v-if="pageNumber > 0">
-                        <a href="#" class="page-link" @click.prevent="prevPage">Ant</a>
+                        <a href="#" class="page-link bg-info" @click.prevent="prevPage">Ant</a>
                       </li>
                       <li class="page-item" v-for="(page, index) in pagesList" :key="index"
                         :class="[page == pageNumber ? 'active' : '']">
-                        <a href="#" class="page-link" @click.prevent="selectPage(page)">{{ page+1 }}</a>
+                        <a href="#" class="page-link bg-info" @click.prevent="selectPage(page)">{{ page+1 }}</a>
                       </li>
                       <li class="page-item" v-if="pageNumber < pageCount -1">
-                        <a href="#" class="page-link" @click.prevent="nextPage">Pos</a>
+                        <a href="#" class="page-link bg-info" @click.prevent="nextPage">Pos</a>
                       </li>
                     </ul>
                   </div>
@@ -118,6 +120,7 @@
               url: ''
             },
             listPermissions: [],
+            listRolePermissionsByUser: JSON.parse(sessionStorage.getItem('listRolePermissionsByUser')),
             pageNumber: 0,
             perPage: 10
           }
@@ -181,6 +184,38 @@
         },
         setDelete(id){
           console.log(id)
+          Swal.fire({
+            title: '¿Está Seguro de eliminar los registros cargados masivamente?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#17a2b8',
+            cancelButtonColor: '#dc3545',
+            confirmButtonText: 'Sí, eliminar'
+          }).then((result) => {
+              if (result.value) {
+                var  url = '/load/setDeleteLoad'
+                axios.post(url, {
+                  'idLoad' : id,
+
+                }).then(response => {
+                     Swal.fire({
+                      icon: 'success',
+                      title: 'Se elimino la carga',
+                      showConfirmButton: false,
+                      timer: 1500
+                    })
+                    this.getlistLoads();
+                }).catch(error => {
+                    if(error.response.status == 401){
+                      this.$router.push({name: 'login'})
+                      location.reload();
+                      sessionStorage.clear();
+                      this.fullscreenLoading = false;
+                    }
+                })
+              
+            }
+          })// end
         },
         nextPage() {
           this.pageNumber++;

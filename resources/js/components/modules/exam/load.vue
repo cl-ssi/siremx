@@ -316,6 +316,7 @@
           }) 
 
         },
+        
         validForm() {
             this.error = 0;
             this.mensajeError = [];
