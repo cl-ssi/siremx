@@ -166,6 +166,7 @@ class ExamController extends Controller
                                  ,'exams.birards_ecografia'
                                  ,'exams.birards_proyeccion'
                                  ,'exams.user_id'
+                                 ,'exams.path'
                                  ,'T1.run'
                                  ,'T1.dv'
                                  ,'T1.run'

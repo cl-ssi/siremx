@@ -84,6 +84,7 @@
                       <th>COMUNA</th>
                       <th>EST. ORIGEN</th>
                       <th>FECHA TOMA EXAMEN</th>
+                      <th>TIPO EXAMEN</th>
                       <th>RUN</th>
                       <th>APELLIDOS</th>
                       <th>NOMBRE</th>
@@ -105,6 +106,7 @@
                         <td v-text="item.commune"></td>
                         <td class=" text-wrap" v-text="item.establishment_origin"></td>
                         <td >{{ item.date_exam | moment("DD-MM-YYYY") }}</td>
+                        <td v-text="item.exam_type"></td>
                         <td v-text="item.run+'-'+item.dv"></td>
                         <td v-text="item.fathers_family+' '+item.mothers_family"></td>
                         <td v-text="item.name"></td>
@@ -116,15 +118,16 @@
                                 <i class="fas fa-history"></i> 
                               </router-link>
                           </template>
+
+                          <template v-if="item.path">
+                              <a class="btn btb-flat btn-xs btn-default" target="_blank" :href="item.path" >
+                                  <i class="fas fa-search text-dark"></i> Informe
+                              </a>
+                          </template>
                           <template v-if="listRolePermissionsByUser.includes('exam.edit')">
                               <router-link class="btn btb-flat btn-xs btn-default" :to="{name: 'exam.edit', params: {id: item.id}}">
                                 <i class="fas fa-pencil-alt"></i> 
                               </router-link>
-                          </template>
-                          <template v-if="item.path">
-                              <a class="btn btb-flat btn-xs btn-default" target="_blank" :href="item.path" >
-                                  <i class="fas fa-search text-dark"></i> Ver Informe
-                              </a>
                           </template>
                           <template v-if="listRolePermissionsByUser.includes('exam.delete')">
                             <button v-if="item.user_id == authUser_id" class="btn btb-flat btn-xs btn-default"  @click.prevent="setDelete(item.id)">
@@ -242,7 +245,7 @@
               'cFathers_family': this.fillBsqUsuario.cFathers_family,
             }
           }).then(response => {
-            console.log(response.data);
+            //console.log(response.data);
             this.inicializarPaginacion();
             this.listUsuarios = response.data;
           }).catch(error => {
@@ -255,7 +258,7 @@
           })
         },
         setDelete(id){
-          console.log(id)
+          //console.log(id)
           Swal.fire({
             title: '¿Está Seguro de eliminar el registro?',
             icon: 'warning',

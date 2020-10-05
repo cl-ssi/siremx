@@ -332,6 +332,7 @@ class ReportController extends Controller
                         SUM(case when YEAR(CURDATE())-YEAR(T1.birthday) > 64 and YEAR(CURDATE())-YEAR(T1.birthday) <= 69 then 1 else 0 end) as range6,
                         SUM(case when YEAR(CURDATE())-YEAR(T1.birthday) > 69 and YEAR(CURDATE())-YEAR(T1.birthday) <= 74 then 1 else 0 end) as range7,
                         SUM(case when YEAR(CURDATE())-YEAR(T1.birthday) > 74 and YEAR(CURDATE())-YEAR(T1.birthday) <= 79 then 1 else 0 end) as range8,
+                        SUM(case when YEAR(CURDATE())-YEAR(T1.birthday) > 79  then 1 else 0 end) as range9,
                         COUNT(YEAR(CURDATE())-YEAR(T1.birthday)) as total
                     FROM exams T0
                     LEFT JOIN patients T1 ON T0.patient_id = T1.id
@@ -398,6 +399,7 @@ class ReportController extends Controller
                         SUM(case when YEAR(CURDATE())-YEAR(T1.birthday) > 64 and YEAR(CURDATE())-YEAR(T1.birthday) <= 69 then 1 else 0 end) as range6,
                         SUM(case when YEAR(CURDATE())-YEAR(T1.birthday) > 69 and YEAR(CURDATE())-YEAR(T1.birthday) <= 74 then 1 else 0 end) as range7,
                         SUM(case when YEAR(CURDATE())-YEAR(T1.birthday) > 74 and YEAR(CURDATE())-YEAR(T1.birthday) <= 79 then 1 else 0 end) as range8,
+                        SUM(case when YEAR(CURDATE())-YEAR(T1.birthday) > 79  then 1 else 0 end) as range9,
                         COUNT(YEAR(CURDATE())-YEAR(T1.birthday)) as total
                     FROM exams T0
                     LEFT JOIN patients T1 ON T0.patient_id = T1.id

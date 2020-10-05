@@ -153,6 +153,14 @@
                         </router-link>
                       </template>
                     </li>
+                    <li class="nav-item">
+                      <template v-if="listPermissions.includes('reportSigte.index')">
+                        <router-link class="nav-link" :to="'/reportSigte'">
+                          <i class="fas fa-file-contract nav-icon"></i>
+                          <p>Reporte SIGTE (En construcción)</p>
+                        </router-link>
+                      </template>
+                    </li>
                   </ul>
                 </li>
               </template>

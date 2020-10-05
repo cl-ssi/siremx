@@ -5,7 +5,7 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0 text-dark">Reporte Birards por rango de edad</h1>
+            <h1 class="m-0 text-dark">Reporte MX SIGTE</h1>
           </div><!-- /.col -->
         </div><!-- /.row -->
       </div><!-- /.container-fluid -->
@@ -65,6 +65,45 @@
                   </div>
 
                   <div class="row">
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label class="col-md-3 col-form-label">BIRARDS</label>
+                        <div class="col-md-9">
+                          <el-select v-model="fillBsqReport.selectBIRADS"
+                              placeholder="Seleccione" multiple
+                              clearable>
+                                <el-option
+                                  v-for="item in listBIRADS"
+                                  :key="item.value"
+                                  :label="item.label"
+                                  :value="item.value">
+                                </el-option>
+                           </el-select>
+                        </div>
+                      </div>
+                    </div>
+                    <template v-if="listRolePermissionsByUser.includes('commune.filter')">
+                        <div class="col-md-6">
+                          <div class="form-group">
+                            <label class="col-md-3 col-form-label">Comuna</label>
+                            <div class="col-md-9">
+                              <el-select v-model="fillBsqReport.commune" filterable
+                                  placeholder="Seleccione"
+                                  clearable>
+                                    <el-option
+                                      v-for="item in listCommunes"
+                                      :key="item.id"
+                                      :label="item.code_deis+' - '+item.name"
+                                      :value="item.code_deis">
+                                    </el-option>
+                              </el-select>
+                            </div>
+                          </div>
+                        </div>
+                  </template>
+                  </div>
+
+                  <div class="row">
                     <template v-if="listRolePermissionsByUser.includes('establishment.filter')">
                       <div class="col-md-6">
                         <div class="form-group">
@@ -106,89 +145,81 @@
                     </template>
                   </div>
 
-                  <template v-if="listRolePermissionsByUser.includes('commune.filter')">
-                    <div class="row">
-                      <div class="col-md-6">
-                        <div class="form-group">
-                          <label class="col-md-4 col-form-label">Comuna</label>
-                          <div class="col-md-9">
-                            <el-select v-model="fillBsqReport.commune" filterable
-                                placeholder="Seleccione"
-                                clearable>
-                                  <el-option
-                                    v-for="item in listCommunes"
-                                    :key="item.id"
-                                    :label="item.code_deis+' - '+item.name"
-                                    :value="item.code_deis">
-                                  </el-option>
-                            </el-select>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </template>
                   
-
                 </form>
               </div>
               <div class="card-footer">
                 <div class="row">
                   <div class="col-md-4 offset-4">
-                    <button class="btn btn-flat btn-info btnWidth" @click.prevent="getRespReport">Generar</button>
+                    <button class="btn btn-flat btn-info btnWidth" @click.prevent="getRespReport">Buscar</button>
                     <button class="btn btn-flat btn-default btnWidth" @click.prevent="limpiarCriteriosBsq">Limpiar</button>
                   </div>
                 </div>
               </div>
             </div>
-
             <div class="card card-default">
               <div class="card-header">
                 <h3 class="card-title">
                     <template v-if="listarUsuariosPaginated.length">
                         <el-tooltip class="item" effect="dark" content="Descargar en Excel" placement="bottom-start">
-                            <i class="fas fa-file-excel text-success" @click.prevent="tableExcel"></i>
+                            <i class="fas fa-file-excel text-success" @click.prevent="exportExcel"></i>
                         </el-tooltip>
                     </template>
-                     Bandeja de Resultados</h3>
+                    Bandeja de Resultados</h3>
               </div>
               <div class="card-body table-responsive">
                 <template v-if="listarUsuariosPaginated.length">
-                 <table id="data-table" class="table table-hover table-sm  table-striped table-bordered table-header-fixed text-nowrap table-valign-middle">
-                    <thead >
-                        <tr>
-                            <th colspan="11" class="text-center bordered align-middle table-default">BIRARDS POR RANGO DE EDAD MAMOGRAFÍA</th>
-                        </tr>
-                        <tr class="text-center align-middle table-default">
-                            <th>BIRARDS</th>
-                            <th>< 35</th>
-                            <th>35 a 49</th>
-                            <th>50 a 54</th>
-                            <th>55 a 59</th>
-                            <th>60 a 64</th>
-                            <th>65 a 69</th>
-                            <th>70 a 74</th>
-                            <th>75 a 79</th>
-                            <th>80 y más</th>
-                            <th>total</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                      <tr v-for="(item, index) in listarUsuariosPaginated" :key="index">
-                        <td v-text="item.birards"></td>
-                        <td v-text="item.range1"></td>
-                        <td v-text="item.range2"></td>
-                        <td v-text="item.range3"></td>
-                        <td v-text="item.range4"></td>
-                        <td v-text="item.range5"></td>
-                        <td v-text="item.range6"></td>
-                        <td v-text="item.range7"></td>
-                        <td v-text="item.range8"></td>
-                        <td v-text="item.range9"></td>
-                        <td v-text="item.total"></td>
-                      </tr>
-                    </tbody>
+                 <table id="data-table" class="table table-hover table-sm table-bordered  table-striped table-header-fixed table-valign-middle projects">
+                    <tr class="small text-nowrap">
+                      <th>S. Salud</th>
+                      <th>Cesfam Solicita</th>
+                      <th>Profesional Solicita</th>
+                      <th>Run</th>
+                      <th>Nombre</th>
+                      <th>Genero</th>
+                      <th>F. Nacimiento</th>
+                      <th>Edad</th>
+                      <th>Dirección</th>
+                      <th>Establecimiento Exámen</th>
+                      <th>F. Orden</th>
+                      <th>F. Exámen</th>
+                      <th>F. Recepción</th>
+                      <th>Mamografía</th>
+                      <th>Eco Mamografía</th>
+                      <th>Médico</th>
+                    </tr>
+                    <tr  class="small" v-for="(item, index) in listarUsuariosPaginated" :key="index">
+                      <td v-text="item.servicio_salud"></td>
+                      <td v-text="item.cesfam_name"></td>
+                      <td v-text="item.profesional_solicita"></td>
+                      <td v-text="item.run+'-'+item.dv"></td>
+                      <td v-text="item.name+' '+item.fathers_family+' '+item.mothers_family"></td>
+                      <td v-text="item.gender"></td>
+                      <td v-text="item.birthday"></td>
+                      <td v-text="item.age"></td>
+                      <td v-text="item.address"></td>
+                      <td v-text="item.establecimiento_realiza_examen"></td>
+                      <td v-text="item.date_exam_order"></td>
+                      <td v-text="item.date_exam"></td>
+                      <td v-text="item.date_exam_reception"></td>
+                      <td v-text="item.birards_mamografia"></td>
+                      <td v-text="item.birards_ecografia"></td>
+                      <td v-text="item.Médico"></td>
+                    </tr>
                   </table>
                   <div class="card-footer clearfix">
+                    <ul class="pagination pagination-sm pagination-secondary m-0 float-right">
+                      <li class="page-item" v-if="pageNumber > 0">
+                        <a href="#" class="page-link" @click.prevent="prevPage">Ant</a>
+                      </li>
+                      <li class="page-item" v-for="(page, index) in pagesList" :key="index"
+                        :class="[page == pageNumber ? 'active' : '']">
+                        <a href="#" class="page-link" @click.prevent="selectPage(page)">{{ page+1 }}</a>
+                      </li>
+                      <li class="page-item" v-if="pageNumber < pageCount -1">
+                        <a href="#" class="page-link" @click.prevent="nextPage">Sig</a>
+                      </li>
+                    </ul>
                   </div>
                 </template>
                 <template v-else>
@@ -198,74 +229,16 @@
                 </template>
               </div>
             </div>
-
-            <div class="card card-default">
-              <div class="card-header">
-                <h3 class="card-title">
-                    <template v-if="listarUsuariosPaginated.length">
-                        <el-tooltip class="item" effect="dark" content="Descargar en Excel" placement="bottom-start">
-                            <i class="fas fa-file-excel text-success" @click.prevent="tableExcel"></i>
-                        </el-tooltip>
-                    </template>
-                     Bandeja de Resultados</h3>
-              </div>
-              <div class="card-body table-responsive">
-                <template v-if="listarUsuariosPaginated.length">
-                 <table id="data-table-eco" class="table table-hover table-sm  table-striped table-bordered table-header-fixed text-nowrap table-valign-middle">
-                    <thead >
-                        <tr>
-                            <th colspan="11" class="text-center bordered align-middle table-default">BIRARDS POR RANGO DE EDAD ECO-MAMARIA</th>
-                        </tr>
-                        <tr class="text-center align-middle table-default">
-                            <th>BIRARDS</th>
-                            <th>< 35</th>
-                            <th>35 a 49</th>
-                            <th>50 a 54</th>
-                            <th>55 a 59</th>
-                            <th>60 a 64</th>
-                            <th>65 a 69</th>
-                            <th>70 a 74</th>
-                            <th>75 a 79</th>
-                            <th>80 y más</th>
-                            <th>total</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                      <tr v-for="(item, index) in listBirardsEcoAgeMX" :key="index">
-                        <td v-text="item.birards"></td>
-                        <td v-text="item.range1"></td>
-                        <td v-text="item.range2"></td>
-                        <td v-text="item.range3"></td>
-                        <td v-text="item.range4"></td>
-                        <td v-text="item.range5"></td>
-                        <td v-text="item.range6"></td>
-                        <td v-text="item.range7"></td>
-                        <td v-text="item.range8"></td>
-                        <td v-text="item.range9"></td>
-                        <td v-text="item.total"></td>
-                      </tr>
-                    </tbody>
-                  </table>
-                  <div class="card-footer clearfix">
-                  </div>
-                </template>
-                <template v-else>
-                  <div class="callout callout-info">
-                      <h5>No se encontraron resultados...</h5>
-                  </div>
-                </template>
-              </div>
-            </div>
-
           </div>
         </div>
       </div>
     </div>
+
     <div class="modal fade" :class="{show: modalShow}" :style=" modalShow ? mostrarModal : ocultarModal">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">SIREMX</h5>
+                    <h5 class="modal-title"> Mensaje</h5>
                     <button class="close" @click="abrirModal"></button>
                 </div>
                 <div class="modal-body">
@@ -287,8 +260,12 @@ import XLSX from 'xlsx'
       data(){
           return {
             fillBsqReport: {
+              run: '',
+              name: '',
+              Fathers_family: '',
               date_ini: '',
               date_end: '',
+              selectBIRADS: '',
               establishmentRequest: '',
               establishmentExam: '',
               commune: ''
@@ -297,12 +274,21 @@ import XLSX from 'xlsx'
             listEstablishments: [],
             listCommunes: [],
             listUsuarios: [],
-            listBirardsEcoAgeMX: [],
             listStatus: [
               {value: 'vig', label: 'Vigente'},
               {value: 'noVig', label: 'No Vigente'},
               {value: 'vencer', label: 'Por Vencer'}
             ],
+            listBIRADS: [
+              {value: '0', label: '0'},
+              {value: '1', label: 'I'},
+              {value: '2', label: 'II'},
+              {value: '3', label: 'III'},
+              {value: '4', label: 'IV'},
+              {value: '5', label: 'V'},
+              {value: '6', label: 'VI'}
+            ],
+            fullscreenLoading: false,
             modalShow: false,
             mostrarModal: {
               display: 'block',
@@ -314,7 +300,7 @@ import XLSX from 'xlsx'
             error: 0,
             mensajeError: [],
             pageNumber: 0,
-            perPage: 25
+            perPage: 75
           }
       },
       computed: {
@@ -345,18 +331,17 @@ import XLSX from 'xlsx'
         },
       },
       mounted() {
-        this.getRespReport();
         this.getListEstablishments();
         this.getListCommunes();
       },
       methods: {
-
+        limpiarCriteriosBsq(){
+          this.fillBsqReport.nRun  = '';
+          this.fillBsqReport.cName = '';
+          this.fillBsqReport.cFathers_family  = '';
+        },
         abrirModal(){
             this.modalShow = !this.modalShow;
-        },
-        limpiarCriteriosBsq(){
-          this.fillBsqReport.date_ini  = '';
-          this.fillBsqReport.date_end = '';
         },
         limpiarBandejaUsuarios(){
           this.listUsuarios = [];
@@ -388,15 +373,17 @@ import XLSX from 'xlsx'
           })
         },
         getRespReport(){
-
-          /*if(this.validateForm()) {
+          //console.log(this.fillBsqReport.selectBIRADS);
+          if(this.validForm()) {
                 this.modalShow = true;
                 return;
-          }*/
-
-          var url = '/report/exams/getBirardsAgeMX'
+          }
+          this.fullscreenLoading = true;
+          
+          var url = '/report/exams/getMXBirards'
           axios.get(url, {
             params: {
+              'listBirards' : this.fillBsqReport.selectBIRADS,
               'dateIni' : (!this.fillBsqReport.date_ini) ? '' : this.fillBsqReport.date_ini,
               'dateEnd' : (!this.fillBsqReport.date_end) ? '' : this.fillBsqReport.date_end,
               'codeDeisRequest' : (!this.fillBsqReport.establishmentRequest) ? '' : this.fillBsqReport.establishmentRequest,
@@ -404,28 +391,13 @@ import XLSX from 'xlsx'
               'commune' : (!this.fillBsqReport.commune) ? '' : this.fillBsqReport.commune,
             }
           }).then(response => {
-            //console.log(response.data);
+            console.log(response.data);
             this.inicializarPaginacion();
             this.listUsuarios = response.data;
+            this.fullscreenLoading = false;
           })
-
-          var url = '/report/exams/getBirardsEcoAgeMX'
-          axios.get(url, {
-            params: {
-              'dateIni' : (!this.fillBsqReport.date_ini) ? '' : this.fillBsqReport.date_ini,
-              'dateEnd' : (!this.fillBsqReport.date_end) ? '' : this.fillBsqReport.date_end,
-              'codeDeisRequest' : (!this.fillBsqReport.establishmentRequest) ? '' : this.fillBsqReport.establishmentRequest,
-              'codeDeis' : (!this.fillBsqReport.establishmentExam) ? '' : this.fillBsqReport.establishmentExam,
-              'commune' : (!this.fillBsqReport.commune) ? '' : this.fillBsqReport.commune,
-            }
-          }).then(response => {
-            //console.log(response.data);
-            this.inicializarPaginacion();
-            this.listBirardsEcoAgeMX = response.data;
-          })
-
-          
         },
+        
         setGenerateDocument() {
             /*const loading = this.$vs.loading([
                 type: "square",
@@ -440,7 +412,7 @@ import XLSX from 'xlsx'
             
             var url = '/report/exam/export'
             axios.get(url, config).then(response => {
-                //console.log(response.data);
+                console.log(response.data);
                 var oMyBlob = new Blob([response.data], {type : 'application/vnd.ms-excel'}); // the blob
                 var url = document.createElement('a')
                 url.href = URL.createObjectURL(oMyBlob);
@@ -448,7 +420,7 @@ import XLSX from 'xlsx'
                 url.click()
                 window.open(url)
             }).catch((error) => {
-            //console.log(error)
+            console.log(error)
          })  
         },
         exportExcel: function () {
@@ -457,22 +429,6 @@ import XLSX from 'xlsx'
         const filename = 'reporte-sismam'
         XLSX.utils.book_append_sheet(workbook, data, filename)
         XLSX.writeFile(workbook, `${filename}.xlsx`)
-        },
-        tableExcel(type, fn, dl) {
-          var elt = document.getElementById('data-table');
-          const filename = 'reporte-sismam'
-          var wb = XLSX.utils.table_to_book(elt, {sheet:"Sheet JS"});
-          return dl ?
-            XLSX.write(wb, {bookType:type, bookSST:true, type: 'base64'}) :
-            XLSX.writeFile(wb, `${filename}.xlsx`)
-        },
-        tableExcel(type, fn, dl) {
-          var elt = document.getElementById('data-table-eco');
-          const filename = 'reporte-sismam'
-          var wb = XLSX.utils.table_to_book(elt, {sheet:"Sheet JS"});
-          return dl ?
-            XLSX.write(wb, {bookType:type, bookSST:true, type: 'base64'}) :
-            XLSX.writeFile(wb, `${filename}.xlsx`)
         },
         nextPage() {
           this.pageNumber++;
@@ -486,29 +442,33 @@ import XLSX from 'xlsx'
         inicializarPaginacion() {
           this.pageNumber = 0;
         },
-        validateForm() {
+        validForm() {
             this.error = 0;
             this.mensajeError = [];
-            if(!this.fillCreateExam.date_ini) {
-                this.mensajeError.push("Debe ingresar fecha de inicio")
+            if(!this.fillBsqReport.date_ini) {
+                this.mensajeError.push("Fecha Inicio es un campo obligatorio")
             }
-            if(!this.fillCreateExam.date_end) {
-                this.mensajeError.push("Debe ingresar fecha de termino")
+            if(!this.fillBsqReport.date_end) {
+                this.mensajeError.push("Fecha Termino es un campo obligatorio")
             }
+            if(!this.fillBsqReport.selectBIRADS) {
+                this.mensajeError.push("Birads es un campo obligatorio")
+            }
+
             if(this.mensajeError.length) {
                 this.error = 1;
             }
             return this.error;
-        }
+        
+      }
       }
     }
 </script>
 
 <style>
-    .el-date-editor.el-input, .el-date-editor.el-input__inner {
+    .el-range-editor.el-input__inner{
         width: 100% !important;
     }
-    
     .el-range-editor .el-range-separator{
         width: 10% !important;
     }
