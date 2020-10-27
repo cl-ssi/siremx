@@ -155,14 +155,14 @@
                       <td v-text="item.name+' '+item.fathers_family+' '+item.mothers_family"></td>
                       <td v-text="item.gender"></td>
                       <td v-text="item.birthday"></td>
-                      <td v-text="item.age"></td>
+                      <td class="text-center align-middle" v-text="item.age"></td>
                       <td v-text="item.address"></td>
                       <td v-text="item.establecimiento_realiza_examen"></td>
                       <td v-text="item.date_exam_order"></td>
                       <td v-text="item.date_exam"></td>
-                      <td v-text="item.date_exam_reception"></td>
-                      <td v-text="item.birards_mamografia"></td>
-                      <td v-text="item.birards_ecografia"></td>
+                      <td class="text-center align-middle" v-text="item.date_exam_reception"></td>
+                      <td class="text-center align-middle" v-text="item.birards_mamografia"></td>
+                      <td class="text-center align-middle" v-text="item.birards_ecografia"></td>
                       <td v-text="item.medico"></td>
                     </tr>
                  
