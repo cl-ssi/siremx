@@ -64,13 +64,111 @@
             </div>
           </div>
         </div>
+
+        <div class="row">
+          <div class="col-md-12">
+            <div class="card">
+              <div class="card-header">
+                <h5 class="card-title">Indicadores Del Año</h5>
+
+                <div class="card-tools">
+                  <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                    <i class="fas fa-minus"></i>
+                  </button>
+                </div>
+              </div>
+              <!-- /.card-header -->
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-md-8">
+                    <p class="text-center">
+                      <strong>Cantidad de exámenes aplicados en el año actual distribuido por mes.</strong>
+                    </p>
+
+                    <div class="chart"><div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"><div class=""></div></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
+                      <!-- Sales Chart Canvas -->
+                      <canvas id="myChart2" height="320" style="height: 320px; display: block; width: 1050px;" width="1050" class="chartjs-render-monitor"></canvas>
+                    </div>
+                    <!-- /.chart-responsive -->
+                  </div>
+                  <!-- /.col -->
+                  <div class="col-md-4">
+                    <p class="text-center">
+                      <strong>Exámenes por Birads</strong>
+                    </p>
+
+                    <div class="card-body">
+                      <div class="table-responsive">
+                        <template v-if="listBirads.length">
+                          <table class="table table-hover ">
+                            <tbody class="small">
+                              <tr v-for="(item, index) in listBirads" :key="index">
+                                <td><strong>BIRADS {{item.birads}}</strong></td>
+                                <td v-text="item.exam_quantity"></td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </template>
+                      </div>
+                      <!-- /.table-responsive -->
+                    </div>
+
+                    <!-- /.progress-group -->
+                  </div>
+                  <!-- /.col -->
+                </div>
+                <!-- /.row -->
+              </div>
+              <!-- ./card-body -->
+              <div class="card-footer">
+                <div class="row">
+                  <div class="col-sm-3 col-6">
+                    <div class="description-block border-right">
+                      <h1 class="description-header">{{listIndicatorBirads.birads_3}}</h1>
+                      <span class="description-text">TOTAL BIRARDS III</span>
+                    </div>
+                    <!-- /.description-block -->
+                  </div>
+                  <!-- /.col -->
+                  <div class="col-sm-3 col-6">
+                    <div class="description-block border-right">
+                      <h1 class="description-header">{{listIndicatorBirads.birads_4}}</h1>
+                      <span class="description-text">TOTAL BIRARDS IV</span>
+                    </div>
+                    <!-- /.description-block -->
+                  </div>
+                  <!-- /.col -->
+                  <div class="col-sm-3 col-6">
+                    <div class="description-block border-right">
+                      <h1 class="description-header">{{listIndicatorBirads.birads_5}}</h1>
+                      <span class="description-text">TOTAL BIRARDS V</span>
+                    </div>
+                    <!-- /.description-block -->
+                  </div>
+                  <!-- /.col -->
+                  <div class="col-sm-3 col-6">
+                    <div class="description-block">
+                      <h1 class="description-header">{{listIndicatorBirads.birads_6}}</h1>
+                      <span class="description-text">TOTAL BIRARDS VI</span>
+                    </div>
+                    <!-- /.description-block -->
+                  </div>
+                </div>
+                <!-- /.row -->
+              </div>
+              <!-- /.card-footer -->
+            </div>
+            <!-- /.card -->
+          </div>
+          <!-- /.col -->
+        </div>
         
         <div class="row">
-          <div class="col-12 col-sm-4">
+          <div class="col-12 col-sm-6">
             <div class="card">
                 <div class="card-header border-0">
                   <div class="d-flex justify-content-between">
-                    <h3 class="card-title">Distribución cantidad de exámenes por Comuna</h3>
+                    <h3 class="card-title">Distribución de exámenes por Comuna</h3>
                   </div>
                 </div>
                 <div class="card-body">
@@ -80,21 +178,23 @@
                 </div>
             </div>
           </div>
-          <div class="col-12 col-sm-8">
+          <div class="col-12 col-sm-6">
             <div class="card">
                 <div class="card-header border-0">
                   <div class="d-flex justify-content-between">
-                    <h3 class="card-title">Cantidad de exámenes aplicados en el año actual distribuido por mes.</h3>
+                    <h3 class="card-title">Exámenes por Establecimiento de origen.</h3>
                   </div>
                 </div>
                 <div class="card-body">
                   <div class="position-relative mb-4"><div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"><div class=""></div></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
-                    <canvas id="myChart2" width="400" height="150"></canvas>
+                    <canvas id="establishmentRadar" width="400" height="300"></canvas>
                   </div>
                 </div>
             </div>
           </div>
         </div>
+
+        
 
      
         
@@ -105,6 +205,7 @@
 
 <script>
     import Chart from 'chart.js';
+    import ChartDataLabels from 'chartjs-plugin-datalabels';
     export default {
       data() {
         return {
@@ -120,19 +221,33 @@
             name_label: [],
             quantity: []
           },
+          listHistEstablishmentYear: {
+            all:[],
+            name_label: [],
+            quantity: []
+          },
           listIndicators: {
             total_exam:'',
             total_mam: '',
             total_eco: '',
             total_pro: ''
-          }
+          },
+          listIndicatorBirads: {
+            birads_3:'',
+            birads_4: '',
+            birads_5: '',
+            birads_6: ''
+          },
+          listBirads: []
         }
       },
       mounted(){
         this.getGraphBar();
         this.getExamYear();
         this.getHistCommuneYear();
+        this.getHistEstablishmentYear();
         this.getIndicators();
+        this.getIndicatorBirads();
       },
       methods:{
         getIndicators() {
@@ -146,6 +261,27 @@
           })
         },
         getIndicatorsFilter() {
+          let me = this;
+          this. listExamYear.all.map(function(x,y){
+            me.listExamYear.name.push(x.month);
+            me.listExamYear.month_name.push(x.month_name);
+            me.listExamYear.quantity.push(x.exam_quantity);
+          })
+        },
+        // Obtiene los indicadores de exámenes por birads
+        getIndicatorBirads() {
+          var url = '/dashboard/getIndicatorBirads'
+          axios.get(url).then(response => {
+            console.log(response.data[0]);
+            this.listBirads = response.data;
+            this.listIndicatorBirads.birads_3  = response.data[3].exam_quantity;
+            this.listIndicatorBirads.birads_4  = response.data[4].exam_quantity;
+            this.listIndicatorBirads.birads_5  = response.data[5].exam_quantity;
+            this.listIndicatorBirads.birads_6  = response.data[6].exam_quantity;
+            this.getIndicatorBiradsFilter();
+          })
+        },
+       getIndicatorBiradsFilter() {
           let me = this;
           this. listExamYear.all.map(function(x,y){
             me.listExamYear.name.push(x.month);
@@ -169,6 +305,7 @@
           })
           this.getGraphLine();
         },
+        
         getHistCommuneYear() {
           var url = '/dashboard/getHistYear'
           axios.get(url).then(response => {
@@ -183,6 +320,21 @@
             me.listHistCommuneYear.quantity.push(x.exam_quantity);
           })
           this.getGraphBar();
+        },
+        getHistEstablishmentYear() {
+          var url = '/dashboard/getHistEstablishmentYear'
+          axios.get(url).then(response => {
+            this.listHistEstablishmentYear.all = response.data;
+            this.getHistEstablishmentYearFilter();
+          })
+        },
+        getHistEstablishmentYearFilter() {
+          let me = this;
+          this.listHistEstablishmentYear.all.map(function(x,y){
+            me.listHistEstablishmentYear.name_label.push(x.name_label);
+            me.listHistEstablishmentYear.quantity.push(x.exam_quantity);
+          })
+          this.getGraphRadar();
         },
         getGraphBar() {
           let me = this;
@@ -223,6 +375,23 @@
             }
           });
         },
+        getGraphRadar() {
+          let me = this;
+          var ctx = document.getElementById("establishmentRadar");
+          var dataValues = me.listHistEstablishmentYear.quantity;
+          var dataLabels = me.listHistEstablishmentYear.name_label;
+          var myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+              labels: dataLabels,
+              datasets: [{
+                label: "Establecimiento Origen",
+                backgroundColor: "rgba(5, 179, 166.2)",
+                data: dataValues
+              }]
+            }
+          });
+        },
         getGraphLine() {
           let me = this;
           var ctx = document.getElementById('myChart2').getContext('2d');
@@ -242,10 +411,22 @@
               },
 
               // Configuration options go here
-              options: {}
-          });
+              options: {
+                maintainAspectRatio: false,
+                responsive: true, 
+                 plugins: {
+                      // Change options for ALL labels of THIS CHART
+                      datalabels: {
+                          color: '#A0A0A0',
+                          align: 'top',
+                          clamp: 'true'
+                      }
+                  }
+                
               }
+          });
+        }
       },
-
+      
     }
 </script>

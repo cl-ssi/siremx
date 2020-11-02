@@ -69,7 +69,10 @@ Route::group(['middleware' => ['auth']], function () {
 
   Route::get('/dashboard/getExamYear','DashboardController@getExamYear');
   Route::get('/dashboard/getHistYear','DashboardController@getHistYear');
+  Route::get('/dashboard/getHistEstablishmentYear','DashboardController@getHistEstablishmentYear');
   Route::get('/dashboard/getIndicators','DashboardController@getIndicators');
+  Route::get('/dashboard/getIndicatorBirads','DashboardController@getIndicatorBirads');
+  Route::get('/dashboard/getExamBiradsYear','DashboardController@getExamBiradsYear');
 
 }); // END MIDDLEWARE
 

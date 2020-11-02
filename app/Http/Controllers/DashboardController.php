@@ -17,6 +17,7 @@ clASs DAShboardController extends Controller
                     ,count(*) AS exam_quantity
             FROM exams T0
             WHERE T0.date_exam >= DATE_FORMAT(NOW() ,'%Y-01-01') AND T0.date_exam <= NOW()
+               
             GROUP BY 
                     MONTH(T0.date_exam)
                     ,MONTHNAME(T0.date_exam)";
@@ -42,6 +43,71 @@ clASs DAShboardController extends Controller
         $patient = DB::select($sql,array(1));
 
         return $patient;
+    }
+
+    public function getHistEstablishmentYear(Request $request)
+    {
+        if(!$request->ajax()) return redirect('/');
+
+        $sql="SELECT  REPLACE(CO.name, 'Centro de Salud Familiar', '') AS name_label
+                      ,count(*) AS exam_quantity
+                FROM exams T0
+                LEFT JOIN patients T1 ON T0.patient_id = T1.id
+                LEFT JOIN establishments CO  ON T0.cesfam = CO.new_code_deis
+                WHERE T0.date_exam >= DATE_FORMAT(NOW() ,'%Y-01-01') AND T0.date_exam <= NOW()
+                  AND CO.name IS NOT NULL
+                GROUP BY 
+                        CO.name
+                ORDER BY exam_quantity DESC";
+
+        $resp = DB::select($sql,array(1));
+
+        return $resp;
+    }
+
+    public function getIndicatorBirads(Request $request)
+    {
+        if(!$request->ajax()) return redirect('/');
+
+        $sql="SELECT 
+                        T.birads AS birads
+                       ,SUM(T.exam_quantity) AS exam_quantity
+                
+                FROM (
+                
+                SELECT  T0.birards_mamografia AS birads
+                                    ,count(*) AS exam_quantity
+                            FROM exams T0
+                            WHERE T0.date_exam >= DATE_FORMAT(NOW() ,'%Y-01-01') AND T0.date_exam <= NOW()
+                            AND birards_mamografia IS NOT NULL
+                            AND birards_mamografia NOT LIKE ''
+                            GROUP BY 
+                                    T0.birards_mamografia
+                UNION ALL
+                
+                SELECT  T0.birards_ecografia AS birads
+                                    ,count(*) AS exam_quantity
+                            FROM exams T0
+                            WHERE T0.date_exam >= DATE_FORMAT(NOW() ,'%Y-01-01') AND T0.date_exam <= NOW()
+                            AND birards_ecografia IS NOT NULL
+                            AND birards_ecografia NOT LIKE ''
+                            GROUP BY 
+                                    T0.birards_ecografia
+                UNION ALL
+                
+                SELECT  T0.birards_proyeccion AS birads
+                                    ,count(*) AS exam_quantity
+                            FROM exams T0
+                            WHERE T0.date_exam >= DATE_FORMAT(NOW() ,'%Y-01-01') AND T0.date_exam <= NOW()
+                            AND birards_proyeccion IS NOT NULL
+                            AND birards_proyeccion NOT LIKE ''
+                            GROUP BY 
+                                    T0.birards_proyeccion ) AS T
+                GROUP BY T.birads";
+
+        $resp = DB::select($sql,array(1));
+
+        return $resp;
     }
 
     public function getIndicators(Request $request)
@@ -79,4 +145,41 @@ clASs DAShboardController extends Controller
 
         return $patient;
     }
+
+    public function getExamBiradsYear(Request $request)
+    {
+        if(!$request->ajax()) return redirect('/');
+
+        $sql="SELECT  t.month
+                     ,t.month_name
+                     ,t.birards
+                     ,t.exam_quantity
+                     ,@running_total:= IF(@previous=t.birards,@running_total,0) + t.exam_quantity   AS exam_quantity_acum
+                     ,@previous:=t.birards AS birards_previous
+                FROM
+                    ( SELECT    MONTH(T0.date_exam) AS month
+                                        ,MONTHNAME(T0.date_exam) AS month_name
+                                ,birards_mamografia AS birards
+                                        ,count(*) AS exam_quantity
+                                FROM exams T0
+                                WHERE T0.date_exam >= DATE_FORMAT(NOW() ,'%Y-01-01') AND T0.date_exam <= NOW()
+                                AND birards_mamografia IS NOT NULL
+                                AND birards_mamografia NOT LIKE ''
+                                GROUP BY 
+                                    MONTH(T0.date_exam)
+                                        ,MONTHNAME(T0.date_exam)
+                                        ,birards_mamografia
+                    ) t
+                JOIN (SELECT @running_total:=0) r
+                ORDER BY birards
+                        ,t.month
+                    
+            ";
+
+        $patient = DB::select($sql,array(1));
+
+        return $patient;
+    }
+
+    
 }

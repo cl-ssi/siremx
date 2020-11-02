@@ -32,16 +32,40 @@ class UsersController extends Controller
        $cCorreo  = ($cCorreo == NULL) ? ($cCorreo = '') : $cCorreo;
        $cEstado  = ($cEstado == NULL) ? ($cEstado = '') : $cEstado;
 
-       $rpta     = DB::select('call sp_Usuario_getListarUsuarios (?,?,?,?,?)',
-       [
-           $idUser,
-           $cNombre,
-           $cUsuario,
-           $cCorreo,
-           $cEstado
-       ]);
+       $sql="
+            SELECT usuario.id,
+            CONCAT(usuario.firstname,' ',usuario.secondname,' ',usuario.lastname) AS fullname,
+            usuario.firstname,
+            usuario.secondname,
+            usuario.lastname,
+            usuario.username,
+            usuario.run,
+            usuario.dv,
+            usuario.commune_id,
+            usuario.establishment_id,
+            CO.name AS commune,
+            ES.alias AS establishment,
+            IFNULL(usuario.email,'') AS email,
+            CASE IFNULL(usuario.state,'') WHEN 'A' THEN 'ACTIVO'
+                                                   ELSE 'INACTIVO'
+                                                   END AS state_alias,
+            IFNULL(usuario.state,'') AS state,
+            IFNULL(image.path,'')    AS profile_image
+         FROM users usuario
+         LEFT OUTER JOIN files image ON usuario.file_id = image.id
+         LEFT JOIN communes CO  ON usuario.commune_id = CO.id
+         LEFT JOIN establishments ES  ON usuario.establishment_id = ES.id
+         WHERE 1=1
+            AND CONCAT(usuario.firstname,' ',usuario.secondname,' ',usuario.lastname) LIKE ('%".$cNombre."%')
+            AND (usuario.username) LIKE ('%".$cUsuario."%')
+            AND (usuario.email) LIKE ('%".$cCorreo."%')
+            AND (usuario.state = '".$cEstado."' OR '".$cEstado."' = '')
+            AND (usuario.id = '".$idUser."' OR '".$idUser."' = 0)
+         ORDER BY usuario.id DESC";
+      
+       $rpta = DB::select($sql,array(1));
 
-       return $rpta;
+      return $rpta;
     }
 
     public function setRegistrarUsuario(Request $request)
@@ -68,23 +92,23 @@ class UsersController extends Controller
        $cContrasena    = ($cContrasena == NULL) ? ($cContrasena = '') : $cContrasena;
        $oFototgrafia   = ($oFototgrafia == NULL) ? ($oFototgrafia = NULL) : $oFototgrafia;
 
-       $rpta     = DB::select('call sp_Usuario_setRegistrarUsuario (?,?,?,?,?,?,?,?,?)',
-       [
-           $run,
-           $dv,
-           $cNombre,
-           $cSegundoNombre,
-           $cApellido,
-           $cUsuario,
-           $cCorreo,
-           $cContrasena,
-           $oFototgrafia
-       ]);
+       $user = new User;
+       $user->run = $run;
+       $user->dv = $dv;
+       $user->firstname = $cNombre;
+       $user->secondname = $cSegundoNombre;
+       $user->lastname = $cApellido;
+       $user->username = $cUsuario;
+       $user->email = $cCorreo;
+       $user->password = $cContrasena;
+       $user->file_id = $oFototgrafia;
+       $user->state = 'A';
+       $user->created_by = 1;
+       $user->updated_by = 1;
 
-       /*$user = new User($request->All());
-       $user->save();*/
- 
-       return $rpta;
+       $user->save();
+
+       return $user->id;
     }
 
     public function setEditUser(Request $request)

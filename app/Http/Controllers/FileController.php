@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
+use App\File;
+
 use Illuminate\Support\Str;
 
 class FileController extends Controller
@@ -23,13 +25,21 @@ class FileController extends Controller
         //dd($fileserver);
         Storage::putFileAs('public/users',$file, $fileserver);
 
-        $rpta     = DB::select('call sp_Archivo_setRegistrarArchivo (?,?,?)',
+        $file = new File;
+        $file->path = asset('storage/users/'.$fileserver);
+        $file->filename = $filename;
+        $file->created_by = $idUser;
+        $file->updated_by = $idUser;
+
+        $file->save();
+
+        /*$rpta     = DB::select('call sp_Archivo_setRegistrarArchivo (?,?,?)',
         [
             asset('storage/users/'.$fileserver),
             $filename,
             $idUser
-        ]);
+        ]); */
 
-       return $rpta;
+       return $file->id;
     }
 }

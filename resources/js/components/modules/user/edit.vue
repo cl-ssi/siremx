@@ -296,8 +296,8 @@
             const config = { headers: {'Content-Type': 'multipart/form-data'}}
             var url = '/archivo/setRegistrarArchivo'
             axios.post(url, this.form, config).then(response =>{
-              console.log(response)
-              var nIdFile = response.data[0].nIdFile;
+              console.log(response.data)
+              var nIdFile = response.data;
               this.setSaveUser(nIdFile);
             }).catch(error => {
               if(error.response.status == 401){
@@ -395,7 +395,6 @@
           })
         },
         setEditRoleByUser() {
-          console.log("en funcion");
           var  url = '/administracion/user/setEditRoleByUser'
           axios.post(url, {
             'idUser' : this.fillEditUser.idUser,

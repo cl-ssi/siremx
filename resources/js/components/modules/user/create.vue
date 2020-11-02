@@ -126,7 +126,7 @@
                   <div class="col-md-4 offset-4">
                     <button class="btn btn-flat btn-info btnWidth" @click.prevent="setRegistrarUsuario" 
                     v-loading.fullscreen.lock="fullscreenLoading">Registrar</button>
-                    <button class="btn btn-flat btn-default btnWidth" @click.prevent="limpiarCriterios">Limpiar</button>
+                    <button class="btn btn-flat btn-default btnWidth" @click.prevent="cleanForm">Limpiar</button>
                   </div>
                 </div>
               </div>
@@ -141,14 +141,14 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title"> SireMX</h5>
-                    <button class="close" @click="abrirModal"></button>
+                    <button class="close" @click="openModal"></button>
                 </div>
                 <div class="modal-body">
                     <div class="callout callout-danger" v-for="(item, index) in mensajeError" :key="index" v-text="item">
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button class="btn btn-secondary" @click="abrirModal">Cerrar</button>
+                    <button class="btn btn-secondary" @click="openModal">Cerrar</button>
                 </div>
             </div>
         </div>
@@ -194,7 +194,7 @@
         this.getListRoles();
       },
       methods: {
-        limpiarCriterios(){
+        cleanForm(){
           this.fillCrearUsuario.run  = '';
           this.fillCrearUsuario.dv  = '';
           this.fillCrearUsuario.cNombre  = '';
@@ -205,7 +205,7 @@
           this.fillCrearUsuario.cContrasena  = '';
           this.fillCrearUsuario.oFotografia  = '';
         },
-        abrirModal(){
+        openModal(){
             this.modalShow = !this.modalShow;
         },
         getFile(e) {
@@ -232,7 +232,7 @@
             var url = '/archivo/setRegistrarArchivo'
             axios.post(url, this.form, config).then(response =>{
               console.log(response)
-              var nIdFile = response.data[0].nIdFile;
+              var nIdFile = response.data;
               this.setStoreUser(nIdFile);
             }).catch(error => {
               if(error.response.status == 401){
@@ -258,9 +258,7 @@
             'idRole'         : this.fillCrearUsuario.idRole,
 
           }).then(response => {
-            console.log(response.data[0].nIdUsuario);
-            console.log(response);
-            this.setEditRoleByUser(response.data[0].nIdUsuario);
+            this.setEditRoleByUser(response.data);
           }).catch(error => {
               if(error.response.status == 401){
                 this.$router.push({name: 'login'})
@@ -271,7 +269,6 @@
           })
         },
         setEditRoleByUser(nIdUsuario) {
-          console.log("en funcion");
           var  url = '/administracion/user/setEditRoleByUser'
           axios.post(url, {
             'idUser' : nIdUsuario,
@@ -326,7 +323,6 @@
                 this.mensajeError.push("La Contraseña es un campo obligatorio")
             }
 
-            //console.log("en Validar"+this.mensajeError)
             if(this.mensajeError.length) {
                 this.error = 1;
             }

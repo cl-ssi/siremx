@@ -40,7 +40,7 @@
                       <div class="form-group">
                         <label>Run</label>
                         <input type="text" class="form-control" v-model="fillBsqUsuario.nRun" @keyup.enter="getListarUsuarios">
-                        <small class="form-text text-muted">Utilizar: 11111111-1</small>
+                        <small class="form-text text-muted">Utilizar Run Sin punto y sin digito verificador</small>
                       </div>
                     </div>
                   </div>
