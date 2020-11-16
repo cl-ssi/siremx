@@ -441,7 +441,7 @@ class ReportController extends Controller
 
       $sql="SELECT ultimo_examen
                   ,YEAR(CURDATE())-YEAR(b.birthday) AS age
-                  ,TIMESTAMPDIFF(Month,ultimo_examen, NOW()) AS years
+                  ,TIMESTAMPDIFF(Month,a.ultimo_examen, NOW()) AS years
                   ,b.name
                   ,b.fathers_family
                   ,b.mothers_family
@@ -454,8 +454,7 @@ class ReportController extends Controller
               SELECT  MAX(date_exam) as ultimo_examen, p.patient_id FROM  exams p WHERE 1=1 ".$listBirards ."  GROUP By p.patient_id
             ) a
             INNER JOIN patients b ON a.patient_id = b.id
-            GROUP By a.patient_id
-            HAVING years >= ".$year."";
+            WHERE TIMESTAMPDIFF(Month,a.ultimo_examen, NOW()) >= ".$year."";
 
       $patient = DB::select($sql);
 
