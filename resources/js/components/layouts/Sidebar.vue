@@ -146,6 +146,14 @@
                       </template>
                     </li>
                     <li class="nav-item">
+                      <template v-if="listPermissions.includes('reportMXBiradYears.index')">
+                        <router-link class="nav-link" :to="'/reportMXBiradYears'">
+                          <i class="fas fa-file-contract nav-icon"></i>
+                          <p>Antiguedad MX por BIRARDS</p>
+                        </router-link>
+                      </template>
+                    </li>
+                    <li class="nav-item">
                       <template v-if="listPermissions.includes('reportBirardsAge.index')">
                         <router-link class="nav-link" :to="'/reportBirardsAge'">
                           <i class="fas fa-file-contract nav-icon"></i>

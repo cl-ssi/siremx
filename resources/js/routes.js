@@ -316,6 +316,15 @@ export default new Router({
             }
         },
 
+        {
+            path: "/reportMXBiradYears",
+            name: "reportMXBiradYears.index",
+            component: require("./components/modules/report/mxBiradYear").default,
+            beforeEnter: (to, from, next) => {
+                verifyAccess(to, from, next);
+            }
+        },
+
         { path: "*", component: require("./components/layouts/404").default }
     ],
     mode: "history",

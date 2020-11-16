@@ -246,35 +246,6 @@ class ReportController extends Controller
 
       $patient = DB::select($sql);
 
-   /*$patient = DB::table('exams AS T0')
-        ->leftjoin('patients AS T1', 'T0.patient_id', '=', 'T1.id')
-        ->leftjoin('communes AS CO', 'T0.comuna', '=', 'CO.code_deis')
-        ->leftjoin('establishments AS ES', 'T0.cesfam', '=', 'ES.new_code_deis')
-        ->leftjoin('establishments AS ES2', 'T0.establecimiento_realiza_examen', '=', 'ES2.new_code_deis')
-        ->select( 'T1.run',
-        'T1.dv',
-        'T1.name',
-        'T1.fathers_family',
-        'T1.mothers_family',
-        'T1.gender',
-        'T1.telephone',
-        'DATE_FORMAT(T1.birthday, \'%d/%m/%Y\') AS birthday',
-        'YEAR(CURDATE())-YEAR(T1.birthday) AS age',
-        'T1.address',
-        'DATE_FORMAT(T0.date_exam_order, \'%d/%m/%Y\') AS date_exam_order',
-        'DATE_FORMAT(T0.date_exam, \'%d/%m/%Y\') AS date_exam',
-        'DATE_FORMAT(T0.date_exam_reception, \'%d/%m/%Y\') AS date_exam_reception',
-        'T0.birards_mamografia',
-        'T0.birards_ecografia',
-        'T0.diagnostico',
-        'ES2.alias AS establecimiento_realiza_examen',
-        'T0.profesional_solicita',
-        'T0.medico',
-        'T0.servicio_salud',
-        'CO.name AS comuna_name',
-        'ES.alias AS cesfam_name')->paginate(20);
-      dd($patient);*/
-
        return $patient;
     }
 
@@ -418,5 +389,72 @@ class ReportController extends Controller
     public function export() 
     {
         return Excel::download(new UsersExport, 'Reporte.xlsx');
+    }
+
+    public function getMXBiradYears(Request $request)
+    {
+       if(!$request->ajax()) return redirect('/');
+
+
+       $year               = $request->year;
+       $dateIni            = $request->dateIni;
+       $dateEnd            = $request->dateEnd;
+       $code_deis          = $request->codeDeis;
+       $code_deis_request  = $request->codeDeisRequest;
+       $commune            = $request->commune;
+       $listBirards        = $request->listBirards;
+       //dd($listBirards);
+
+       $dateIni  = ($dateIni == NULL) ? ($dateIni = date("Y-m-d")) : $dateIni;
+       $dateEnd  = ($dateEnd == NULL) ? ($dateEnd = '') : $dateEnd;
+       $code_deis  = ($code_deis == NULL) ? ($code_deis = '') : "AND T0.establecimiento_realiza_examen = ".$code_deis;
+       if($code_deis_request == NULL) {
+          if(Auth::user()->establishment_id){
+            $code_deis_request = "AND T0.cesfam = ".Auth::user()->establishment_id;
+          }
+          else {
+            $code_deis_request = '';
+          }
+       }
+       else {
+          $code_deis_request = "AND T0.cesfam = ".$code_deis_request;
+       }
+ 
+      if($commune == NULL) {
+           if(Auth::user()->commune_id){
+             $commune = "AND T0.comuna = ".Auth::user()->commune_id;
+           }
+           else {
+             $commune = '';
+           }
+      }
+      else {
+         $commune = "AND T0.comuna = ".$commune;
+      }
+
+      if(!$listBirards == NULL) {
+           $listBirards = "AND birards_mamografia = (".$listBirards.")";
+      }
+      else {
+          $listBirards = '';
+      }
+
+      $sql="SELECT  b.*
+                  ,ultimo_examen
+                  ,YEAR(CURDATE())-YEAR(b.birthday) AS age
+                  ,TIMESTAMPDIFF(Month,ultimo_examen, NOW()) AS years
+                  ,b.name
+                  , b.fathers_family
+                  , b.run
+            FROM (
+              SELECT  MAX(date_exam) as ultimo_examen, p.patient_id FROM  exams p WHERE 1=1 ".$listBirards ."  GROUP By p.patient_id
+            ) a
+            INNER JOIN patients b ON a.patient_id = b.id
+            GROUP By a.patient_id
+            HAVING years >= ".$year."";
+
+      $patient = DB::select($sql);
+
+       return $patient;
     }
 }
