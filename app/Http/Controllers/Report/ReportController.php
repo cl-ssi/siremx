@@ -439,13 +439,17 @@ class ReportController extends Controller
           $listBirards = '';
       }
 
-      $sql="SELECT  b.*
-                  ,ultimo_examen
+      $sql="SELECT ultimo_examen
                   ,YEAR(CURDATE())-YEAR(b.birthday) AS age
                   ,TIMESTAMPDIFF(Month,ultimo_examen, NOW()) AS years
                   ,b.name
-                  , b.fathers_family
-                  , b.run
+                  ,b.fathers_family
+                  ,b.mothers_family
+                  ,b.gender
+                  ,b.birthday
+                  ,b.address
+                  ,b.telephone
+                  ,b.run
             FROM (
               SELECT  MAX(date_exam) as ultimo_examen, p.patient_id FROM  exams p WHERE 1=1 ".$listBirards ."  GROUP By p.patient_id
             ) a
@@ -458,3 +462,4 @@ class ReportController extends Controller
        return $patient;
     }
 }
+
