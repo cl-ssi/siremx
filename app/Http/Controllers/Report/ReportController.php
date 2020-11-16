@@ -450,6 +450,7 @@ class ReportController extends Controller
                   ,b.address
                   ,b.telephone
                   ,b.run
+                  ,b.dv
             FROM (
               SELECT  MAX(date_exam) as ultimo_examen, p.patient_id FROM  exams p WHERE 1=1 ".$listBirards ."  GROUP By p.patient_id
             ) a
