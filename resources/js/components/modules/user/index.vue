@@ -206,7 +206,7 @@
               cEstado: ''
             },
             listUsuarios: [],
-            listRolePermissionsByUser: JSON.parse(sessionStorage.getItem('listRolePermissionsByUser')),
+            listRolePermissionsByUser: JSON.parse(localStorage.getItem('listRolePermissionsByUser')),
             listEstados: [
               {value: 'A', label: 'Activo'},
               {value: 'I', label: 'Inactivo'}
@@ -269,7 +269,7 @@
               if(error.response.status == 401){
                 this.$router.push({name: 'login'})
                 location.reload();
-                sessionStorage.clear();
+                localStorage.clear();
                 this.fullscreenLoading = false;
               }
           })
@@ -314,7 +314,7 @@
                     if(error.response.status == 401){
                       this.$router.push({name: 'login'})
                       location.reload();
-                      sessionStorage.clear();
+                      localStorage.clear();
                       this.fullscreenLoading = false;
                     }
                 })

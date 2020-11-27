@@ -4,10 +4,10 @@ import Router from "vue-router";
 Vue.use(Router);
 
 function verifyAccess(to, from, next) {
-    let authUser = JSON.parse(sessionStorage.getItem("authUser"));
+    let authUser = JSON.parse(localStorage.getItem("authUser"));
     if (authUser) {
         let listRolePermissionsByUser = JSON.parse(
-            sessionStorage.getItem("listRolePermissionsByUser")
+            localStorage.getItem("listRolePermissionsByUser")
         );
         if (listRolePermissionsByUser.includes(to.name)) {
             next();

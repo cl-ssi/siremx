@@ -142,7 +142,7 @@
               if(error.response.status == 401){
                 this.$router.push({name: 'login'})
                 location.reload();
-                sessionStorage.clear();
+                localStorage.clear();
                 this.fullscreenLoading = false;
               }
           })
@@ -173,7 +173,7 @@
               if(error.response.status == 401){
                 this.$router.push({name: 'login'})
                 location.reload();
-                sessionStorage.clear();
+                localStorage.clear();
                 this.fullscreenLoading = false;
               }
           })

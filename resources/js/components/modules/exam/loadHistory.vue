@@ -120,7 +120,7 @@
               url: ''
             },
             listPermissions: [],
-            listRolePermissionsByUser: JSON.parse(sessionStorage.getItem('listRolePermissionsByUser')),
+            listRolePermissionsByUser: JSON.parse(localStorage.getItem('listRolePermissionsByUser')),
             pageNumber: 0,
             perPage: 10
           }
@@ -177,7 +177,7 @@
               if(error.response.status == 401){
                 this.$router.push({name: 'login'})
                 location.reload();
-                sessionStorage.clear();
+                localStorage.clear();
                 this.fullscreenLoading = false;
               }
           })
@@ -209,7 +209,7 @@
                     if(error.response.status == 401){
                       this.$router.push({name: 'login'})
                       location.reload();
-                      sessionStorage.clear();
+                      localStorage.clear();
                       this.fullscreenLoading = false;
                     }
                 })

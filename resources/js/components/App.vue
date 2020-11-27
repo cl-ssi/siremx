@@ -37,7 +37,7 @@
         components:{Navbar,Sidebar,Footer},
         mounted() {
 
-            this.listRolePermissionsByUser = JSON.parse(sessionStorage.getItem('listRolePermissionsByUser'));
+            this.listRolePermissionsByUser = JSON.parse(localStorage.getItem('listRolePermissionsByUser'));
 
             EventBus.$on('notifyrolePermissionsByUser',data => {
                 this.listRolePermissionsByUser = data;

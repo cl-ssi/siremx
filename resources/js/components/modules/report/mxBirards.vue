@@ -268,7 +268,7 @@ import XLSX from 'xlsx'
               establishmentExam: '',
               commune: ''
             },
-            listRolePermissionsByUser: JSON.parse(sessionStorage.getItem('listRolePermissionsByUser')),
+            listRolePermissionsByUser: JSON.parse(localStorage.getItem('listRolePermissionsByUser')),
             listEstablishments: [],
             listCommunes: [],
             listUsuarios: [],
@@ -352,7 +352,7 @@ import XLSX from 'xlsx'
               if(error.response.status == 401){
                 this.$router.push({name: 'login'})
                 location.reload();
-                sessionStorage.clear();
+                localStorage.clear();
                 this.fullscreenLoading = false;
               }
           })
@@ -365,7 +365,7 @@ import XLSX from 'xlsx'
               if(error.response.status == 401){
                 this.$router.push({name: 'login'})
                 location.reload();
-                sessionStorage.clear();
+                localStorage.clear();
                 this.fullscreenLoading = false;
               }
           })

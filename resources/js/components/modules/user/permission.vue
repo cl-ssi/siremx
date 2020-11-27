@@ -184,7 +184,7 @@
               if(error.response.status == 401){
                 this.$router.push({name: 'login'})
                 location.reload();
-                sessionStorage.clear();
+                localStorage.clear();
                 this.fullscreenLoading = false;
               }
           })
@@ -203,7 +203,7 @@
               if(error.response.status == 401){
                 this.$router.push({name: 'login'})
                 location.reload();
-                sessionStorage.clear();
+                localStorage.clear();
                 this.fullscreenLoading = false;
               }
           })
@@ -221,7 +221,7 @@
               if(error.response.status == 401){
                 this.$router.push({name: 'login'})
                 location.reload();
-                sessionStorage.clear();
+                localStorage.clear();
                 this.fullscreenLoading = false;
               }
           })
@@ -272,7 +272,7 @@
               if(error.response.status == 401){
                 this.$router.push({name: 'login'})
                 location.reload();
-                sessionStorage.clear();
+                localStorage.clear();
                 this.fullscreenLoading = false;
               }
           })
@@ -286,7 +286,7 @@
               if(error.response.status == 401){
                 this.$router.push({name: 'login'})
                 location.reload();
-                sessionStorage.clear();
+                localStorage.clear();
                 this.fullscreenLoading = false;
               }
           })
@@ -297,7 +297,7 @@
             me.listRolePermissionsByUser.map(function(x, y){
                 me.listRolePermissionsByUserFilter.push(x.slug)
             })
-            sessionStorage.setItem('listRolePermissionsByUser', JSON.stringify(me.listRolePermissionsByUserFilter));
+            localStorage.setItem('listRolePermissionsByUser', JSON.stringify(me.listRolePermissionsByUserFilter));
             EventBus.$emit('notifyrolePermissionsByUser', me.listRolePermissionsByUserFilter);
             this.fullscreenLoading = false;
              Swal.fire({

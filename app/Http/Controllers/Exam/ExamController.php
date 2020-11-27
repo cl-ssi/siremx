@@ -22,8 +22,6 @@ class ExamController extends Controller
     
        $idExam  = $request->idExam;
        $idExam  = ($idExam == NULL) ? ($idExam = '') : $idExam;
-
-       //dd($idExam );
        
        $exam = Exam::Where('id','=',$idExam)->get();
 
@@ -50,8 +48,6 @@ class ExamController extends Controller
        $date_exam_reception   = $request->date_exam_reception;
        $diagnostic            = $request->diagnostic;
 
-       
-       
 
        if($examType == 'mam'){
             $birards_mam = $birards;
@@ -76,7 +72,7 @@ class ExamController extends Controller
        $servicioSalud        = ($servicioSalud == NULL) ? ($servicioSalud = '') : $servicioSalud;
        $commune              = ($commune == NULL) ? ($commune = '') : $commune;
        $establishmentRequest = ($establishmentRequest == NULL) ? ($establishmentRequest = '') : $establishmentRequest;
-       $date_exam_order      = ($date_exam_order == NULL) ? ($date_exam_order = NULL) : $date_exam_order; // SE QUITO NULL
+       $date_exam_order      = ($date_exam_order == NULL) ? ($date_exam_order = NULL) : $date_exam_order;
        $establishmentExam    = ($establishmentExam == NULL) ? ($establishmentExam = '') : $establishmentExam;
        $doctor               = ($doctor == NULL) ? ($doctor = '') : $doctor;
        $date_exam            = ($date_exam == NULL) ? ($date_exam = NULL) : $date_exam;
@@ -100,7 +96,7 @@ class ExamController extends Controller
        $exam->birards_proyeccion   = $birards_pro;
        $exam->date_exam_reception  = $date_exam_reception;
        $exam->diagnostico          = $diagnostic;
-       //dd($exam->filename);
+
        if($request->hasFile('file')){
         $file                  = $request->file;
         $flag                  = $idExam;
@@ -116,7 +112,6 @@ class ExamController extends Controller
         $exam->filename             = $exam->filename;
        }
 
-       //$exam->updated_at           = date("Y-m-d");
        $exam->save();
 
 
@@ -127,9 +122,9 @@ class ExamController extends Controller
     {
         if(!$request->ajax()) return redirect('/');
     
-        $cName           = $request->cName;
-        $cFathers_family = $request->cFathers_family;
-        $nRun            = $request->nRun;
+        $cName              = $request->cName;
+        $cFathers_family    = $request->cFathers_family;
+        $nRun               = $request->nRun;
         $code_deis_request  = $request->codeDeisRequest;
 
 
@@ -145,8 +140,6 @@ class ExamController extends Controller
               $code_deis_request = '';
             }
          }
-
-
        
         if($cName || $cFathers_family || $nRun ){
 
@@ -216,17 +209,13 @@ class ExamController extends Controller
                     ->orderBy('id','DESC')
                     ->take(1200)->get();
         }
-
-       // Se obtiene el listado de Id de pacientes conforme el request.
-        
-
+     
        return $exams;
     }
 
     public function setStoreExam(Request $request)
     {
        if(!$request->ajax()) return redirect('/');
-       //dd($request);
 
        $idPatient             = $request->idPatient;
        $run                   = $request->run;
@@ -247,16 +236,6 @@ class ExamController extends Controller
        $derivation            = $request->derivation;
        $examType              = $request->examType;
         
-        
-       //dd($request);
-
-       // Se obtiene el listado de Id de pacientes conforme el request.
-       /*$patients_list = Patient::Where('run','LIKE','%'.$run.'%')
-                               ->Where('name','LIKE','%'.$name.'%')
-                               ->Where('fathers_family','LIKE','%'.$fathers_family.'%')
-                               ->get('id');*/
-
-        
         $exams = new Exam();
         $exams->servicio_salud       = $servicioSalud;
         $exams->profesional_solicita = $professional;
@@ -271,7 +250,7 @@ class ExamController extends Controller
         $exams->exam_type            = $examType;
         $exams->load_source          = 'app';
         $exams->load_id              = 0;
-        $exams->user_id              = Auth::id(); //Cambiar por usuario de sesión
+        $exams->user_id              = Auth::id();
         $exams->patient_id           = $idPatient;
         $exams->save();
 
@@ -364,6 +343,7 @@ class ExamController extends Controller
                 $date_birthday = ($date_birthday == NULL) ? ($date_birthday = '') : $date_birthday;
 
                 $gender = $exam['GENERO'];
+
                 if($gender == 'F'){
                     $gender = 'female';
                 }
@@ -409,11 +389,30 @@ class ExamController extends Controller
             $commune  = ($commune == NULL) ? ($commune = NULL) : $commune;
 
             $birardsMam = $exam['BIRADS MAM'];
-            $birardsMam  = ($birardsMam == NULL) ? ($birardsMam = '') : $birardsMam;
+            $birardsMam  = ($birardsMam == NULL) ? ($birardsMam = NULL) : $birardsMam;
             $birardsEco = $exam['BIRADS ECO'];
-            $birardsEco  = ($birardsEco == NULL) ? ($birardsEco = '') : $birardsEco;
+            $birardsEco  = ($birardsEco == NULL) ? ($birardsEco = NULL) : $birardsEco;
             $birardsPro = $exam['BIRADS PRO'];
-            $birardsPro  = ($birardsPro == NULL) ? ($birardsPro = '') : $birardsPro;
+            $birardsPro  = ($birardsPro == NULL) ? ($birardsPro = NULL) : $birardsPro;
+
+
+           
+            if($birardsMam)
+            {
+                $examType = 'mam';
+            }
+            elseif($birardsEco)
+            {
+                $examType = 'eco';
+            }
+            elseif($birardsPro)
+            {
+                $examType = 'pro';
+            }
+            else
+            {
+                $examType = NULL;
+            }
 
             $mDerivation = $exam['MDERIVACION'];
             $mDerivation  = ($mDerivation == NULL) ? ($mDerivation = '') : $mDerivation;
@@ -436,6 +435,7 @@ class ExamController extends Controller
             $examDet->date_exam            = $date_exam;
             $examDet->diagnostico          = $diagnostic;
             $examDet->date_exam_reception  = $date_exam_reception;
+            $examDet->exam_type            = $examType;
             $examDet->birards_mamografia   = $birardsMam;
             $examDet->birards_ecografia    = $birardsEco;
             $examDet->birards_proyeccion   = $birardsPro;

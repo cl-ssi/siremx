@@ -46,8 +46,8 @@
                 me.listRolePermissionsByUser.map(function(x, y){
                     me.listRolePermissionsByUserFilter.push(x.slug)
                 })
-                sessionStorage.setItem('listRolePermissionsByUser', JSON.stringify(me.listRolePermissionsByUserFilter));
-                sessionStorage.setItem('authUser', JSON.stringify(authUser));
+                localStorage.setItem('listRolePermissionsByUser', JSON.stringify(me.listRolePermissionsByUserFilter));
+                localStorage.setItem('authUser', JSON.stringify(authUser));
                 this.loginSuccess();
             },
             loginFailed() {

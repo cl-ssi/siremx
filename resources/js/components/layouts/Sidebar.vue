@@ -225,7 +225,7 @@
             if(response.data.code == 204){
               location.reload();
               this.$router.push({name: 'login'})
-              sessionStorage.clear();
+              localStorage.clear();
               this.fullscreenLoading = false;
             }
           })
