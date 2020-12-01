@@ -28,7 +28,7 @@
                 <small>
                   <cite title="Source Title">50 a 69 Años:</cite> 
                   <strong>{{listIndicator5069.age5069_percent}}% </strong>
-                  <cite title="Source Title">con </cite> <strong>{{listIndicator5069.total_mam}}</strong> exámenes.
+                  <cite title="Source Title">con </cite> <strong>{{listIndicator5069.age5069}}</strong> exámenes.
                 </small>
               </div>
               <div class="icon">
