@@ -151,7 +151,7 @@
                     </template>
                     Bandeja de Resultados</h3>
               </div>
-              <div class="card-body table-responsive">
+              <div class="card-body table-responsive p-1">
                 <template v-if="listarUsuariosPaginated.length">
                  <table id="data-table" class="table table-hover table-sm table-bordered  table-striped table-header-fixed table-valign-middle projects">
                     <tr class="small text-nowrap">

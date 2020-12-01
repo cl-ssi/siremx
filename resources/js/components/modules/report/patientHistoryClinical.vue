@@ -13,11 +13,6 @@
     <!-- /.content-header -->
 
     <div class="content container-fluid">
-      <div class="card">
-        <div class="card-header">
-        </div>
-        <div class="card-body">
-          <div class="container-fluid">
             <div class="card card-secondary">
               <div class="card-header">
                 <h3 class="card-title">Criterios de Búsqueda</h3>
@@ -65,28 +60,28 @@
                     </template>
                     Bandeja de Resultados</h3>
               </div>
-              <div class="card-body table-responsive">
+              <div class="card-body table-responsive p-1">
                 <template v-if="listPatientsPaginated.length">
-                 <table id="data-table" class="table table-hover table-sm table-bordered  table-striped table-header-fixed table-valign-middle projects">
+                 <table id="data-table" class="table table-hover table-sm table-striped table-bordered table-header-fixed text-nowrap table-valign-middle table-responsive">
                     <tr class="small text-nowrap">
-                      <th>S. SALUD</th>
-                      <th>CESFAM</th>
-                      <th>PROFESIONA SOLICITA</th>
-                      <th>RUN</th>
-                      <th>NOMBRE</th>
-                      <th>GENERO</th>
-                      <th>F. NAC</th>
-                      <th>EDAD</th>
-                      <th>DIRECCION</th>
-                      <th>EST. EXAMEN</th>
-                      <th>F. ORDEN</th>
-                      <th>F. EXAMEN</th>
-                      <th>F. RESULTADO</th>
-                      <th>MAMOGRAFIA</th>
-                      <th>ECOGRAFIA</th>
-                      <th>PROYECCION</th>
-                      <th>MEDICO</th>
-                      <th>INFORME</th>
+                      <th class="text-center bg-secondary">S. SALUD</th>
+                      <th class="text-center bg-secondary">CESFAM</th>
+                      <th class="text-center bg-secondary">PROFESIONA SOL.</th>
+                      <th class="text-center bg-secondary">RUN</th>
+                      <th class="text-center bg-secondary">NOMBRE</th>
+                      <th class="text-center bg-secondary">GENERO</th>
+                      <th class="text-center bg-secondary">F. NAC</th>
+                      <th class="text-center bg-secondary">EDAD</th>
+                      <th class="text-center bg-secondary">DIRECCION</th>
+                      <th class="text-center bg-secondary">EST. EXAMEN</th>
+                      <th class="text-center bg-secondary">F. ORDEN</th>
+                      <th class="text-center bg-secondary">F. EXAMEN</th>
+                      <th class="text-center bg-secondary">F. RESULTADO</th>
+                      <th class="text-center bg-secondary">MAMOGRAFIA</th>
+                      <th class="text-center bg-secondary">ECOGRAFIA</th>
+                      <th class="text-center bg-secondary">PROYECCION</th>
+                      <th class="text-center bg-secondary">MEDICO</th>
+                      <th class="text-center bg-secondary">INFORME</th>
                     </tr>
                     <tr class="small " v-for="(item, index) in listPatients" :key="index">
                       <td v-text="item.servicio_salud"></td>
@@ -122,9 +117,7 @@
                       <h5>No se encontraron resultados...</h5>
                   </div>
                 </template>
-              </div>
-            </div>
-          </div>
+              
         </div>
       </div>
     </div>
@@ -224,6 +217,14 @@ import XLSX from 'xlsx'
           })
         },
         getRespReport(){
+
+          const loading = this.$loading({
+            lock: true,
+            text: 'Generando Informe',
+            spinner: 'el-icon-loading',
+            background: 'rgba(0, 0, 0, 0.7)'
+          });
+
           var url = '/report/exams/getPatientHistoryClinical'
           axios.get(url, {
             params: {
@@ -237,6 +238,7 @@ import XLSX from 'xlsx'
             this.inicializarPaginacion();
             this.listPatients = response.data;
             console.log(this.listPatients);
+            loading.close();
 
           })
         },

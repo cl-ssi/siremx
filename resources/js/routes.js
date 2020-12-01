@@ -45,6 +45,15 @@ export default new Router({
         },
 
         {
+            path: "/dashboardAudit",
+            name: "dashboardAudit.index",
+            component: require("./components/modules/dashboard/dashAudit").default,
+            beforeEnter: (to, from, next) => {
+                verifyAccess(to, from, next);
+            }
+        },
+
+        {
             path: "/",
             name: "dashboard.index",
             component: require("./components/modules/dashboard/index").default,

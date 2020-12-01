@@ -68,13 +68,18 @@ Route::group(['middleware' => ['auth']], function () {
   Route::get('/report/exams/getMXBirards','Report\ReportController@getMXBirards'); 
   Route::get('/report/exams/getMXBiradYears','Report\ReportController@getMXBiradYears');
 
-
   Route::get('/dashboard/getExamYear','DashboardController@getExamYear');
   Route::get('/dashboard/getHistYear','DashboardController@getHistYear');
   Route::get('/dashboard/getHistEstablishmentYear','DashboardController@getHistEstablishmentYear');
   Route::get('/dashboard/getIndicators','DashboardController@getIndicators');
+  Route::get('/dashboard/getIndicator5069','DashboardController@getIndicator5069');
   Route::get('/dashboard/getIndicatorBirads','DashboardController@getIndicatorBirads');
   Route::get('/dashboard/getExamBiradsYear','DashboardController@getExamBiradsYear');
+
+  // DASHBOARD AUDITORIA
+
+  Route::get('/dashboard/getExamYearEstablishment','DashboardController@getExamYearEstablishment');
+  Route::get('/dashboard/getLastExamEstablishment','DashboardController@getLastExamEstablishment');
 
 }); // END MIDDLEWARE
 

@@ -10,7 +10,6 @@
                 <h3>{{listIndicators.total_exam}}</h3>
 
                 <p>Exámenes Aplicados</p>
-                <small class="text-light">.</small>
               </div>
               <div class="icon">
                 <i class="fas fa-chart-bar"></i>
@@ -24,12 +23,8 @@
             <div class="small-box bg-default">
               <div class="inner">
                 <h3>{{listIndicators.total_mam}}<sup style="font-size: 20px"></sup></h3>
+
                 <p>Mamografías</p>
-                <small>
-                  <cite title="Source Title">50 a 69 Años:</cite> 
-                  <strong>{{listIndicator5069.age5069_percent}}% </strong>
-                  <cite title="Source Title">con </cite> <strong>{{listIndicator5069.total_mam}}</strong> exámenes.
-                </small>
               </div>
               <div class="icon">
                 <i class="fas fa-chart-pie"></i>
@@ -45,7 +40,6 @@
                 <h3>{{listIndicators.total_eco}}</h3>
 
                 <p>Ecografías</p>
-                <small class="text-light">.</small>
               </div>
               <div class="icon">
                 <i class="fas fa-chart-bar"></i>
@@ -62,7 +56,6 @@
                 <h3>{{listIndicators.total_pro}}</h3>
 
                 <p>Proyecciones</p>
-                <small class="text-light">.</small>
               </div>
               <div class="icon">
                 <i class="fas fa-chart-pie"></i>
@@ -87,31 +80,20 @@
               <!-- /.card-header -->
               <div class="card-body">
                 <div class="row">
-                  <div class="col-md-8">
-                    <p class="text-center">
-                      <strong>Cantidad de exámenes aplicados en el año actual distribuido por mes.</strong>
-                    </p>
-
-                    <div class="chart"><div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"><div class=""></div></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
-                      <!-- Sales Chart Canvas -->
-                      <canvas id="myChart2" height="320" style="height: 320px; display: block; width: 1050px;" width="1050" class="chartjs-render-monitor"></canvas>
-                    </div>
-                    <!-- /.chart-responsive -->
-                  </div>
                   <!-- /.col -->
-                  <div class="col-md-4">
+                  <div class="col-md-12">
                     <p class="text-center">
-                      <strong>Exámenes por Birads</strong>
+                      <strong>Último registro por Establecimiento</strong>
                     </p>
 
-                    <div class="card-body">
+                    <div class="card-body table-responsive p-1">
                       <div class="table-responsive">
                         <template v-if="listBirads.length">
                           <table class="table table-hover ">
-                            <tbody class="small">
-                              <tr v-for="(item, index) in listBirads" :key="index">
-                                <td><strong>BIRADS {{item.birads}}</strong></td>
-                                <td v-text="item.exam_quantity"></td>
+                            <tbody class="">
+                              <tr v-for="(item, index) in listLastExam" :key="index">
+                                <td><strong>{{item.establishmnet}}</strong></td>
+                                <td >{{ item.last_exam | moment("DD-MM-YYYY") }}</td>
                               </tr>
                             </tbody>
                           </table>
@@ -126,43 +108,7 @@
                 </div>
                 <!-- /.row -->
               </div>
-              <!-- ./card-body -->
-              <div class="card-footer">
-                <div class="row">
-                  <div class="col-sm-3 col-6">
-                    <div class="description-block border-right">
-                      <h1 class="description-header">{{listIndicatorBirads.birads_3}}</h1>
-                      <span class="description-text">TOTAL BIRARDS III</span>
-                    </div>
-                    <!-- /.description-block -->
-                  </div>
-                  <!-- /.col -->
-                  <div class="col-sm-3 col-6">
-                    <div class="description-block border-right">
-                      <h1 class="description-header">{{listIndicatorBirads.birads_4}}</h1>
-                      <span class="description-text">TOTAL BIRARDS IV</span>
-                    </div>
-                    <!-- /.description-block -->
-                  </div>
-                  <!-- /.col -->
-                  <div class="col-sm-3 col-6">
-                    <div class="description-block border-right">
-                      <h1 class="description-header">{{listIndicatorBirads.birads_5}}</h1>
-                      <span class="description-text">TOTAL BIRARDS V</span>
-                    </div>
-                    <!-- /.description-block -->
-                  </div>
-                  <!-- /.col -->
-                  <div class="col-sm-3 col-6">
-                    <div class="description-block">
-                      <h1 class="description-header">{{listIndicatorBirads.birads_6}}</h1>
-                      <span class="description-text">TOTAL BIRARDS VI</span>
-                    </div>
-                    <!-- /.description-block -->
-                  </div>
-                </div>
-                <!-- /.row -->
-              </div>
+              
               <!-- /.card-footer -->
             </div>
             <!-- /.card -->
@@ -239,18 +185,14 @@
             total_eco: '',
             total_pro: ''
           },
-          listIndicator5069: {
-            age5069:'',
-            total_mam: '',
-            age5069_percent: ''
-          },
           listIndicatorBirads: {
             birads_3:'',
             birads_4: '',
             birads_5: '',
             birads_6: ''
           },
-          listBirads: []
+          listBirads: [],
+          listLastExam: []
         }
       },
       mounted(){
@@ -259,8 +201,8 @@
         this.getHistCommuneYear();
         this.getHistEstablishmentYear();
         this.getIndicators();
-        this.getIndicator5069();
         this.getIndicatorBirads();
+        this.getLastExamEstablishment();
       },
       methods:{
         getIndicators() {
@@ -281,16 +223,6 @@
             me.listExamYear.quantity.push(x.exam_quantity);
           })
         },
-        // INDICADOR QUE PERMITE OBTENER LA CANTIDAD DE EXAMENES ENTRE 50 Y 60 AÑOS DE EDAD
-        getIndicator5069() {
-          var url = '/dashboard/getIndicator5069'
-          axios.get(url).then(response => {
-            this.listIndicator5069.age5069   = response.data[0].age5069;
-            this.listIndicator5069.total_mam = response.data[0].total_mam;
-            this.listIndicator5069.age5069_percent = Number((response.data[0].age5069/response.data[0].total_mam)*100).toFixed(0);
-
-          })
-        },
         // Obtiene los indicadores de exámenes por birads
         getIndicatorBirads() {
           var url = '/dashboard/getIndicatorBirads'
@@ -304,6 +236,14 @@
             this.getIndicatorBiradsFilter();
           })
         },
+         // Obtiene los indicadores de exámenes por birads
+        getLastExamEstablishment() {
+          var url = '/dashboard/getLastExamEstablishment'
+          axios.get(url).then(response => {
+            console.log(response.data[0]);
+            this.listLastExam = response.data;
+          })
+        },
        getIndicatorBiradsFilter() {
           let me = this;
           this. listExamYear.all.map(function(x,y){
@@ -313,7 +253,7 @@
           })
         },
         getExamYear() {
-          var url = '/dashboard/getExamYear'
+          var url = '/dashboard/getExamYearEstablishment'
           axios.get(url).then(response => {
             this.listExamYear.all = response.data;
             this.getExamYearFilter();
@@ -439,6 +379,7 @@
                       data: me.listExamYear.quantity,
                   }]
               },
+              
 
               // Configuration options go here
               options: {

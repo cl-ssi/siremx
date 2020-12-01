@@ -44,6 +44,15 @@
                 </template>
               </li>
 
+              <li class="nav-item has-treeview">
+                <template v-if="listPermissions.includes('dashboardAudit.index')">
+                  <router-link class="nav-link bg-purple active" :to="'/dashboardAudit'" >
+                    <i class="nav-icon fas fa-tachometer-alt"></i>
+                    <p>Dashboard Auditoría</p>
+                  </router-link>
+                </template>
+              </li>
+
               <template v-if="listPermissions.includes('exam.index','exam.load')">
                 <li class="nav-header">GESTIÓN</li>
                 <li class="nav-item has-treeview">

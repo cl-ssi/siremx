@@ -13,10 +13,6 @@
     <!-- /.content-header -->
 
     <div class="content container-fluid">
-      <div class="card">
-        <div class="card-header">
-        </div>
-        <div class="card-body">
           <div class="container-fluid">
             <div class="card card-secondary">
               <div class="card-header">
@@ -149,10 +145,10 @@
                     </template>
                      Bandeja de Resultados</h3>
               </div>
-              <div class="card-body table-responsive">
+              <div class="card-body table-responsive p-1">
                 <template v-if="listarUsuariosPaginated.length">
-                 <table id="data-table" class="table table-hover table-sm  table-striped table-bordered table-header-fixed text-nowrap table-valign-middle">
-                    <thead >
+                 <table id="data-table" class="table table-hover table-sm table-striped table-bordered table-header-fixed text-nowrap table-valign-middle">
+                    <thead class=" text-nowrap">
                         <tr>
                             <th colspan="11" class="text-center bordered align-middle table-default">BIRARDS POR RANGO DE EDAD MAMOGRAFÍA</th>
                         </tr>
@@ -172,17 +168,17 @@
                     </thead>
                     <tbody>
                       <tr v-for="(item, index) in listarUsuariosPaginated" :key="index">
-                        <td v-text="item.birards"></td>
-                        <td v-text="item.range1"></td>
-                        <td v-text="item.range2"></td>
-                        <td v-text="item.range3"></td>
-                        <td v-text="item.range4"></td>
-                        <td v-text="item.range5"></td>
-                        <td v-text="item.range6"></td>
-                        <td v-text="item.range7"></td>
-                        <td v-text="item.range8"></td>
-                        <td v-text="item.range9"></td>
-                        <td v-text="item.total"></td>
+                        <td class="text-center" v-text="item.birards"></td>
+                        <td class="text-center" v-text="item.range1"></td>
+                        <td class="text-center" v-text="item.range2"></td>
+                        <td class="text-center" v-text="item.range3"></td>
+                        <td class="text-center" v-text="item.range4"></td>
+                        <td class="text-center" v-text="item.range5"></td>
+                        <td class="text-center" v-text="item.range6"></td>
+                        <td class="text-center" v-text="item.range7"></td>
+                        <td class="text-center" v-text="item.range8"></td>
+                        <td class="text-center" v-text="item.range9"></td>
+                        <td class="text-center" v-text="item.total"></td>
                       </tr>
                     </tbody>
                   </table>
@@ -207,7 +203,7 @@
                     </template>
                      Bandeja de Resultados</h3>
               </div>
-              <div class="card-body table-responsive">
+              <div class="card-body table-responsive p-1">
                 <template v-if="listarUsuariosPaginated.length">
                  <table id="data-table-eco" class="table table-hover table-sm  table-striped table-bordered table-header-fixed text-nowrap table-valign-middle">
                     <thead >
@@ -230,17 +226,17 @@
                     </thead>
                     <tbody>
                       <tr v-for="(item, index) in listBirardsEcoAgeMX" :key="index">
-                        <td v-text="item.birards"></td>
-                        <td v-text="item.range1"></td>
-                        <td v-text="item.range2"></td>
-                        <td v-text="item.range3"></td>
-                        <td v-text="item.range4"></td>
-                        <td v-text="item.range5"></td>
-                        <td v-text="item.range6"></td>
-                        <td v-text="item.range7"></td>
-                        <td v-text="item.range8"></td>
-                        <td v-text="item.range9"></td>
-                        <td v-text="item.total"></td>
+                        <td class="text-center" v-text="item.birards"></td>
+                        <td class="text-center" v-text="item.range1"></td>
+                        <td class="text-center" v-text="item.range2"></td>
+                        <td class="text-center" v-text="item.range3"></td>
+                        <td class="text-center" v-text="item.range4"></td>
+                        <td class="text-center" v-text="item.range5"></td>
+                        <td class="text-center" v-text="item.range6"></td>
+                        <td class="text-center" v-text="item.range7"></td>
+                        <td class="text-center" v-text="item.range8"></td>
+                        <td class="text-center" v-text="item.range9"></td>
+                        <td class="text-center" v-text="item.total"></td>
                       </tr>
                     </tbody>
                   </table>
@@ -255,8 +251,6 @@
               </div>
             </div>
 
-          </div>
-        </div>
       </div>
     </div>
     <div class="modal fade" :class="{show: modalShow}" :style=" modalShow ? mostrarModal : ocultarModal">

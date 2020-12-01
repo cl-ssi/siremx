@@ -101,8 +101,90 @@ class ReportController extends Controller
 
       list($run,$dv) = array_pad(explode('-',str_replace(".", "", $run)),2,null);
 
-       $sql=" SELECT 
-                    T1.run,
+      $sql=" SELECT 
+                  T1.run,
+                  T1.dv,
+                  T1.name,
+                  T1.fathers_family,
+                  T1.mothers_family,
+                  T1.gender,
+                  T1.telephone,
+                  DATE_FORMAT(T1.birthday, '%d/%m/%Y') AS birthday,
+                  YEAR(CURDATE())-YEAR(T1.birthday) AS age,
+                  T1.address,
+                  DATE_FORMAT(T0.date_exam_order, '%d/%m/%Y') AS date_exam_order,
+                  DATE_FORMAT(T0.date_exam, '%d/%m/%Y') AS date_exam,
+                  DATE_FORMAT(T0.date_exam_reception, '%d/%m/%Y') AS date_exam_reception,
+                  T0.birards_mamografia,
+                  T0.birards_ecografia,
+                  T0.birards_proyeccion,
+                  T0.diagnostico,
+                  ES2.alias AS establecimiento_realiza_examen,
+                  T0.profesional_solicita,
+                  T0.medico,
+                  T0.servicio_salud,
+                  CO.name AS comuna_name,
+                  ES.alias AS cesfam_name
+              FROM exams T0
+              LEFT JOIN patients T1 ON T0.patient_id = T1.id
+              LEFT JOIN communes CO  ON T0.comuna = CO.code_deis
+              LEFT JOIN establishments ES  ON T0.cesfam = ES.new_code_deis
+              LEFT JOIN establishments ES2  ON T0.establecimiento_realiza_examen = ES2.new_code_deis
+              WHERE T1.run = '".$run."'
+                    ".$code_deis_request ."
+                    ".$code_deis ."
+                    ".$commune." 
+              ORDER BY T0.id DESC";
+
+       $patient = DB::select($sql,array(1));
+
+       return $patient;
+    }
+    
+
+    public function getMX(Request $request)
+    {
+       if(!$request->ajax()) return redirect('/');
+
+       $dateIni            = $request->dateIni;
+       $dateEnd            = $request->dateEnd;
+       $code_deis          = $request->codeDeis;
+       $code_deis_request  = $request->codeDeisRequest;
+       $commune            = $request->commune;
+
+       $dateIni  = ($dateIni == NULL) ? ($dateIni = date("Y-m-d")) : $dateIni;
+       $dateEnd  = ($dateEnd == NULL) ? ($dateEnd = '') : $dateEnd;
+       $code_deis  = ($code_deis == NULL) ? ($code_deis = '') : "AND T0.establecimiento_realiza_examen = ".$code_deis;
+        if($code_deis_request == NULL) {
+          if(Auth::user()->establishment_id){
+            $code_deis_request = "AND T0.cesfam = ".Auth::user()->establishment_id;
+          }
+          else {
+            $code_deis_request = '';
+          }
+        }
+        else {
+          $code_deis_request = "AND T0.cesfam = ".$code_deis_request;
+        }
+ 
+        if($commune == NULL) {
+            if(Auth::user()->commune_id){
+              $commune = "AND T0.comuna = ".Auth::user()->commune_id;
+            }
+            else {
+              $commune = '';
+            }
+        }
+        else {
+          $commune = "AND T0.comuna = ".$commune;
+        }
+
+
+        // $exams = Exam::with("patients")
+        //             ->whereBetween('date_exam', [$dateIni, $dateEnd])
+        //             ->get();
+      
+        $sql=" SELECT T1.run,
                     T1.dv,
                     T1.name,
                     T1.fathers_family,
@@ -117,6 +199,7 @@ class ReportController extends Controller
                     DATE_FORMAT(T0.date_exam_reception, '%d/%m/%Y') AS date_exam_reception,
                     T0.birards_mamografia,
                     T0.birards_ecografia,
+                    T0.birards_proyeccion,
                     T0.diagnostico,
                     ES2.alias AS establecimiento_realiza_examen,
                     T0.profesional_solicita,
@@ -129,33 +212,16 @@ class ReportController extends Controller
                LEFT JOIN communes CO  ON T0.comuna = CO.code_deis
                LEFT JOIN establishments ES  ON T0.cesfam = ES.new_code_deis
                LEFT JOIN establishments ES2  ON T0.establecimiento_realiza_examen = ES2.new_code_deis
-               WHERE T1.run = '".$run."'
-                     ".$code_deis_request ."
-                     ".$code_deis ."
-                     ".$commune." 
-               ORDER BY T0.id DESC";
+              WHERE T0.date_exam >= '".$dateIni ."' AND T0.date_exam <= '".$dateEnd ."'
+                    ".$code_deis_request ."
+                    ".$code_deis ."
+                    ".$commune." ";
+      
+                    //dd($sql);
 
-       $patient = DB::select($sql,array(1));
+      $patient = DB::select($sql);
 
        return $patient;
-    }
-    
-
-    public function getMX(Request $request)
-    {
-       if(!$request->ajax()) return redirect('/');
-
-       $dateIni            = $request->dateIni;
-       $dateEnd            = $request->dateEnd;
-
-       $dateIni  = ($dateIni == NULL) ? ($dateIni = date("Y-m-d")) : $dateIni;
-       $dateEnd  = ($dateEnd == NULL) ? ($dateEnd = '') : $dateEnd;
-
-       $exams = Exam::with("patients")
-                    ->whereBetween('date_exam', [$dateIni, $dateEnd])
-                    ->get();
-
-       return $exams->toArray();
     }
 
     public function getMXBirards(Request $request)
@@ -224,6 +290,7 @@ class ReportController extends Controller
                     DATE_FORMAT(T0.date_exam_reception, '%d/%m/%Y') AS date_exam_reception,
                     T0.birards_mamografia,
                     T0.birards_ecografia,
+                    T0.birards_proyeccion,
                     T0.diagnostico,
                     ES2.alias AS establecimiento_realiza_examen,
                     T0.profesional_solicita,

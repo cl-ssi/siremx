@@ -13,11 +13,6 @@
     <!-- /.content-header -->
 
     <div class="content container-fluid">
-      <div class="card">
-        <div class="card-header">
-        </div>
-        <div class="card-body">
-          <div class="container-fluid">
             <div class="card card-secondary">
               <div class="card-header">
                 <h3 class="card-title">Criterios de Búsqueda</h3>
@@ -126,28 +121,29 @@
                     </template>
                     Bandeja de Resultados</h3>
               </div>
-              <div class="card-body table-responsive">
+              <div class="card-body table-responsive p-1">
                 <template v-if="listPatientsPaginated.length">
-                 <table id="data-table" class="table table-hover table-sm table-bordered table-striped table-header-fixed text-nowrap table-valign-middle projects">
-                    <tr>
-                      <th>S. Salud</th>
-                      <th>Cesfam Solicita</th>
-                      <th>Profesional Solicita</th>
-                      <th>Run</th>
-                      <th>Nombre</th>
-                      <th>Genero</th>
-                      <th>F. Nacimiento</th>
-                      <th>Edad</th>
-                      <th>Dirección</th>
-                      <th>Establecimiento Exámen</th>
-                      <th>F. Orden</th>
-                      <th>F. Exámen</th>
-                      <th>F. Recepción</th>
-                      <th>Mamografía</th>
-                      <th>Eco Mamografía</th>
-                      <th>Médico</th>
+                 <table id="data-table" class="table table-hover table-sm table-striped table-bordered table-header-fixed text-nowrap table-valign-middle table-responsive">
+                    <tr class="small text-nowrap">
+                      <th class="text-center bg-secondary">S. SALUD</th>
+                      <th class="text-center bg-secondary">CESFAM</th>
+                      <th class="text-center bg-secondary">PROFESIONA SOL.</th>
+                      <th class="text-center bg-secondary">RUN</th>
+                      <th class="text-center bg-secondary">NOMBRE</th>
+                      <th class="text-center bg-secondary">GENERO</th>
+                      <th class="text-center bg-secondary">F. NAC</th>
+                      <th class="text-center bg-secondary">EDAD</th>
+                      <th class="text-center bg-secondary">DIRECCION</th>
+                      <th class="text-center bg-secondary">EST. EXAMEN</th>
+                      <th class="text-center bg-secondary">F. ORDEN</th>
+                      <th class="text-center bg-secondary">F. EXAMEN</th>
+                      <th class="text-center bg-secondary">F. RESULTADO</th>
+                      <th class="text-center bg-secondary">MAMOGRAFIA</th>
+                      <th class="text-center bg-secondary">ECOGRAFIA</th>
+                      <th class="text-center bg-secondary">PROYECCION</th>
+                      <th class="text-center bg-secondary">MEDICO</th>
                     </tr>
-                    <tr v-for="(item, index) in listPatients" :key="index">
+                    <tr class="small" v-for="(item, index) in listPatients" :key="index">
                       <td v-text="item.servicio_salud"></td>
                       <td v-text="item.cesfam_name"></td>
                       <td v-text="item.profesional_solicita"></td>
@@ -163,6 +159,7 @@
                       <td class="text-center align-middle" v-text="item.date_exam_reception"></td>
                       <td class="text-center align-middle" v-text="item.birards_mamografia"></td>
                       <td class="text-center align-middle" v-text="item.birards_ecografia"></td>
+                      <td class="text-center align-middle" v-text="item.birards_proyeccion"></td>
                       <td v-text="item.medico"></td>
                     </tr>
                  
@@ -173,9 +170,7 @@
                       <h5>No se encontraron resultados...</h5>
                   </div>
                 </template>
-              </div>
-            </div>
-          </div>
+             
         </div>
       </div>
     </div>
@@ -275,6 +270,14 @@ import XLSX from 'xlsx'
           })
         },
         getRespReport(){
+
+          const loading = this.$loading({
+            lock: true,
+            text: 'Generando Informe',
+            spinner: 'el-icon-loading',
+            background: 'rgba(0, 0, 0, 0.7)'
+          });
+
           var url = '/report/exams/getPatientHistory'
           axios.get(url, {
             params: {
@@ -288,6 +291,7 @@ import XLSX from 'xlsx'
             this.inicializarPaginacion();
             this.listPatients = response.data;
             console.log(this.listPatients);
+            loading.close();
 
           })
         },

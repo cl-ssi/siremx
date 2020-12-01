@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 
-clASs DAShboardController extends Controller
+class DashboardController extends Controller
 {
     public function getExamYear(Request $request)
     {
@@ -146,6 +146,26 @@ clASs DAShboardController extends Controller
         return $patient;
     }
 
+    public function getIndicator5069(Request $request)
+    {
+        if(!$request->ajax()) return redirect('/');
+
+        $sql="SELECT 
+                      SUM(case when YEAR(CURDATE())-YEAR(T1.birthday) > 49 and YEAR(CURDATE())-YEAR(T1.birthday) <= 69 then 1 else 0 end) as age5069
+                     ,COUNT(YEAR(CURDATE())-YEAR(T1.birthday)) as total_mam
+                FROM exams T0
+                LEFT JOIN patients T1 ON T0.patient_id = T1.id
+                WHERE T0.date_exam >= DATE_FORMAT(NOW() ,'%Y-01-01') 
+                  AND T0.date_exam <= NOW()
+                  AND T0.birards_mamografia IS NOT NULL
+                  AND T0.birards_mamografia <> ''
+                ";
+
+        $patient = DB::select($sql,array(1));
+
+        return $patient;
+    }
+
     public function getExamBiradsYear(Request $request)
     {
         if(!$request->ajax()) return redirect('/');
@@ -181,5 +201,49 @@ clASs DAShboardController extends Controller
         return $patient;
     }
 
+    // DASHBOARD AUDITORIA
+
+    public function getExamYearEstablishment(Request $request)
+    {
+        if(!$request->ajax()) return redirect('/');
+
+        $sql="SELECT  
+                        T0.cesfam AS establishment
+                ,MONTH(T0.date_exam) AS month
+                ,MONTHNAME(T0.date_exam) AS month_name
+                ,count(*) AS exam_quantity
+                FROM exams T0
+                WHERE T0.date_exam >= DATE_FORMAT(NOW() ,'%Y-01-01') AND T0.date_exam <= NOW()
+                 AND T0.cesfam = '102301'
+                GROUP BY 
+                T0.cesfam 
+                ,MONTH(T0.date_exam)
+                ,MONTHNAME(T0.date_exam)
+                ORDER BY T0.cesfam ";
+
+        $patient = DB::select($sql,array(1));
+
+        return $patient;
+    }
+
+    public function getLastExamEstablishment(Request $request)
+    {
+        if(!$request->ajax()) return redirect('/');
+
+        $sql=" SELECT  
+                        e.alias as establishmnet
+                ,MAX(date_exam) as last_exam
+                FROM  exams p
+                LEFT JOIN establishments e ON e.new_code_deis = p.cesfam
+                WHERE 1=1
+                AND e.alias IS NOT NULL
+                AND p.date_exam >= DATE_FORMAT(NOW() ,'%Y-01-01')
+                GROUP BY e.alias
+                ORDER BY last_exam DESC";
+
+        $resp = DB::select($sql,array(1));
+
+        return $resp;
+    }
     
 }

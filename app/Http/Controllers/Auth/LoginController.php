@@ -11,8 +11,13 @@ use App\User;
 
 class LoginController extends Controller
 {
+
+    protected $maxAttempts = 3; 
+    protected $decayMinutes = 2; 
+    
     public function login(Request $request)
     {
+
         $email    = $request->email;
         $password = $request->pass;
         $resp = Auth::attempt(['username' => $email, 'password' => $password, 'state' => 'A']);
