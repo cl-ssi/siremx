@@ -84,7 +84,7 @@
                       <label class="col-md-4 col-form-label">Establecimiento Origen</label>
                       <div class="col-md-9">
                         <el-select v-model="fillBsqReport.establishmentRequest" filterable
-                            placeholder="Seleccione"
+                            placeholder="Seleccione" multiple
                             clearable>
                               <el-option
                                 v-for="item in listEstablishments"

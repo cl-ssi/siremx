@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-
+use App\Exam;
 
 class DashboardController extends Controller
 {
@@ -230,18 +230,47 @@ class DashboardController extends Controller
     {
         if(!$request->ajax()) return redirect('/');
 
-        $sql=" SELECT  
-                        e.alias as establishmnet
-                ,MAX(date_exam) as last_exam
-                FROM  exams p
-                LEFT JOIN establishments e ON e.new_code_deis = p.cesfam
-                WHERE 1=1
-                AND e.alias IS NOT NULL
-                AND p.date_exam >= DATE_FORMAT(NOW() ,'%Y-01-01')
-                GROUP BY e.alias
-                ORDER BY last_exam DESC";
 
-        $resp = DB::select($sql,array(1));
+        $date = date("Y-01-01");
+
+
+        $lastExamsEstablishmentRequests = Exam::select(
+                                        'e.alias as establishment'
+                                        ,'e.new_code_deis'
+                                        ,DB::raw('MAX(exams.date_exam) as last_exam'))
+                                ->leftjoin('establishments as e', 'e.new_code_deis', '=', 'exams.cesfam')
+                                ->whereNotNull('e.alias')
+                                ->Where('exams.date_exam','>=',$date)
+                                ->groupBy('e.alias','e.new_code_deis')
+                                ->orderBy('last_exam','ASC')
+                                ->get();
+        
+        $lastExamsEstablishmentExams = Exam::select(
+                                        'e.alias as establishment'
+                                        ,'e.new_code_deis'
+                                        ,DB::raw('MAX(exams.date_exam) as last_establishment_exam'))
+                                ->leftjoin('establishments as e', 'e.new_code_deis', '=', 'exams.establecimiento_realiza_examen')
+                                ->whereNotNull('e.alias')
+                                ->Where('exams.date_exam','>=',$date)
+                                ->groupBy('e.alias','e.new_code_deis')
+                                ->orderBy('last_establishment_exam','ASC')
+                                ->get();
+        
+        
+
+        foreach ($lastExamsEstablishmentRequests as $lastExamsEstablishmentRequest) {
+
+            foreach ($lastExamsEstablishmentExams as $lastExamsEstablishmentExam) {
+                
+                if($lastExamsEstablishmentRequest->new_code_deis == $lastExamsEstablishmentExam->new_code_deis) {
+                    $lastExamsEstablishmentRequest['last_establishment_exam'] = $lastExamsEstablishmentExam->last_establishment_exam;
+                }
+
+            }
+        }
+
+        $resp = $lastExamsEstablishmentRequests;
+
 
         return $resp;
     }

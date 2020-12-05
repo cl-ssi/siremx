@@ -35,4 +35,6 @@ class Establishment extends Model
      * @var array
      */
     protected $dates = ['deleted_at'];
+
+    protected $table = 'establishments';
 }

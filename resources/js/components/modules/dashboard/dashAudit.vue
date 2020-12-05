@@ -90,10 +90,17 @@
                       <div class="table-responsive">
                         <template v-if="listBirads.length">
                           <table class="table table-hover ">
+                            <thead class="">
+                                <th>ESTABLECIMIENTO</th>
+                                <th >ÚLTIMO EXAMEN ORIGEN</th>
+                                <th >ÚLTIMO EXAMEN CENTRO</th>
+                                <th ></th>
+                            </thead>
                             <tbody class="">
                               <tr v-for="(item, index) in listLastExam" :key="index">
-                                <td><strong>{{item.establishmnet}}</strong></td>
+                                <td><strong>{{item.establishment}}</strong></td>
                                 <td >{{ item.last_exam | moment("DD-MM-YYYY") }}</td>
+                                <td >{{ item.last_establishment_exam | moment("DD-MM-YYYY") }}</td>
                               </tr>
                             </tbody>
                           </table>
