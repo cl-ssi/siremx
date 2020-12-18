@@ -456,19 +456,19 @@
               
             }
             else {
-              this.fillCreateExam.idPatient = response.data.id;
-              this.fillCreateExam.name = response.data.name;
-              this.fillCreateExam.run = response.data.run+'-'+response.data.dv;
+              this.fillCreateExam.idPatient      = response.data.id;
+              this.fillCreateExam.name           = response.data.name;
+              this.fillCreateExam.run            = response.data.run+'-'+response.data.dv;
               this.fillCreateExam.fathers_family = response.data.fathers_family;
               this.fillCreateExam.mothers_family = response.data.mothers_family;
           
-              this.fillCreateExam.address = response.data.address;
-              this.fillCreateExam.birthday = response.data.birthday;
-              this.fillCreateExam.gender = response.data.gender;
-              this.fillCreateExam.age = response.data.age;
-              this.fillCreateExam.exams = response.data.exams;
+              this.fillCreateExam.address        = response.data.address;
+              this.fillCreateExam.birthday       = response.data.birthday;
+              this.fillCreateExam.gender         = response.data.gender;
+              this.fillCreateExam.age            = response.data.age;
+              this.fillCreateExam.exams          = response.data.exams;
 
-              this.fillCreateExam.telephone = response.data.telephone;
+              this.fillCreateExam.telephone      = response.data.telephone;
 
               this.fullscreenLoading = false;
             } 
@@ -479,7 +479,6 @@
         },
         getListPatientsApi(){
           var run = this.fillCreateExam.run.split('-');
-          console.log(run);
           var session_url = 'https://i.saludiquique.cl/monitor/api/webservices/fonasa?run='+run[0]+'&dv='+run[1];
           var username = 'api@redsalud.gob.cl';
           var password = 'apiesmeralda';
@@ -491,14 +490,9 @@
               password: password
             }
           }).then(response => {
-            
-            console.log(response);
-
-            var data = JSON.stringify(response.data);
-            if(response.data.run)
+              var data = JSON.stringify(response.data);
+              if(response.data.run)
             {
-             
-              
               Swal.fire({
               title: '¿El paciente se ha encontrado en sistema monitor, desea cargarlo?',
               icon: 'warning',
@@ -539,10 +533,6 @@
                 timer: 1500
               })
             }
-            
-            
-
-            console.log(data);
 
           }).catch(error => {
             console.log("Error en autenticacion");
@@ -572,18 +562,7 @@
             this.fullscreenLoading = false;
           })
         },
-        /*Swal.fire({
-              title: '¿El paciente no se encuentra en los registros de Siremx, dese cargarlo desde monitor?',
-              icon: 'warning',
-              showCancelButton: true,
-              confirmButtonColor: '#3085d6',
-              cancelButtonColor: '#d33',
-              confirmButtonText: 'Si, cargar'
-              }).then((result) => {
-                  if (result.value) {
-                    //this.setStoreExam();
-                }
-              })*/
+
         getListCommunes() {
           
           var route = '/administracion/communes/getListCommunes'
@@ -599,6 +578,7 @@
               }
           })
         },
+        
         getListDerivations(code_deis) {
           
           var route = '/administracion/derivations/getListDerivationsSelect'

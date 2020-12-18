@@ -17,10 +17,9 @@ class RoleController extends Controller
     {
        if(!$request->ajax()) return redirect('/');
     
-       $idRole         = $request->idRole;
-       //dd($idRole);
-       $name           = $request->name;
-       $name  = ($name == NULL) ? ($name = '') : $name;
+       $idRole = $request->idRole;
+       $name   = $request->name;
+       $name   = ($name == NULL) ? ($name = '') : $name;
        
        $roles = Role::Where('name','LIKE','%'.$name.'%')
                     ->Where('id','LIKE','%'.$idRole.'%')->get();
@@ -88,37 +87,34 @@ class RoleController extends Controller
     // Editar Roles y Permisos
     public function setEditRolePermissions(Request $request)
     {
-      //dd($request);
-       
-       if(!$request->ajax()) return redirect('/');
-         //dd($request);
-         $role = Role::find($request->input('idRole'));
-         $role->name = $request->input('name');
-         $role->slug = $request->input('slug');
-         //$role->updated_at = $request->$name;
-         $role->save();
+      if(!$request->ajax()) return redirect('/');
+      
+      $role = Role::find($request->input('idRole'));
+      $role->name = $request->input('name');
+      $role->slug = $request->input('slug');
+      $role->save();
 
-         $PermissionsListOld = RolePermission::where('role_id', $request->input('idRole'));
+      $PermissionsListOld = RolePermission::where('role_id', $request->input('idRole'));
 
-         $PermissionsListOld->delete();
+      $PermissionsListOld->delete();
 
-         $idRole = $request->input('idRole');
+      $idRole = $request->input('idRole');
 
-         $listPermissions     = $request->listPermissionsFilter;
-         $listPermissionsSize = sizeof($listPermissions);
-         if($listPermissionsSize > 0) {
-            foreach($listPermissions as $key => $value){
-               if($value['checked'] == true) {
+      $listPermissions     = $request->listPermissionsFilter;
+      $listPermissionsSize = sizeof($listPermissions);
+      if($listPermissionsSize > 0) {
+         foreach($listPermissions as $key => $value){
+            if($value['checked'] == true) {
 
-                  $permissionsRole = new RolePermission;
-                  $permissionsRole->role_id = $idRole;
-                  $permissionsRole->permission_id = $value['id'];
-                  $permissionsRole->save();
+               $permissionsRole = new RolePermission;
+               $permissionsRole->role_id = $idRole;
+               $permissionsRole->permission_id = $value['id'];
+               $permissionsRole->save();
 
-               }
             }
          }
-       
-       return $role;
+      }
+      
+      return $role;
     }
 }

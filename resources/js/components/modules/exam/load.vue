@@ -68,7 +68,7 @@
                 <div class="row">
                   <div class="col-md-4 offset-4">
                     <button class="btn btn-flat btn-info btnWidth" @click.prevent="storeExcel">Cargar</button>
-                    <button class="btn btn-flat btn-default btnWidth" @click.prevent="limpiarCriteriosBsq">Limpiar</button>
+                    <button class="btn btn-flat btn-default btnWidth" @click.prevent="clearForm">Limpiar</button>
                   </div>
                 </div>
               </div>
@@ -110,14 +110,14 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title"> Siremx</h5>
-                    <button class="close" @click="abrirModal"></button>
+                    <button class="close" @click="openModal"></button>
                 </div>
                 <div class="modal-body">
                     <div class="callout callout-danger" v-for="(item, index) in mensajeError" :key="index" v-text="item">
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button class="btn btn-secondary" @click="abrirModal">Cerrar</button>
+                    <button class="btn btn-secondary" @click="openModal">Cerrar</button>
                 </div>
             </div>
         </div>
@@ -131,10 +131,9 @@
     export default {
       data(){
           return {
-            dataArr: [], // Table content data array
-            // countArr: {}, // Analyze the table data and header to get a cross reference array for user-defined consolidation. For the time being, this article only writes the basis, and does not introduce the automatic consolidation of cells~~My other articles have custom merge implementation methods~
-            tableColumn: [], // Table header configuration array
-            tableLoading: false, // Whether the table is loading
+            dataArr: [], // Tabla que contiene datos en array
+            tableColumn: [], // Cabecera de la tabla
+            tableLoading: false, // Mientras la tabla esta cargando
             examsData: [],
             fillSetLoad: {
               file: '',
@@ -158,14 +157,14 @@
         
       },
       methods: {
-        limpiarCriteriosBsq(){
+        clearForm(){
           this.fillSetLoad.file  = '';
         },
 
-        abrirModal(){
+        openModal(){
             this.modalShow = !this.modalShow;
         },
-        limpiarBandejaUsuarios(){
+        cleanDataTableUsers(){
           this.examsData = [];
           this.dataArr = [];
         },
@@ -302,7 +301,6 @@
                       showConfirmButton: false,
                       timer: 1500
                     })
-                    //this.getListarUsuarios();
                 }).catch(error => {
                     if(error.response.status == 401){
                       this.$router.push({name: 'login'})

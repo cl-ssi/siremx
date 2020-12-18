@@ -1,7 +1,12 @@
 <template>
+
 </template>
 
 <script>
+    // Este archivo vue permite procesar el login mediante
+    // acceso por clave única, los metodos posteriores son
+    // los que establecen la conexión con el backend y
+    // controladores de laravel.
     export default {
         data() {
             return {

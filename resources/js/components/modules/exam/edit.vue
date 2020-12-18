@@ -394,7 +394,6 @@
       methods: {
         onChange: function (event)
         {
-            console.log(this.fillEditExam.establishmentExam)
             this.fillEditExam.derivation = '';
             var code_deis = this.fillEditExam.establishmentExam;
             this.getListDerivations(code_deis);
@@ -448,7 +447,6 @@
           })
         },
         getPatientById() {
-          //this.fullscreenLoading = true;  
           var url = '/exam/getExamById'
           axios.get(url, {
             params: {

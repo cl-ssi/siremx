@@ -32,6 +32,14 @@
           </nav>
 
           <!-- Sidebar Menu -->
+          <!-- El menu se asigna mediante la siguiente lista
+          la cual esta presentada mediante jerarquía y niveles.
+          Para añadir una nueva opción de menu se recomienda
+          copiar desde una creada y modificar a necesidad. -->
+
+          <!-- Se debe tener en cuenta que cada opción de menú debe tener
+          un permiso asociado, el cual permite ser visible para el
+          usuario que tenga asignado el permiso. (permission, routes) -->
           <nav class="mt-2">
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
               

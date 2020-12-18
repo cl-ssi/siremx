@@ -20,7 +20,7 @@ class LoginController extends Controller
 
         $email    = $request->email;
         $password = $request->pass;
-        $resp = Auth::attempt(['username' => $email, 'password' => $password, 'state' => 'A']);
+        $resp     = Auth::attempt(['username' => $email, 'password' => $password, 'state' => 'A']);
 
         if($resp) {
             return response()->json([
@@ -47,6 +47,7 @@ class LoginController extends Controller
     public function logincu($access_token = null)
     {
         if ($access_token) {
+            // Cambiar url base por variable ENV
             $url_base = "https://www.claveunica.gob.cl/openid/userinfo/";
             $response = Http::withToken($access_token)->post($url_base);
             $user_cu = json_decode($response);

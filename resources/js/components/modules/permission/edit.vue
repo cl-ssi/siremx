@@ -61,7 +61,7 @@
                         <div class="col-md-3 offset-4">
                             <button class="btn btn-flat btn-info btnWidth" @click.prevent="setEditPermission" 
                             v-loading.fullscreen.lock="fullscreenLoading">Editar</button>
-                            <button class="btn btn-flat btn-default btnWidth" @click.prevent="limpiarCriterios">Limpiar</button>
+                            <button class="btn btn-flat btn-default btnWidth" @click.prevent="cleanForm">Limpiar</button>
                         </div>
                         </div>
                     </div>
@@ -77,14 +77,14 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title"> Sismam</h5>
-                    <button class="close" @click="abrirModal"></button>
+                    <button class="close" @click="openModal"></button>
                 </div>
                 <div class="modal-body">
                     <div class="callout callout-danger" v-for="(item, index) in mensajeError" :key="index" v-text="item">
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button class="btn btn-secondary" @click="abrirModal">Cerrar</button>
+                    <button class="btn btn-secondary" @click="openModal">Cerrar</button>
                 </div>
             </div>
         </div>
@@ -121,11 +121,11 @@
         this.getlistPermissions();
       },
       methods: {
-        limpiarCriterios(){
+        cleanForm(){
           this.fillEditPermission.name = '';
           this.fillEditPermission.slug = '';
         },
-        abrirModal(){
+        openModal(){
             this.modalShow = !this.modalShow;
         },
         getlistPermissions(){

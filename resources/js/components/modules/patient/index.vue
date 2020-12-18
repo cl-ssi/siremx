@@ -39,7 +39,7 @@
                       <div class="form-group">
                         <label class="col-md-3 col-form-label">Rut</label>
                         <div class="col-md-9">
-                          <input type="text" class="form-control" v-model="fillBsqUsuario.nRun" @keyup.enter="getListarUsuarios">
+                          <input type="text" class="form-control" v-model="fillBsqUsuario.nRun" @keyup.enter="gwetListPatients">
                         </div>
                       </div>
                     </div>
@@ -47,7 +47,7 @@
                       <div class="form-group">
                         <label class="col-md-3 col-form-label">Nombre</label>
                         <div class="col-md-9">
-                          <input type="text" class="form-control" v-model="fillBsqUsuario.cName" @keyup.enter="getListarUsuarios">
+                          <input type="text" class="form-control" v-model="fillBsqUsuario.cName" @keyup.enter="gwetListPatients">
                         </div>
                       </div>
                     </div>
@@ -57,7 +57,7 @@
                       <div class="form-group">
                         <label class="col-md-3 col-form-label">Apellido Paterno</label>
                         <div class="col-md-9">
-                          <input type="text" class="form-control" v-model="fillBsqUsuario.cFathers_family" @keyup.enter="getListarUsuarios">
+                          <input type="text" class="form-control" v-model="fillBsqUsuario.cFathers_family" @keyup.enter="gwetListPatients">
                         </div>
                       </div>
                     </div>
@@ -67,8 +67,8 @@
               <div class="card-footer">
                 <div class="row">
                   <div class="col-md-4 offset-4">
-                    <button class="btn btn-flat btn-info btnWidth" @click.prevent="getListarUsuarios">Buscar</button>
-                    <button class="btn btn-flat btn-default btnWidth" @click.prevent="limpiarCriteriosBsq">Limpiar</button>
+                    <button class="btn btn-flat btn-info btnWidth" @click.prevent="gwetListPatients">Buscar</button>
+                    <button class="btn btn-flat btn-default btnWidth" @click.prevent="cleanForm">Limpiar</button>
                   </div>
                 </div>
               </div>
@@ -182,15 +182,12 @@
         },
       },
       methods: {
-        limpiarCriteriosBsq(){
+        cleanForm(){
           this.fillBsqUsuario.nRun  = '';
           this.fillBsqUsuario.cName = '';
           this.fillBsqUsuario.cFathers_family  = '';
         },
-        limpiarBandejaUsuarios(){
-          this.listUsuarios = [];
-        },
-        getListarUsuarios(){
+        gwetListPatients(){
           var url = '/administracion/patient/getListarPatients'
           axios.get(url, {
             params: {

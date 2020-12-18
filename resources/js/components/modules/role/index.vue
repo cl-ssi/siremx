@@ -47,7 +47,7 @@
                 <div class="row">
                   <div class="col-md-4 offset-4">
                     <button class="btn btn-flat btn-info btnWidth" @click.prevent="getListRoles">Buscar</button>
-                    <button class="btn btn-flat btn-default btnWidth" @click.prevent="limpiarCriteriosBsq">Limpiar</button>
+                    <button class="btn btn-flat btn-default btnWidth" @click.prevent="cleanForm">Limpiar</button>
                   </div>
                 </div>
               </div>
@@ -152,11 +152,8 @@
         this.getListRoles();
       },
       methods: {
-        limpiarCriteriosBsq(){
+        cleanForm(){
           this.fillBsqRole.name  = '';
-        },
-        limpiarBandejaUsuarios(){
-          this.listRoles = [];
         },
         getListRoles(){
           var url = '/administracion/role/getListRoles'

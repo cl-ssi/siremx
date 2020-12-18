@@ -47,7 +47,7 @@
                 <div class="row">
                   <div class="col-md-4 offset-4">
                     <button class="btn btn-flat btn-info btnWidth" @click.prevent="getlistLoads">Buscar</button>
-                    <button class="btn btn-flat btn-default btnWidth" @click.prevent="limpiarCriteriosBsq">Limpiar</button>
+                    <button class="btn btn-flat btn-default btnWidth" @click.prevent="cleanForm">Limpiar</button>
                   </div>
                 </div>
               </div>
@@ -92,7 +92,7 @@
                         <a href="#" class="page-link bg-info" @click.prevent="selectPage(page)">{{ page+1 }}</a>
                       </li>
                       <li class="page-item" v-if="pageNumber < pageCount -1">
-                        <a href="#" class="page-link bg-info" @click.prevent="nextPage">Pos</a>
+                        <a href="#" class="page-link bg-info" @click.prevent="nextPage">Sig</a>
                       </li>
                     </ul>
                   </div>
@@ -156,11 +156,8 @@
         this.getlistLoads();
       },
       methods: {
-        limpiarCriteriosBsq(){
+        cleanForm(){
           this.fillBsqPermission.name  = '';
-        },
-        limpiarBandejaUsuarios(){
-          this.listPermissions = [];
         },
         getlistLoads(){
           var url = '/load/getListLoads'

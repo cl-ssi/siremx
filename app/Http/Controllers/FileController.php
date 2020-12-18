@@ -15,14 +15,14 @@ class FileController extends Controller
 {
     public function setRegistrarArchivo(Request $request) 
     {
-        //dd($request);
+        if(!$request->ajax()) return redirect('/');
+
         $file = $request->file;
         $flag = Str::random(10);
         $filename = $file->getClientOriginalName();
         $fileserver = $flag.'_'.$filename;
         $idUser = Auth::id();
 
-        //dd($fileserver);
         Storage::putFileAs('public/users',$file, $fileserver);
 
         $file = new File;
@@ -32,13 +32,6 @@ class FileController extends Controller
         $file->updated_by = $idUser;
 
         $file->save();
-
-        /*$rpta     = DB::select('call sp_Archivo_setRegistrarArchivo (?,?,?)',
-        [
-            asset('storage/users/'.$fileserver),
-            $filename,
-            $idUser
-        ]); */
 
        return $file->id;
     }

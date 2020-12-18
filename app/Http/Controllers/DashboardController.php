@@ -255,11 +255,8 @@ class DashboardController extends Controller
                                 ->groupBy('e.alias','e.new_code_deis')
                                 ->orderBy('last_establishment_exam','ASC')
                                 ->get();
-        
-        
 
         foreach ($lastExamsEstablishmentRequests as $lastExamsEstablishmentRequest) {
-
             foreach ($lastExamsEstablishmentExams as $lastExamsEstablishmentExam) {
                 
                 if($lastExamsEstablishmentRequest->new_code_deis == $lastExamsEstablishmentExam->new_code_deis) {
