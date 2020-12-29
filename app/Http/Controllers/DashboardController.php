@@ -201,6 +201,97 @@ class DashboardController extends Controller
         return $patient;
     }
 
+    public function getHistEstablishmentYearProfessional(Request $request)
+    {
+        if(!$request->ajax()) return redirect('/');
+
+        $exams = Exam::select(
+                                  'T2.new_code_deis'
+                                 ,'T2.name'
+                                 , DB::raw('REPLACE(T2.name, "Centro de Salud Familiar", "") AS name_label')
+                                 , DB::raw('count(exams.id) AS exam_quantity'))
+                    ->leftjoin('patients AS T1', 'exams.patient_id', '=', 'T1.id')
+                    ->leftjoin('establishments AS T2', 'exams.cesfam', '=', 'T2.new_code_deis')
+                    ->whereNotNull('T2.name')
+                    ->whereYear('exams.date_exam', date('Y'))
+                    ->groupBy('T2.new_code_deis','T2.name')
+                    ->orderBy('exam_quantity','Desc')
+                    ->get();
+
+        $exams_medico = Exam::select(
+                                  'T2.new_code_deis'
+                                 ,'T2.name'
+                                 , DB::raw('REPLACE(T2.name, "Centro de Salud Familiar", "") AS name_label')
+                                 , DB::raw('count(exams.id) AS exam_quantity'))
+                    ->leftjoin('patients AS T1', 'exams.patient_id', '=', 'T1.id')
+                    ->leftjoin('establishments AS T2', 'exams.cesfam', '=', 'T2.new_code_deis')
+                    ->where('exams.profesional_solicita','Medico')
+                    ->whereYear('exams.date_exam', date('Y'))
+                    ->groupBy('T2.new_code_deis','T2.name')
+                    ->orderBy('exam_quantity','Desc')
+                    ->get();
+
+        $exams_matrona = Exam::select(
+                                  'T2.new_code_deis'
+                                 ,'T2.name'
+                                 , DB::raw('REPLACE(T2.name, "Centro de Salud Familiar", "") AS name_label')
+                                 , DB::raw('count(exams.id) AS exam_quantity'))
+                    ->leftjoin('patients AS T1', 'exams.patient_id', '=', 'T1.id')
+                    ->leftjoin('establishments AS T2', 'exams.cesfam', '=', 'T2.new_code_deis')
+                    ->where('exams.profesional_solicita','Matrona')
+                    ->whereYear('exams.date_exam', date('Y'))
+                    ->groupBy('T2.new_code_deis','T2.name')
+                    ->orderBy('exam_quantity','Desc')
+                    ->get();
+        
+        $exams_other = Exam::select(
+                                  'T2.new_code_deis'
+                                 ,'T2.name'
+                                 , DB::raw('REPLACE(T2.name, "Centro de Salud Familiar", "") AS name_label')
+                                 , DB::raw('count(exams.id) AS exam_quantity'))
+                    ->leftjoin('patients AS T1', 'exams.patient_id', '=', 'T1.id')
+                    ->leftjoin('establishments AS T2', 'exams.cesfam', '=', 'T2.new_code_deis')
+                    ->where('exams.profesional_solicita','!=','Medico')
+                    ->where('exams.profesional_solicita','!=','Matrona')
+                    ->whereYear('exams.date_exam', date('Y'))
+                    ->groupBy('T2.new_code_deis','T2.name')
+                    ->orderBy('exam_quantity','Desc')
+                    ->get();
+
+
+        foreach ($exams as $exam) {
+            foreach ($exams_medico as $exam_medico) {
+
+                if($exam->new_code_deis == $exam_medico->new_code_deis) {
+                    $exam['exam_quantity_med'] = $exam_medico->exam_quantity;
+                }
+
+            }
+        }
+
+        foreach ($exams as $exam) {
+            foreach ($exams_matrona as $exam_matrona) {
+
+                if($exam->new_code_deis == $exam_matrona->new_code_deis) {
+                    $exam['exam_quantity_mat'] = $exam_matrona->exam_quantity;
+                }
+
+            }
+        }
+
+        foreach ($exams as $exam) {
+            foreach ($exams_other as $exam_other) {
+
+                if($exam->new_code_deis == $exam_other->new_code_deis) {
+                    $exam['exam_quantity_other'] = $exam_other->exam_quantity;
+                }
+
+            }
+        }
+
+        return $exams;
+    }
+
     // DASHBOARD AUDITORIA
 
     public function getExamYearEstablishment(Request $request)

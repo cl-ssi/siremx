@@ -75,6 +75,7 @@ Route::group(['middleware' => ['auth']], function () {
   Route::get('/dashboard/getIndicator5069','DashboardController@getIndicator5069');
   Route::get('/dashboard/getIndicatorBirads','DashboardController@getIndicatorBirads');
   Route::get('/dashboard/getExamBiradsYear','DashboardController@getExamBiradsYear');
+  Route::get('/dashboard/getHistEstablishmentYearProfessional','DashboardController@getHistEstablishmentYearProfessional');
 
   // DASHBOARD AUDITORIA
 

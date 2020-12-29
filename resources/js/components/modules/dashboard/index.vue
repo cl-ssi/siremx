@@ -201,7 +201,22 @@
           </div>
         </div>
 
-        
+        <div class="row">
+          <div class="col-12 col-sm-12">
+            <div class="card">
+                <div class="card-header border-0">
+                  <div class="d-flex justify-content-between">
+                    <h3 class="card-title">Exámenes por Establecimiento de origen y Profesional</h3>
+                  </div>
+                </div>
+                <div class="card-body">
+                  <div class="position-relative mb-4"><div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"><div class=""></div></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
+                    <canvas id="establishmentRadarSource" width="400" height="300"></canvas>
+                  </div>
+                </div>
+            </div>
+          </div>
+        </div> 
 
      
         
@@ -233,6 +248,14 @@
             name_label: [],
             quantity: []
           },
+          listHistEstablishmentYearProfessional: {
+            all:[],
+            name_label: [],
+            quantity: [],
+            quantity_med: [],
+            quantity_mat: [],
+            quantity_other: []
+          },
           listIndicators: {
             total_exam:'',
             total_mam: '',
@@ -258,6 +281,7 @@
         this.getExamYear();
         this.getHistCommuneYear();
         this.getHistEstablishmentYear();
+        this.getHistEstablishmentYearProfessional();
         this.getIndicators();
         this.getIndicator5069();
         this.getIndicatorBirads();
@@ -295,7 +319,7 @@
         getIndicatorBirads() {
           var url = '/dashboard/getIndicatorBirads'
           axios.get(url).then(response => {
-            console.log(response.data[0]);
+            //console.log(response.data[0]);
             this.listBirads = response.data;
             this.listIndicatorBirads.birads_3  = response.data[3].exam_quantity;
             this.listIndicatorBirads.birads_4  = response.data[4].exam_quantity;
@@ -334,8 +358,7 @@
             me.listExamYear.quantity.push(x.exam_quantity);
           })
           this.getGraphLine();
-        },
-        
+        },        
         getHistCommuneYear() {
           var url = '/dashboard/getHistYear'
           axios.get(url).then(response => {
@@ -365,6 +388,25 @@
             me.listHistEstablishmentYear.quantity.push(x.exam_quantity);
           })
           this.getGraphRadar();
+        },
+
+        getHistEstablishmentYearProfessional() {
+          var url = '/dashboard/getHistEstablishmentYearProfessional'
+          axios.get(url).then(response => {
+            this.listHistEstablishmentYearProfessional.all = response.data;
+            this.getHistEstablishmentYearProfessionalFilter();
+          })
+        },
+        getHistEstablishmentYearProfessionalFilter() {
+          let me = this;
+          this.listHistEstablishmentYearProfessional.all.map(function(x,y){
+            me.listHistEstablishmentYearProfessional.name_label.push(x.name_label);
+            me.listHistEstablishmentYearProfessional.quantity.push(x.exam_quantity);
+            me.listHistEstablishmentYearProfessional.quantity_med.push(x.exam_quantity_med);
+            me.listHistEstablishmentYearProfessional.quantity_mat.push(x.exam_quantity_mat);
+            me.listHistEstablishmentYearProfessional.quantity_other.push(x.exam_quantity_other);
+          })
+          this.getGraphRadarSource();
         },
         getGraphBar() {
           let me = this;
@@ -422,6 +464,86 @@
             }
           });
         },
+        getGraphRadarSource() {
+          let me = this;
+          //var ctx = document.getElementById("establishmentRadarSource");
+          //var dataValues = me.listHistEstablishmentYear.quantity; Data 1
+          var dataValues       = me.listHistEstablishmentYearProfessional.quantity;
+          var dataValues_med   = me.listHistEstablishmentYearProfessional.quantity_med;
+          var dataValues_mat   = me.listHistEstablishmentYearProfessional.quantity_mat;
+          var dataValues_other = me.listHistEstablishmentYearProfessional.quantity_other;
+          var dataLabels = me.listHistEstablishmentYearProfessional.name_label;
+          console.log(dataLabels);
+
+          var ctx = document.getElementById("establishmentRadarSource");
+          var myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+              labels: dataLabels,
+              datasets: [{
+                  label: 'Medico',
+                   data: dataValues_med,
+                  backgroundColor: 'rgba(188, 242, 247)',
+                  borderColor: 'rgba(5, 179, 166.2)',
+                  borderWidth: 2
+                },
+                {
+                  label: 'Matrona',
+                   data: dataValues_mat,
+                  backgroundColor: 'rgba(255, 214, 214)',
+                  borderColor: 'rgba(217, 20, 20)',
+                  borderWidth: 2
+                },
+                {
+                  label: 'Otro',
+                   data: dataValues_other,
+                  backgroundColor: 'rgba(227, 227, 227)',
+                  borderColor: 'rgba(140, 140, 140)',
+                  borderWidth: 2
+                }
+              ]
+            },
+            options: {
+              scales: {
+                yAxes: [{
+                  stacked: true,
+                  ticks: {
+                    beginAtZero: true
+                  }
+                }],
+                xAxes: [{
+                  stacked: true,
+                  ticks: {
+                    beginAtZero: true
+                  }
+                }]
+
+              }
+            }
+          });
+          // var myChart = new Chart(ctx, {
+          //   type: 'bar',
+          //   data: {
+          //     labels: dataLabels,
+          //     datasets: [{
+          //       label: "Establecimiento Origen",
+          //       backgroundColor: "rgba(5, 179, 166.2)",
+          //       data: dataValues
+          //     }]
+          //   },
+          //    options: {
+          //         scales: {
+          //             xAxes: [{
+          //                 stacked: true
+          //             }],
+          //             yAxes: [{
+          //                 stacked: true
+          //             }]
+          //         }
+          //     }
+          // });
+        },
+        
         getGraphLine() {
           let me = this;
           var ctx = document.getElementById('myChart2').getContext('2d');
