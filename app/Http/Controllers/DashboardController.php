@@ -11,12 +11,14 @@ class DashboardController extends Controller
     public function getExamYear(Request $request)
     {
         if(!$request->ajax()) return redirect('/');
+        $year = $request->year;
+        $year  = ($year == NULL) ? ($year = date("Y")) : $year;
 
         $sql=" SELECT  MONTH(T0.date_exam) AS month
                     ,MONTHNAME(T0.date_exam) AS month_name
                     ,count(*) AS exam_quantity
             FROM exams T0
-            WHERE T0.date_exam >= DATE_FORMAT(NOW() ,'%Y-01-01') AND T0.date_exam <= NOW()
+            WHERE YEAR(T0.date_exam) = ".$year."
                
             GROUP BY 
                     MONTH(T0.date_exam)
@@ -30,13 +32,15 @@ class DashboardController extends Controller
     public function getHistYear(Request $request)
     {
         if(!$request->ajax()) return redirect('/');
+        $year = $request->year;
+        $year  = ($year == NULL) ? ($year = date("Y")) : $year;
 
         $sql="SELECT  CO.name AS name_label
                         ,count(*) AS exam_quantity
                 FROM exams T0
                 LEFT JOIN patients T1 ON T0.patient_id = T1.id
                 LEFT JOIN communes CO  ON T0.comuna = CO.code_deis
-                WHERE T0.date_exam >= DATE_FORMAT(NOW() ,'%Y-01-01') AND T0.date_exam <= NOW()
+                WHERE YEAR(T0.date_exam) = ".$year."
                 GROUP BY 
                         CO.name";
 
@@ -48,13 +52,15 @@ class DashboardController extends Controller
     public function getHistEstablishmentYear(Request $request)
     {
         if(!$request->ajax()) return redirect('/');
+        $year = $request->year;
+        $year  = ($year == NULL) ? ($year = date("Y")) : $year;
 
         $sql="SELECT  REPLACE(CO.name, 'Centro de Salud Familiar', '') AS name_label
                       ,count(*) AS exam_quantity
                 FROM exams T0
                 LEFT JOIN patients T1 ON T0.patient_id = T1.id
                 LEFT JOIN establishments CO  ON T0.cesfam = CO.new_code_deis
-                WHERE T0.date_exam >= DATE_FORMAT(NOW() ,'%Y-01-01') AND T0.date_exam <= NOW()
+                WHERE YEAR(T0.date_exam) = ".$year."
                   AND CO.name IS NOT NULL
                 GROUP BY 
                         CO.name
@@ -69,6 +75,9 @@ class DashboardController extends Controller
     {
         if(!$request->ajax()) return redirect('/');
 
+        $year = $request->year;
+        $year  = ($year == NULL) ? ($year = date("Y")) : $year;
+
         $sql="SELECT 
                         T.birads AS birads
                        ,SUM(T.exam_quantity) AS exam_quantity
@@ -78,7 +87,7 @@ class DashboardController extends Controller
                 SELECT  T0.birards_mamografia AS birads
                                     ,count(*) AS exam_quantity
                             FROM exams T0
-                            WHERE T0.date_exam >= DATE_FORMAT(NOW() ,'%Y-01-01') AND T0.date_exam <= NOW()
+                            WHERE YEAR(T0.date_exam) = ".$year."
                             AND birards_mamografia IS NOT NULL
                             AND birards_mamografia NOT LIKE ''
                             GROUP BY 
@@ -88,7 +97,7 @@ class DashboardController extends Controller
                 SELECT  T0.birards_ecografia AS birads
                                     ,count(*) AS exam_quantity
                             FROM exams T0
-                            WHERE T0.date_exam >= DATE_FORMAT(NOW() ,'%Y-01-01') AND T0.date_exam <= NOW()
+                            WHERE YEAR(T0.date_exam) = ".$year."
                             AND birards_ecografia IS NOT NULL
                             AND birards_ecografia NOT LIKE ''
                             GROUP BY 
@@ -98,7 +107,7 @@ class DashboardController extends Controller
                 SELECT  T0.birards_proyeccion AS birads
                                     ,count(*) AS exam_quantity
                             FROM exams T0
-                            WHERE T0.date_exam >= DATE_FORMAT(NOW() ,'%Y-01-01') AND T0.date_exam <= NOW()
+                            WHERE YEAR(T0.date_exam) = ".$year."
                             AND birards_proyeccion IS NOT NULL
                             AND birards_proyeccion NOT LIKE ''
                             GROUP BY 
@@ -114,31 +123,34 @@ class DashboardController extends Controller
     {
         if(!$request->ajax()) return redirect('/');
 
+        $year = $request->year;
+        $year  = ($year == NULL) ? ($year = date("Y")) : $year;
+
         $sql="SELECT 'total_exam',
                         COUNT(*) AS quantity
                 FROM exams T0
-                WHERE T0.date_exam >= DATE_FORMAT(NOW() ,'%Y-01-01') AND T0.date_exam <= NOW()
+                WHERE YEAR(T0.date_exam) = ".$year."
                 UNION
                 SELECT 'total_mam',
                         COUNT(T0.birards_mamografia) AS quantity
                 FROM exams T0
                 WHERE T0.birards_mamografia IS NOT NULL
                     AND T0.birards_mamografia <> ''
-                    AND T0.date_exam >= DATE_FORMAT(NOW() ,'%Y-01-01') AND T0.date_exam <= NOW()
+                    AND YEAR(T0.date_exam) = ".$year."
                 UNION  
                 SELECT 'total_eco',
                         COUNT(T0.birards_ecografia) AS quantity
                 FROM exams T0
                 WHERE T0.birards_ecografia IS NOT NULL
                     AND T0.birards_ecografia <> ''
-                    AND T0.date_exam >= DATE_FORMAT(NOW() ,'%Y-01-01') AND T0.date_exam <= NOW()
+                    AND YEAR(T0.date_exam) = ".$year."
                 UNION
                 SELECT 'total_pro',
                         COUNT(T0.birards_proyeccion) AS quantity
                 FROM exams T0
                 WHERE T0.birards_proyeccion IS NOT NULL
                     AND T0.birards_proyeccion <> ''
-                    AND T0.date_exam >= DATE_FORMAT(NOW() ,'%Y-01-01') AND T0.date_exam <= NOW()
+                    AND YEAR(T0.date_exam) = ".$year."
                 ";
 
         $patient = DB::select($sql,array(1));
@@ -150,13 +162,15 @@ class DashboardController extends Controller
     {
         if(!$request->ajax()) return redirect('/');
 
+        $year = $request->year;
+        $year  = ($year == NULL) ? ($year = date("Y")) : $year;
+
         $sql="SELECT 
                       SUM(case when YEAR(CURDATE())-YEAR(T1.birthday) > 49 and YEAR(CURDATE())-YEAR(T1.birthday) <= 69 then 1 else 0 end) as age5069
                      ,COUNT(YEAR(CURDATE())-YEAR(T1.birthday)) as total_mam
                 FROM exams T0
                 LEFT JOIN patients T1 ON T0.patient_id = T1.id
-                WHERE T0.date_exam >= DATE_FORMAT(NOW() ,'%Y-01-01') 
-                  AND T0.date_exam <= NOW()
+                WHERE YEAR(T0.date_exam) = ".$year."
                   AND T0.birards_mamografia IS NOT NULL
                   AND T0.birards_mamografia <> ''
                 ";
@@ -204,6 +218,8 @@ class DashboardController extends Controller
     public function getHistEstablishmentYearProfessional(Request $request)
     {
         if(!$request->ajax()) return redirect('/');
+        $year = $request->year;
+        $year  = ($year == NULL) ? ($year = date("Y")) : $year;
 
         $exams = Exam::select(
                                   'T2.new_code_deis'
@@ -213,7 +229,7 @@ class DashboardController extends Controller
                     ->leftjoin('patients AS T1', 'exams.patient_id', '=', 'T1.id')
                     ->leftjoin('establishments AS T2', 'exams.cesfam', '=', 'T2.new_code_deis')
                     ->whereNotNull('T2.name')
-                    ->whereYear('exams.date_exam', date('Y'))
+                    ->whereYear('exams.date_exam', $year)
                     ->groupBy('T2.new_code_deis','T2.name')
                     ->orderBy('exam_quantity','Desc')
                     ->get();
@@ -226,7 +242,7 @@ class DashboardController extends Controller
                     ->leftjoin('patients AS T1', 'exams.patient_id', '=', 'T1.id')
                     ->leftjoin('establishments AS T2', 'exams.cesfam', '=', 'T2.new_code_deis')
                     ->where('exams.profesional_solicita','Medico')
-                    ->whereYear('exams.date_exam', date('Y'))
+                    ->whereYear('exams.date_exam', $year)
                     ->groupBy('T2.new_code_deis','T2.name')
                     ->orderBy('exam_quantity','Desc')
                     ->get();
@@ -239,7 +255,7 @@ class DashboardController extends Controller
                     ->leftjoin('patients AS T1', 'exams.patient_id', '=', 'T1.id')
                     ->leftjoin('establishments AS T2', 'exams.cesfam', '=', 'T2.new_code_deis')
                     ->where('exams.profesional_solicita','Matrona')
-                    ->whereYear('exams.date_exam', date('Y'))
+                    ->whereYear('exams.date_exam', $year)
                     ->groupBy('T2.new_code_deis','T2.name')
                     ->orderBy('exam_quantity','Desc')
                     ->get();
@@ -253,7 +269,7 @@ class DashboardController extends Controller
                     ->leftjoin('establishments AS T2', 'exams.cesfam', '=', 'T2.new_code_deis')
                     ->where('exams.profesional_solicita','!=','Medico')
                     ->where('exams.profesional_solicita','!=','Matrona')
-                    ->whereYear('exams.date_exam', date('Y'))
+                    ->whereYear('exams.date_exam', $year)
                     ->groupBy('T2.new_code_deis','T2.name')
                     ->orderBy('exam_quantity','Desc')
                     ->get();

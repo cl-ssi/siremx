@@ -15,7 +15,7 @@
                     <input type="email" @keyup.enter="login" v-model="fillLogin.email" class="form-control" placeholder="Usuario">
                     <div class="input-group-append">
                         <div class="input-group-text">
-                        <span class="fas fa-air-freshener text-info"></span>
+                        <span class="fas fa-user"></span>
                         </div>
                     </div>
                 </div>

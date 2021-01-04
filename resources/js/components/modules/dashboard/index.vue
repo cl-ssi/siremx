@@ -2,6 +2,24 @@
     <!-- Content Header (Page header) -->
     <div class="content-header">
       <div class="container-fluid">
+
+            <div class="row">
+              <div class="col-8 col-sm-2">
+                  <div class="form-group">
+                    <el-date-picker
+                        v-model="year"
+                        size="mini"
+                        type="year"
+                        placeholder="Año"
+                        value-format="yyyy"
+                        format="yyyy">
+                    </el-date-picker>
+                  </div>
+              </div>
+              <div class="col-4 col-sm-1">
+                <el-button size="mini btn-info" @click.prevent="getRespReport"><i class="fas fa-redo-alt"></i></el-button></div>
+            </div>
+
         <div class="row">
           <div class="col-lg-3 col-6">
             <!-- small box -->
@@ -231,6 +249,7 @@
     export default {
       data() {
         return {
+          year: '',
           listExamYear: {
             all:[],
             name: [],
@@ -287,9 +306,23 @@
         this.getIndicatorBirads();
       },
       methods:{
+        getRespReport(){
+          this.getIndicators();
+          this.getIndicator5069();
+          this.getIndicatorBirads();
+
+          this.getExamYear();
+          this.getHistCommuneYear();
+          this.getHistEstablishmentYear();
+          this.getHistEstablishmentYearProfessional();
+        },
         getIndicators() {
           var url = '/dashboard/getIndicators'
-          axios.get(url).then(response => {
+          axios.get(url,{ 
+            params: {
+              'year' : (!this.year) ? '' : this.year,
+            }
+          }).then(response => {
             this.listIndicators.total_exam = response.data[0].quantity;
             this.listIndicators.total_mam = response.data[1].quantity;
             this.listIndicators.total_eco = response.data[2].quantity;
@@ -308,7 +341,11 @@
         // INDICADOR QUE PERMITE OBTENER LA CANTIDAD DE EXAMENES ENTRE 50 Y 60 AÑOS DE EDAD
         getIndicator5069() {
           var url = '/dashboard/getIndicator5069'
-          axios.get(url).then(response => {
+          axios.get(url,{ 
+            params: {
+              'year' : (!this.year) ? '' : this.year,
+            }
+          }).then(response => {
             this.listIndicator5069.age5069   = response.data[0].age5069;
             this.listIndicator5069.total_mam = response.data[0].total_mam;
             this.listIndicator5069.age5069_percent = Number((response.data[0].age5069/response.data[0].total_mam)*100).toFixed(0);
@@ -318,8 +355,11 @@
         // Obtiene los indicadores de exámenes por birads
         getIndicatorBirads() {
           var url = '/dashboard/getIndicatorBirads'
-          axios.get(url).then(response => {
-            //console.log(response.data[0]);
+          axios.get(url,{ 
+            params: {
+              'year' : (!this.year) ? '' : this.year,
+            }
+          }).then(response => {
             this.listBirads = response.data;
             this.listIndicatorBirads.birads_3  = response.data[3].exam_quantity;
             this.listIndicatorBirads.birads_4  = response.data[4].exam_quantity;
@@ -328,7 +368,7 @@
             this.getIndicatorBiradsFilter();
           })
         },
-       getIndicatorBiradsFilter() {
+        getIndicatorBiradsFilter() {
           let me = this;
           this. listExamYear.all.map(function(x,y){
             me.listExamYear.name.push(x.month);
@@ -337,8 +377,17 @@
           })
         },
         getExamYear() {
+          this.listExamYear.all = [];
+          this.listExamYear.name = [];
+          this.listExamYear.month_name = [];
+          this.listExamYear.quantity = [];
+
           var url = '/dashboard/getExamYear'
-          axios.get(url).then(response => {
+          axios.get(url,{ 
+            params: {
+              'year' : (!this.year) ? '' : this.year,
+            }
+          }).then(response => {
             this.listExamYear.all = response.data;
             this.getExamYearFilter();
           }).catch(error => {
@@ -352,7 +401,7 @@
         },
         getExamYearFilter() {
           let me = this;
-          this. listExamYear.all.map(function(x,y){
+          this.listExamYear.all.map(function(x,y){
             me.listExamYear.name.push(x.month);
             me.listExamYear.month_name.push(x.month_name);
             me.listExamYear.quantity.push(x.exam_quantity);
@@ -360,8 +409,17 @@
           this.getGraphLine();
         },        
         getHistCommuneYear() {
+
+          this.listHistCommuneYear.all = [];
+          this.listHistCommuneYear.name_label = [];
+          this.listHistCommuneYear.quantity = [];
+
           var url = '/dashboard/getHistYear'
-          axios.get(url).then(response => {
+          axios.get(url,{ 
+            params: {
+              'year' : (!this.year) ? '' : this.year,
+            }
+          }).then(response => {
             this.listHistCommuneYear.all = response.data;
             this.getHistCommuneYearFilter();
           })
@@ -375,8 +433,17 @@
           this.getGraphBar();
         },
         getHistEstablishmentYear() {
+
+          this.listHistEstablishmentYear.all = [];
+          this.listHistEstablishmentYear.name_label = [];
+          this.listHistEstablishmentYear.quantity = [];
+
           var url = '/dashboard/getHistEstablishmentYear'
-          axios.get(url).then(response => {
+          axios.get(url,{ 
+            params: {
+              'year' : (!this.year) ? '' : this.year,
+            }
+          }).then(response => {
             this.listHistEstablishmentYear.all = response.data;
             this.getHistEstablishmentYearFilter();
           })
@@ -389,10 +456,21 @@
           })
           this.getGraphRadar();
         },
-
         getHistEstablishmentYearProfessional() {
+
+          this.listHistEstablishmentYearProfessional.all = [];
+          this.listHistEstablishmentYearProfessional.name_label = [];
+          this.listHistEstablishmentYearProfessional.quantity = [];
+          this.listHistEstablishmentYearProfessional.quantity_med = [];
+          this.listHistEstablishmentYearProfessional.quantity_mat = [];
+          this.listHistEstablishmentYearProfessional.quantity_other = [];
+
           var url = '/dashboard/getHistEstablishmentYearProfessional'
-          axios.get(url).then(response => {
+          axios.get(url,{ 
+            params: {
+              'year' : (!this.year) ? '' : this.year,
+            }
+          }).then(response => {
             this.listHistEstablishmentYearProfessional.all = response.data;
             this.getHistEstablishmentYearProfessionalFilter();
           })
@@ -466,14 +544,11 @@
         },
         getGraphRadarSource() {
           let me = this;
-          //var ctx = document.getElementById("establishmentRadarSource");
-          //var dataValues = me.listHistEstablishmentYear.quantity; Data 1
           var dataValues       = me.listHistEstablishmentYearProfessional.quantity;
           var dataValues_med   = me.listHistEstablishmentYearProfessional.quantity_med;
           var dataValues_mat   = me.listHistEstablishmentYearProfessional.quantity_mat;
           var dataValues_other = me.listHistEstablishmentYearProfessional.quantity_other;
           var dataLabels = me.listHistEstablishmentYearProfessional.name_label;
-          console.log(dataLabels);
 
           var ctx = document.getElementById("establishmentRadarSource");
           var myChart = new Chart(ctx, {
@@ -521,27 +596,6 @@
               }
             }
           });
-          // var myChart = new Chart(ctx, {
-          //   type: 'bar',
-          //   data: {
-          //     labels: dataLabels,
-          //     datasets: [{
-          //       label: "Establecimiento Origen",
-          //       backgroundColor: "rgba(5, 179, 166.2)",
-          //       data: dataValues
-          //     }]
-          //   },
-          //    options: {
-          //         scales: {
-          //             xAxes: [{
-          //                 stacked: true
-          //             }],
-          //             yAxes: [{
-          //                 stacked: true
-          //             }]
-          //         }
-          //     }
-          // });
         },
         
         getGraphLine() {
