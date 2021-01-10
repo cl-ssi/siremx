@@ -62,6 +62,7 @@ Route::group(['middleware' => ['auth']], function () {
   Route::get('/report/exams/getPatientHistoryClinical','Report\ReportController@getPatientHistoryClinical');
   Route::get('/report/exams/getPatientHistory','Report\ReportController@getPatientHistory');
   Route::get('/report/exams/getMX','Report\ReportController@getMX');
+  Route::get('/report/exams/getMXCoverage','Report\ReportController@getMXCoverage');
   Route::get('/report/exams/getBirardsAgeMX','Report\ReportController@getBirardsAgeMX');
   Route::get('/report/exams/getBirardsEcoAgeMX','Report\ReportController@getBirardsEcoAgeMX');
   Route::get('/report/exam/export','Report\ReportController@export');

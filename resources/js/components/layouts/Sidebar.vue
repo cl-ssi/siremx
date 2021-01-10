@@ -166,7 +166,23 @@
                       <template v-if="listPermissions.includes('reportMXBiradYears.index')">
                         <router-link class="nav-link" :to="'/reportMXBiradYears'">
                           <i class="fas fa-file-contract nav-icon"></i>
-                          <p>Antiguedad MX por BIRARDS</p>
+                          <p>Antiguedad MX</p>
+                        </router-link>
+                      </template>
+                    </li>
+                    <li class="nav-item">
+                      <template v-if="listPermissions.includes('reportMXcoverage.index')">
+                        <router-link class="nav-link" :to="'/reportMXcoverage'">
+                          <i class="fas fa-file-contract nav-icon"></i>
+                          <p>Cobertura MX</p>
+                        </router-link>
+                      </template>
+                    </li>
+                    <li class="nav-item">
+                      <template v-if="listPermissions.includes('reportMXTarget.index')">
+                        <router-link class="nav-link" :to="'/reportMXTarget'">
+                          <i class="fas fa-file-contract nav-icon"></i>
+                          <p>Reporte Focalización</p>
                         </router-link>
                       </template>
                     </li>

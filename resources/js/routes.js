@@ -334,6 +334,15 @@ export default new Router({
             }
         },
 
+        {
+            path: "/reportMXcoverage",
+            name: "reportMXcoverage.index",
+            component: require("./components/modules/report/mxCoverage").default,
+            beforeEnter: (to, from, next) => {
+                verifyAccess(to, from, next);
+            }
+        },
+
         { path: "*", component: require("./components/layouts/404").default }
     ],
     mode: "history",

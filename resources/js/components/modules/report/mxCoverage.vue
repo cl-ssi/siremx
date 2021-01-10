@@ -5,7 +5,7 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0 text-dark">Reporte MX</h1>
+            <h1 class="m-0 text-dark">Reporte Cobertura MX</h1>
           </div><!-- /.col -->
         </div><!-- /.row -->
       </div><!-- /.container-fluid -->
@@ -145,35 +145,23 @@
               <table id="data-table-eco" class="table table-hover table-sm  table-striped table-bordered table-header-fixed text-nowrap table-valign-middle">
                 <thead >
                     <tr>
-                        <th colspan="11" class="text-center bordered align-middle table-default">BIRARDS POR RANGO DE EDAD ECO-MAMARIA</th>
+                        <th colspan="11" class="text-center bordered align-middle table-default">ANALISIS DE EXÁMENES</th>
                     </tr>
                     <tr class="text-center align-middle table-default">
-                        <th>BIRARDS</th>
-                        <th>< 35</th>
-                        <th>35 a 49</th>
-                        <th>50 a 54</th>
-                        <th>55 a 59</th>
-                        <th>60 a 64</th>
-                        <th>65 a 69</th>
-                        <th>70 a 74</th>
-                        <th>75 a 79</th>
-                        <th>80 y más</th>
-                        <th>total</th>
+                        <th class="text-center bg-dark">Rango Etareo</th>
+                        <th class="text-center bg-dark">Mamografía</th>
+                        <th class="text-center bg-dark">Ecografía</th>
+                        <th class="text-center bg-dark">Proyección</th>
+                        <th class="text-center bg-dark">Total</th>
                     </tr>
                 </thead>
                 <tbody>
                   <tr v-for="(item, index) in listBirardsMamAgeMX" :key="index">
-                    <td class="text-center" v-text="item.birards"></td>
-                    <td class="text-center" v-text="item.range1"></td>
-                    <td class="text-center" v-text="item.range2"></td>
-                    <td class="text-center" v-text="item.range3"></td>
-                    <td class="text-center" v-text="item.range4"></td>
-                    <td class="text-center" v-text="item.range5"></td>
-                    <td class="text-center" v-text="item.range6"></td>
-                    <td class="text-center" v-text="item.range7"></td>
-                    <td class="text-center" v-text="item.range8"></td>
-                    <td class="text-center" v-text="item.range9"></td>
-                    <td class="text-center" v-text="item.total"></td>
+                    <td class="text-center" v-text="item.age"></td>
+                    <td class="text-center" v-text="item.mam"></td>
+                    <td class="text-center" v-text="item.eco"></td>
+                    <td class="text-center" v-text="item.pro"></td>
+                    <td class="text-center" >{{ Number(item.mam) + Number(item.eco) + Number(item.pro)}}</td>
                   </tr>
                 </tbody>
               </table>
@@ -188,80 +176,6 @@
           </div>
         </div>
 
-        <div class="card card-default">
-          <div class="card-header">
-            <h3 class="card-title">
-                <template v-if="listarUsuariosPaginated.length">
-                    <el-tooltip class="item" effect="dark" content="Descargar en Excel" placement="bottom-start">
-                        <i class="fas fa-file-excel text-success" @click.prevent="tableExcel"></i>
-                    </el-tooltip>
-                </template>
-                Bandeja de Resultados</h3>
-          </div>
-          <div class="card-body table-responsive p-1">
-            <template v-if="listarUsuariosPaginated.length">
-              <table id="data-table" class="table table-hover table-sm table-striped table-bordered table-header-fixed text-nowrap table-valign-middle table-responsive">
-                <tr class="small text-nowrap">
-                  <th class="text-center bg-secondary">S. SALUD</th>
-                  <th class="text-center bg-secondary">CESFAM SOL.</th>
-                  <th class="text-center bg-secondary">PROFESIONAL SOL.</th>
-                  <th class="text-center bg-secondary">RUN</th>
-                  <th class="text-center bg-secondary">NOMBRE</th>
-                  <th class="text-center bg-secondary">GENERO</th>
-                  <th class="text-center bg-secondary">F. NACIMIENTO</th>
-                  <th class="text-center bg-secondary">EDAD</th>
-                  <th class="text-center bg-secondary">DIRECCIÓN</th>
-                  <th class="text-center bg-secondary">EST. EXAMEN</th>
-                  <th class="text-center bg-secondary">F. ORDEN</th>
-                  <th class="text-center bg-secondary">F. EXAMEN</th>
-                  <th class="text-center bg-secondary">F. RECEPCION</th>
-                  <th class="text-center bg-secondary">MAMOGRAFÍA</th>
-                  <th class="text-center bg-secondary">ECO MAMARIA</th>
-                  <th class="text-center bg-secondary">PROYECCIÓN</th>
-                  <th class="text-center bg-secondary">MÉDICO</th>
-                </tr>
-                <tr class="small "v-for="(item, index) in listarUsuariosPaginated" :key="index">
-                  <td v-text="item.servicio_salud"></td>
-                  <td v-text="item.cesfam_name"></td>
-                  <td v-text="item.profesional_solicita"></td>
-                  <td v-text="item.run+'-'+item.dv"></td>
-                  <td v-text="item.name+' '+item.fathers_family+' '+item.mothers_family"></td>
-                  <td v-text="item.gender"></td>
-                  <td v-text="item.birthday"></td>
-                  <td class="text-center align-middle" v-text="item.age"></td>
-                  <td v-text="item.address"></td>
-                  <td v-text="item.establecimiento_realiza_examen"></td>
-                  <td v-text="item.date_exam_order"></td>
-                  <td v-text="item.date_exam"></td>
-                  <td v-text="item.date_exam_reception"></td>
-                  <td class="text-center align-middle" v-text="item.birards_mamografia"></td>
-                  <td class="text-center align-middle" v-text="item.birards_ecografia"></td>
-                  <td class="text-center align-middle" v-text="item.birards_proyeccion"></td>
-                  <td v-text="item.Médico"></td>
-                </tr>
-              </table>
-              <div class="card-footer clearfix">
-                <ul class="pagination pagination-sm pagination-secondary m-0 float-right">
-                  <li class="page-item" v-if="pageNumber > 0">
-                    <a href="#" class="page-link" @click.prevent="prevPage">Ant</a>
-                  </li>
-                  <li class="page-item" v-for="(page, index) in pagesList" :key="index"
-                    :class="[page == pageNumber ? 'active' : '']">
-                    <a href="#" class="page-link" @click.prevent="selectPage(page)">{{ page+1 }}</a>
-                  </li>
-                  <li class="page-item" v-if="pageNumber < pageCount -1">
-                    <a href="#" class="page-link" @click.prevent="nextPage">Sig</a>
-                  </li>
-                </ul>
-              </div>
-            </template>
-            <template v-else>
-              <div class="callout callout-info">
-                  <h5>No se encontraron resultados...</h5>
-              </div>
-            </template>
-          </div>
-        </div>
      </div>
   </div>
 </template>
@@ -359,32 +273,12 @@ import XLSX from 'xlsx'
           })
         },
         getRespReport(){
-          this.getRespReportAge();
           const loading = this.$loading({
             lock: true,
             text: 'Generando Informe',
             spinner: 'el-icon-loading',
             background: 'rgba(0, 0, 0, 0.7)'
           });
-
-          var url = '/report/exams/getMX'
-          axios.get(url, {
-            params: {
-              'dateIni' : (!this.fillBsqReport.date_ini) ? '' : this.fillBsqReport.date_ini,
-              'dateEnd' : (!this.fillBsqReport.date_end) ? '' : this.fillBsqReport.date_end,
-              'codeDeisRequest' : (!this.fillBsqReport.establishmentRequest) ? '' : this.fillBsqReport.establishmentRequest,
-              'codeDeis' : (!this.fillBsqReport.establishmentExam) ? '' : this.fillBsqReport.establishmentExam,
-              'commune' : (!this.fillBsqReport.commune) ? '' : this.fillBsqReport.commune,
-            }
-          }).then(response => {
-            console.log(response.data);
-            this.inicializarPaginacion();
-            this.listUsuarios = response.data;
-            loading.close();
-          })
-        },
-
-         getRespReportAge(){
 
           var url = '/report/exams/getMXCoverage'
           axios.get(url, {
@@ -396,22 +290,10 @@ import XLSX from 'xlsx'
               'commune' : (!this.fillBsqReport.commune) ? '' : this.fillBsqReport.commune,
             }
           }).then(response => {
+            console.log(response.data);
             this.inicializarPaginacion();
             this.listBirardsMamAgeMX = response.data;
-          })
-
-          var url = '/report/exams/getBirardsEcoAgeMX'
-          axios.get(url, {
-            params: {
-              'dateIni' : (!this.fillBsqReport.date_ini) ? '' : this.fillBsqReport.date_ini,
-              'dateEnd' : (!this.fillBsqReport.date_end) ? '' : this.fillBsqReport.date_end,
-              'codeDeisRequest' : (!this.fillBsqReport.establishmentRequest) ? '' : this.fillBsqReport.establishmentRequest,
-              'codeDeis' : (!this.fillBsqReport.establishmentExam) ? '' : this.fillBsqReport.establishmentExam,
-              'commune' : (!this.fillBsqReport.commune) ? '' : this.fillBsqReport.commune,
-            }
-          }).then(response => {
-            this.inicializarPaginacion();
-            this.listBirardsEcoAgeMX = response.data;
+            loading.close();
           })
         },
 

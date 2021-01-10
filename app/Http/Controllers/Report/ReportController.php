@@ -528,5 +528,281 @@ class ReportController extends Controller
 
       return $patient;
   }
+
+  public function getMXCoverage(Request $request)
+  {
+
+    if(!$request->ajax()) return redirect('/');
+      $dateIni            = $request->dateIni;
+      $dateEnd            = $request->dateEnd;
+      $code_deis          = $request->codeDeis;
+      $code_deis_request  = $request->codeDeisRequest;
+      $commune            = $request->commune;
+
+      $dateIni  = ($dateIni == NULL) ? ($dateIni = date("Y-m-d")) : $dateIni;
+      $dateEnd  = ($dateEnd == NULL) ? ($dateEnd = '') : $dateEnd;
+      $code_deis  = ($code_deis == NULL) ? ($code_deis = '') : "AND T0.establecimiento_realiza_examen = ".$code_deis;
+      
+      if($code_deis_request == NULL) {
+        if(Auth::user()->establishment_id){
+          $code_deis_request = "AND T0.cesfam = ".Auth::user()->establishment_id;
+        }
+        else {
+          $code_deis_request = '';
+        }
+      }
+      else {
+        if(!$code_deis_request == NULL) {
+          $code_deis_request = "AND T0.cesfam IN (".implode(', ', $code_deis_request).")";
+        }
+        else {
+            $code_deis_request = '';
+        }
+      }
+
+      if($commune == NULL) {
+          if(Auth::user()->commune_id){
+            $commune = "AND T0.comuna = ".Auth::user()->commune_id;
+          }
+          else {
+            $commune = '';
+          }
+      }
+      else {
+        $commune = "AND T0.comuna = ".$commune;
+      }
+
+      $sql = "
+
+            SELECT '0 > 15' AS age
+                ,SUM(case when T0.birards_mamografia > 0  then 1 else 0 end)  AS mam
+                ,SUM(case when T0.birards_ecografia  > 0  then 1 else 0 end)  AS eco
+                ,SUM(case when T0.birards_proyeccion > 0  then 1 else 0 end)  AS pro
+              FROM exams T0 
+              LEFT JOIN patients T1 ON T0.patient_id = T1.id
+            WHERE T0.date_exam >= '".$dateIni."' AND T0.date_exam <= '".$dateEnd."'
+             ".$code_deis_request ."
+                  ".$code_deis ."
+                  ".$commune."
+              AND YEAR(CURDATE())-YEAR(T1.birthday) < 15
+            GROUP BY '0 > 15'
+
+            UNION ALL
+
+            SELECT '15 - 19' AS age
+                ,SUM(case when T0.birards_mamografia > 0  then 1 else 0 end)  AS mam
+                ,SUM(case when T0.birards_ecografia  > 0  then 1 else 0 end)  AS eco
+                ,SUM(case when T0.birards_proyeccion > 0  then 1 else 0 end)  AS pro
+              FROM exams T0 
+              LEFT JOIN patients T1 ON T0.patient_id = T1.id
+            WHERE T0.date_exam >= '".$dateIni."' AND T0.date_exam <= '".$dateEnd."'
+             ".$code_deis_request ."
+                  ".$code_deis ."
+                  ".$commune."
+              AND YEAR(CURDATE())-YEAR(T1.birthday) >= 15 AND YEAR(CURDATE())-YEAR(T1.birthday) <= 19 
+            GROUP BY '15 - 19'
+
+            UNION ALL
+
+            SELECT '20 - 24' AS age
+                ,SUM(case when T0.birards_mamografia > 0  then 1 else 0 end)  AS mam
+                ,SUM(case when T0.birards_ecografia  > 0  then 1 else 0 end)  AS eco
+                ,SUM(case when T0.birards_proyeccion > 0  then 1 else 0 end)  AS pro
+              FROM exams T0 
+              LEFT JOIN patients T1 ON T0.patient_id = T1.id
+            WHERE T0.date_exam >= '".$dateIni."' AND T0.date_exam <= '".$dateEnd."'
+             ".$code_deis_request ."
+                  ".$code_deis ."
+                  ".$commune."
+              AND YEAR(CURDATE())-YEAR(T1.birthday) >= 20 AND YEAR(CURDATE())-YEAR(T1.birthday) <= 24 
+            GROUP BY '20 - 24'
+
+            UNION ALL
+
+            SELECT '25 - 29' AS age
+                ,SUM(case when T0.birards_mamografia > 0  then 1 else 0 end)  AS mam
+                ,SUM(case when T0.birards_ecografia  > 0  then 1 else 0 end)  AS eco
+                ,SUM(case when T0.birards_proyeccion > 0  then 1 else 0 end)  AS pro
+              FROM exams T0 
+              LEFT JOIN patients T1 ON T0.patient_id = T1.id
+            WHERE T0.date_exam >= '".$dateIni."' AND T0.date_exam <= '".$dateEnd."'
+             ".$code_deis_request ."
+                  ".$code_deis ."
+                  ".$commune."
+              AND YEAR(CURDATE())-YEAR(T1.birthday) >= 25 AND YEAR(CURDATE())-YEAR(T1.birthday) <= 29 
+            GROUP BY '25 - 29'
+
+            UNION ALL
+
+            SELECT '30 - 34' AS age
+                ,SUM(case when T0.birards_mamografia > 0  then 1 else 0 end)  AS mam
+                ,SUM(case when T0.birards_ecografia  > 0  then 1 else 0 end)  AS eco
+                ,SUM(case when T0.birards_proyeccion > 0  then 1 else 0 end)  AS pro
+              FROM exams T0 
+              LEFT JOIN patients T1 ON T0.patient_id = T1.id
+            WHERE T0.date_exam >= '".$dateIni."' AND T0.date_exam <= '".$dateEnd."'
+             ".$code_deis_request ."
+                  ".$code_deis ."
+                  ".$commune."
+              AND YEAR(CURDATE())-YEAR(T1.birthday) >= 30 AND YEAR(CURDATE())-YEAR(T1.birthday) <= 34 
+            GROUP BY '30 - 34'
+
+            UNION ALL
+
+            SELECT '35 - 39' AS age
+                ,SUM(case when T0.birards_mamografia > 0  then 1 else 0 end)  AS mam
+                ,SUM(case when T0.birards_ecografia  > 0  then 1 else 0 end)  AS eco
+                ,SUM(case when T0.birards_proyeccion > 0  then 1 else 0 end)  AS pro
+              FROM exams T0 
+              LEFT JOIN patients T1 ON T0.patient_id = T1.id
+            WHERE T0.date_exam >= '".$dateIni."' AND T0.date_exam <= '".$dateEnd."'
+             ".$code_deis_request ."
+                  ".$code_deis ."
+                  ".$commune."
+              AND YEAR(CURDATE())-YEAR(T1.birthday) >= 35 AND YEAR(CURDATE())-YEAR(T1.birthday) <= 39 
+            GROUP BY '35 - 39'
+
+            UNION ALL
+
+            SELECT '40 - 44' AS age
+                ,SUM(case when T0.birards_mamografia > 0  then 1 else 0 end)  AS mam
+                ,SUM(case when T0.birards_ecografia  > 0  then 1 else 0 end)  AS eco
+                ,SUM(case when T0.birards_proyeccion > 0  then 1 else 0 end)  AS pro
+              FROM exams T0 
+              LEFT JOIN patients T1 ON T0.patient_id = T1.id
+            WHERE T0.date_exam >= '".$dateIni."' AND T0.date_exam <= '".$dateEnd."'
+             ".$code_deis_request ."
+                  ".$code_deis ."
+                  ".$commune."
+              AND YEAR(CURDATE())-YEAR(T1.birthday) >= 40 AND YEAR(CURDATE())-YEAR(T1.birthday) <= 44 
+            GROUP BY '40 - 44'
+
+            UNION ALL
+
+            SELECT '45 - 49' AS age
+                ,SUM(case when T0.birards_mamografia > 0  then 1 else 0 end)  AS mam
+                ,SUM(case when T0.birards_ecografia  > 0  then 1 else 0 end)  AS eco
+                ,SUM(case when T0.birards_proyeccion > 0  then 1 else 0 end)  AS pro
+              FROM exams T0 
+              LEFT JOIN patients T1 ON T0.patient_id = T1.id
+            WHERE T0.date_exam >= '".$dateIni."' AND T0.date_exam <= '".$dateEnd."'
+             ".$code_deis_request ."
+                  ".$code_deis ."
+                  ".$commune."
+              AND YEAR(CURDATE())-YEAR(T1.birthday) >= 45 AND YEAR(CURDATE())-YEAR(T1.birthday) <= 49 
+            GROUP BY '45 - 49'
+
+            UNION ALL
+
+            SELECT '50 - 54' AS age
+                ,SUM(case when T0.birards_mamografia > 0  then 1 else 0 end)  AS mam
+                ,SUM(case when T0.birards_ecografia  > 0  then 1 else 0 end)  AS eco
+                ,SUM(case when T0.birards_proyeccion > 0  then 1 else 0 end)  AS pro
+              FROM exams T0 
+              LEFT JOIN patients T1 ON T0.patient_id = T1.id
+            WHERE T0.date_exam >= '".$dateIni."' AND T0.date_exam <= '".$dateEnd."'
+             ".$code_deis_request ."
+                  ".$code_deis ."
+                  ".$commune."
+              AND YEAR(CURDATE())-YEAR(T1.birthday) >= 50 AND YEAR(CURDATE())-YEAR(T1.birthday) <= 54 
+            GROUP BY '50 - 54'
+
+            UNION ALL
+
+            SELECT '55 - 59' AS age
+                ,SUM(case when T0.birards_mamografia > 0  then 1 else 0 end)  AS mam
+                ,SUM(case when T0.birards_ecografia  > 0  then 1 else 0 end)  AS eco
+                ,SUM(case when T0.birards_proyeccion > 0  then 1 else 0 end)  AS pro
+              FROM exams T0 
+              LEFT JOIN patients T1 ON T0.patient_id = T1.id
+            WHERE T0.date_exam >= '".$dateIni."' AND T0.date_exam <= '".$dateEnd."'
+             ".$code_deis_request ."
+                  ".$code_deis ."
+                  ".$commune."
+              AND YEAR(CURDATE())-YEAR(T1.birthday) >= 55 AND YEAR(CURDATE())-YEAR(T1.birthday) <= 59 
+            GROUP BY '55 - 59'
+
+            UNION ALL
+
+            SELECT '60 - 64' AS age
+                ,SUM(case when T0.birards_mamografia > 0  then 1 else 0 end)  AS mam
+                ,SUM(case when T0.birards_ecografia  > 0  then 1 else 0 end)  AS eco
+                ,SUM(case when T0.birards_proyeccion > 0  then 1 else 0 end)  AS pro
+              FROM exams T0 
+              LEFT JOIN patients T1 ON T0.patient_id = T1.id
+            WHERE T0.date_exam >= '".$dateIni."' AND T0.date_exam <= '".$dateEnd."'
+             ".$code_deis_request ."
+                  ".$code_deis ."
+                  ".$commune."
+              AND YEAR(CURDATE())-YEAR(T1.birthday) >= 60 AND YEAR(CURDATE())-YEAR(T1.birthday) <= 64 
+            GROUP BY '60 - 64'
+
+            UNION ALL
+
+            SELECT '65 - 69' AS age
+                ,SUM(case when T0.birards_mamografia > 0  then 1 else 0 end)  AS mam
+                ,SUM(case when T0.birards_ecografia  > 0  then 1 else 0 end)  AS eco
+                ,SUM(case when T0.birards_proyeccion > 0  then 1 else 0 end)  AS pro
+              FROM exams T0 
+              LEFT JOIN patients T1 ON T0.patient_id = T1.id
+            WHERE T0.date_exam >= '".$dateIni."' AND T0.date_exam <= '".$dateEnd."'
+             ".$code_deis_request ."
+                  ".$code_deis ."
+                  ".$commune."
+              AND YEAR(CURDATE())-YEAR(T1.birthday) >= 65 AND YEAR(CURDATE())-YEAR(T1.birthday) <= 69 
+            GROUP BY '65 - 69'
+
+            UNION ALL
+
+            SELECT '70 - 74' AS age
+                ,SUM(case when T0.birards_mamografia > 0  then 1 else 0 end)  AS mam
+                ,SUM(case when T0.birards_ecografia  > 0  then 1 else 0 end)  AS eco
+                ,SUM(case when T0.birards_proyeccion > 0  then 1 else 0 end)  AS pro
+              FROM exams T0 
+              LEFT JOIN patients T1 ON T0.patient_id = T1.id
+            WHERE T0.date_exam >= '".$dateIni."' AND T0.date_exam <= '".$dateEnd."'
+             ".$code_deis_request ."
+                  ".$code_deis ."
+                  ".$commune."
+              AND YEAR(CURDATE())-YEAR(T1.birthday) >= 70 AND YEAR(CURDATE())-YEAR(T1.birthday) <= 74 
+            GROUP BY '70 - 74'
+
+            UNION ALL
+
+            SELECT '75 - 79' AS age
+                ,SUM(case when T0.birards_mamografia > 0  then 1 else 0 end)  AS mam
+                ,SUM(case when T0.birards_ecografia  > 0  then 1 else 0 end)  AS eco
+                ,SUM(case when T0.birards_proyeccion > 0  then 1 else 0 end)  AS pro
+              FROM exams T0 
+              LEFT JOIN patients T1 ON T0.patient_id = T1.id
+            WHERE T0.date_exam >= '".$dateIni."' AND T0.date_exam <= '".$dateEnd."'
+             ".$code_deis_request ."
+                  ".$code_deis ."
+                  ".$commune."
+              AND YEAR(CURDATE())-YEAR(T1.birthday) >= 75 AND YEAR(CURDATE())-YEAR(T1.birthday) <= 79 
+            GROUP BY '75 - 79'
+
+            UNION ALL
+
+            SELECT '80 - Más' AS age
+                ,SUM(case when T0.birards_mamografia > 0  then 1 else 0 end)  AS mam
+                ,SUM(case when T0.birards_ecografia  > 0  then 1 else 0 end)  AS eco
+                ,SUM(case when T0.birards_proyeccion > 0  then 1 else 0 end)  AS pro
+              FROM exams T0 
+              LEFT JOIN patients T1 ON T0.patient_id = T1.id
+            WHERE T0.date_exam >= '".$dateIni."' AND T0.date_exam <= '".$dateEnd."'
+             ".$code_deis_request ."
+                  ".$code_deis ."
+                  ".$commune."
+              AND YEAR(CURDATE())-YEAR(T1.birthday) >= 80 
+            GROUP BY '80 - Más'
+
+      ";
+
+
+      $result = DB::select($sql,array(1));
+
+      return $result;
+  }
 }
 
