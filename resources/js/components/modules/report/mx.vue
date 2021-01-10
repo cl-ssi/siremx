@@ -386,7 +386,7 @@ import XLSX from 'xlsx'
 
          getRespReportAge(){
 
-          var url = '/report/exams/getMXCoverage'
+          var url = '/report/exams/getBirardsMamAgeMX'
           axios.get(url, {
             params: {
               'dateIni' : (!this.fillBsqReport.date_ini) ? '' : this.fillBsqReport.date_ini,
