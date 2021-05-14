@@ -190,7 +190,7 @@
                       <template v-if="listPermissions.includes('reportBirardsAge.index')">
                         <router-link class="nav-link" :to="'/reportBirardsAge'">
                           <i class="fas fa-file-contract nav-icon"></i>
-                          <p>Birards por Edad</p>
+                          <p>Reporte REM</p>
                         </router-link>
                       </template>
                     </li>
