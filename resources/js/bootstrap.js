@@ -22,7 +22,7 @@ try {
 window.axios = require('axios');
 
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
-window.axios.defaults.baseURL = process.env.MIX_VUE_APP_BE_URL; 
+window.axios.defaults.baseURL = process.env.MIX_VUE_APP_BE_URL;
 
 /**
  * Echo exposes an expressive API for subscribing to channels and listening

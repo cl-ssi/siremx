@@ -127,7 +127,7 @@
                         <template v-if="listBirads.length">
                           <table class="table table-hover ">
                             <tbody class="small">
-                              <tr v-for="(item, index) in listBirads" :key="index">
+                              <tr v-for="(item, index) in listBirads.slice(0,7)" :key="index">
                                 <td><strong>BIRADS {{item.birads}}</strong></td>
                                 <td v-text="item.exam_quantity"></td>
                               </tr>
