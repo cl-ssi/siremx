@@ -53,6 +53,7 @@ Route::group(['middleware' => ['auth']], function () {
   Route::get('/exam/getListExams','Exam\ExamController@getListExams');
   Route::post('/exam/setStoreExam','Exam\ExamController@setStoreExam');
   Route::post('/exam/setLoadExams','Exam\ExamController@setLoadExams');
+  Route::post('/exam/setLoadSigteID','Exam\ExamController@setLoadSigteID');
   Route::post('/exam/setEditExam','Exam\ExamController@setEditExam');
   Route::post('/exam/setDeleteExam','Exam\ExamController@setDeleteExam');
 
@@ -68,6 +69,7 @@ Route::group(['middleware' => ['auth']], function () {
   Route::get('/report/exam/export','Report\ReportController@export');
   Route::get('/report/exams/getMXBirards','Report\ReportController@getMXBirards'); 
   Route::get('/report/exams/getMXBiradYears','Report\ReportController@getMXBiradYears');
+  Route::get('/report/exams/getMXSigte','Report\ReportController@getMXSigte'); 
 
   Route::get('/dashboard/getExamYear','DashboardController@getExamYear');
   Route::get('/dashboard/getHistYear','DashboardController@getHistYear');

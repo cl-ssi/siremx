@@ -13,10 +13,10 @@
     <!-- /.content-header -->
 
     <div class="content container-fluid">
-      <div class="card">
+      <!-- <div class="card">
         <div class="card-header">
         </div>
-        <div class="card-body">
+        <div class="card-body"> -->
           <div class="container-fluid">
             <div class="card card-secondary">
               <div class="card-header">
@@ -39,8 +39,7 @@
                             type="date"
                             placeholder="Fecha"
                             value-format="yyyy-MM-dd"
-                            format="dd/MM/yyyy"
-                            default-value="2020-07-02">
+                            format="dd/MM/yyyy">
                           </el-date-picker>
                           <small class="form-text text-muted"> * Considera fecha de toma de exámen</small>
                         </div>
@@ -55,8 +54,7 @@
                             type="date"
                             placeholder="Fecha"
                             value-format="yyyy-MM-dd"
-                            format="dd/MM/yyyy"
-                            default-value="2020-07-31">
+                            format="dd/MM/yyyy">
                           </el-date-picker>
                           <small class="form-text text-muted"> * Considera fecha de toma de exámen</small>
                         </div>
@@ -67,13 +65,13 @@
                   <div class="row">
                     <div class="col-md-6">
                       <div class="form-group">
-                        <label class="col-md-3 col-form-label">BIRARDS</label>
+                        <label class="col-md-3 col-form-label">Tipo de datos</label>
                         <div class="col-md-9">
-                          <el-select v-model="fillBsqReport.selectBIRADS"
-                              placeholder="Seleccione" multiple
+                          <el-select v-model="fillBsqReport.type"
+                              placeholder="Seleccione"
                               clearable>
                                 <el-option
-                                  v-for="item in listBIRADS"
+                                  v-for="item in listType"
                                   :key="item.value"
                                   :label="item.label"
                                   :value="item.value">
@@ -103,7 +101,7 @@
                   </template>
                   </div>
 
-                  <div class="row">
+                  <!-- <div class="row">
                     <template v-if="listRolePermissionsByUser.includes('establishment.filter')">
                       <div class="col-md-6">
                         <div class="form-group">
@@ -143,7 +141,7 @@
                         </div>
                       </div>
                     </template>
-                  </div>
+                  </div> -->
 
                   
                 </form>
@@ -151,13 +149,13 @@
               <div class="card-footer">
                 <div class="row">
                   <div class="col-md-4 offset-4">
-                    <button class="btn btn-flat btn-info btnWidth" @click.prevent="getRespReport">Buscar</button>
+                    <button class="btn btn-flat btn-info btnWidth" @click.prevent="getRespReport">Descargar</button>
                     <button class="btn btn-flat btn-default btnWidth" @click.prevent="limpiarCriteriosBsq">Limpiar</button>
                   </div>
                 </div>
               </div>
             </div>
-            <div class="card card-default">
+            <!-- <div class="card card-default">
               <div class="card-header">
                 <h3 class="card-title">
                     <template v-if="listarUsuariosPaginated.length">
@@ -228,11 +226,11 @@
                   </div>
                 </template>
               </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+            </div> -->
+          <!-- </div>
+        </div> -->
+      
+    
 
     <div class="modal fade" :class="{show: modalShow}" :style=" modalShow ? mostrarModal : ocultarModal">
         <div class="modal-dialog" role="document">
@@ -251,6 +249,41 @@
             </div>
         </div>
     </div>
+  
+
+    <div class="card card-secondary">
+      <div class="card-header">
+        <h3 class="card-title">Cargar parámetro SIGTE_ID en Exámenes</h3> 
+        <div class="card-tools">
+          <button type="button" data-card-widget="collapse" data-toggle="tooltip" title="Collapse" class="btn btn-tool"><i class="fas fa-minus"></i></button>
+        </div>
+      </div>
+      <div class="card-body">
+        <form role="form">
+          <div class="row">
+            <div class="col-md-12">
+              <div class="form-group">
+                <label class="col-md-4 col-form-label">Seleccionar Archivo</label>
+                <div class="col-md-4">
+                  <input type="file" class="form-control" @change="setFile"> 
+                  <small class="form-text text-muted">* Extensión xlsx</small>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="card-footer">
+        <div class="row">
+          <div class="col-md-4 offset-4">
+            <button class="btn btn-flat btn-info btnWidth" @click.prevent="storeExcel">Cargar</button> 
+            <button class="btn btn-flat btn-default btnWidth" @click.prevent="clearForm">Limpiar</button>
+          </div>
+        </div>
+      </div>
+      </div>
+    </div>
+    </div>
   </div>
 </template>
 
@@ -260,34 +293,20 @@ import XLSX from 'xlsx'
       data(){
           return {
             fillBsqReport: {
-              run: '',
-              name: '',
-              Fathers_family: '',
               date_ini: '',
               date_end: '',
-              selectBIRADS: '',
-              establishmentRequest: '',
-              establishmentExam: '',
-              commune: ''
+              commune: '',
+              type: '',
             },
             listRolePermissionsByUser: JSON.parse(localStorage.getItem('listRolePermissionsByUser')),
-            listEstablishments: [],
             listCommunes: [],
             listUsuarios: [],
-            listStatus: [
-              {value: 'vig', label: 'Vigente'},
-              {value: 'noVig', label: 'No Vigente'},
-              {value: 'vencer', label: 'Por Vencer'}
+            listType: [
+              {value: 'input', label: 'Datos de entrada'},
+              {value: 'output', label: 'Datos de salida'},
             ],
-            listBIRADS: [
-              {value: '0', label: '0'},
-              {value: '1', label: 'I'},
-              {value: '2', label: 'II'},
-              {value: '3', label: 'III'},
-              {value: '4', label: 'IV'},
-              {value: '5', label: 'V'},
-              {value: '6', label: 'VI'}
-            ],
+            // examsData: [],
+            file: '',
             fullscreenLoading: false,
             modalShow: false,
             mostrarModal: {
@@ -299,65 +318,23 @@ import XLSX from 'xlsx'
             },
             error: 0,
             mensajeError: [],
-            pageNumber: 0,
-            perPage: 75
           }
       },
-      computed: {
-        //  Obtener el número de páginas
-        pageCount() {
-          let a = this.listUsuarios.length,
-              b = this.perPage;
-              return Math.ceil(a/b);
-        },
-        // Obtener registros paginados
-        listarUsuariosPaginated() {
-          let inicio = this.pageNumber * this.perPage,
-              fin    = inicio + this.perPage;
-          return this.listUsuarios.slice(inicio,fin)
-        },
-        pagesList() {
-          let a = this.listUsuarios.length,
-              b = this.perPage;
-              let pageCount = Math.ceil(a/b);
-              let count = 0;
-              let pagesArray = [];
-
-              while (count < pageCount) {
-                pagesArray.push(count);
-                count++;
-              }
-              return pagesArray;
-        },
-      },
       mounted() {
-        this.getListEstablishments();
         this.getListCommunes();
       },
       methods: {
         limpiarCriteriosBsq(){
-          this.fillBsqReport.nRun  = '';
-          this.fillBsqReport.cName = '';
-          this.fillBsqReport.cFathers_family  = '';
+          this.fillBsqReport.date_ini  = '';
+          this.fillBsqReport.date_end = '';
+          this.fillBsqReport.type  = '';
+          this.fillBsqReport.commune  = '';
         },
         abrirModal(){
             this.modalShow = !this.modalShow;
         },
         limpiarBandejaUsuarios(){
           this.listUsuarios = [];
-        },
-        getListEstablishments() {
-          var route = '/administracion/establishments/getListEstablishments'
-          axios.get(route).then( response => {
-            this.listEstablishments = response.data;
-          }).catch(error => {
-              if(error.response.status == 401){
-                this.$router.push({name: 'login'})
-                location.reload();
-                localStorage.clear();
-                this.fullscreenLoading = false;
-              }
-          })
         },
         getListCommunes() {
           var route = '/administracion/communes/getListCommunes'
@@ -380,53 +357,28 @@ import XLSX from 'xlsx'
           }
           this.fullscreenLoading = true;
           
-          var url = '/report/exams/getMXBirards'
+          var url = '/report/exams/getMXSigte'
           axios.get(url, {
             params: {
-              'listBirards' : this.fillBsqReport.selectBIRADS,
               'dateIni' : (!this.fillBsqReport.date_ini) ? '' : this.fillBsqReport.date_ini,
               'dateEnd' : (!this.fillBsqReport.date_end) ? '' : this.fillBsqReport.date_end,
-              'codeDeisRequest' : (!this.fillBsqReport.establishmentRequest) ? '' : this.fillBsqReport.establishmentRequest,
-              'codeDeis' : (!this.fillBsqReport.establishmentExam) ? '' : this.fillBsqReport.establishmentExam,
+              'type'    : (!this.fillBsqReport.type) ? '' : this.fillBsqReport.type,
               'commune' : (!this.fillBsqReport.commune) ? '' : this.fillBsqReport.commune,
             }
           }).then(response => {
-            console.log(response.data);
-            this.inicializarPaginacion();
+            // console.log(response.data);
+            // this.inicializarPaginacion();
             this.listUsuarios = response.data;
             this.fullscreenLoading = false;
+            this.exportExcel();
+          }).catch(error => {
+              console.log(error.response)
           })
-        },
-        
-        setGenerateDocument() {
-            /*const loading = this.$vs.loading([
-                type: "square",
-                color: '#D53978',
-                background: '#FFFFFF',
-                text: 'Cargando...'
-            ])*/
-            console.log("en Funcion");
-            var config = {
-                responseType: 'blob'
-            }
-            
-            var url = '/report/exam/export'
-            axios.get(url, config).then(response => {
-                console.log(response.data);
-                var oMyBlob = new Blob([response.data], {type : 'application/vnd.ms-excel'}); // the blob
-                var url = document.createElement('a')
-                url.href = URL.createObjectURL(oMyBlob);
-                url.download = 'reporte.xlsx'
-                url.click()
-                window.open(url)
-            }).catch((error) => {
-            console.log(error)
-         })  
         },
         exportExcel: function () {
         let data = XLSX.utils.json_to_sheet(this.listUsuarios)
         const workbook = XLSX.utils.book_new()
-        const filename = 'reporte-sismam'
+        const filename = 'sigte-' + this.fillBsqReport.type + '-data-' + this.fillBsqReport.date_ini.slice(0,-3)
         XLSX.utils.book_append_sheet(workbook, data, filename)
         XLSX.writeFile(workbook, `${filename}.xlsx`)
         },
@@ -443,24 +395,131 @@ import XLSX from 'xlsx'
           this.pageNumber = 0;
         },
         validForm() {
-            this.error = 0;
-            this.mensajeError = [];
-            if(!this.fillBsqReport.date_ini) {
-                this.mensajeError.push("Fecha Inicio es un campo obligatorio")
-            }
-            if(!this.fillBsqReport.date_end) {
-                this.mensajeError.push("Fecha Termino es un campo obligatorio")
-            }
-            if(!this.fillBsqReport.selectBIRADS) {
-                this.mensajeError.push("Birads es un campo obligatorio")
-            }
+          this.error = 0;
+          this.mensajeError = [];
+          if(!this.fillBsqReport.date_ini) {
+              this.mensajeError.push("Fecha Inicio es un campo obligatorio")
+          }
+          if(!this.fillBsqReport.date_end) {
+              this.mensajeError.push("Fecha Termino es un campo obligatorio")
+          }
+          if(!this.fillBsqReport.type) {
+              this.mensajeError.push("Tipo de dato es un campo obligatorio")
+          }
 
-            if(this.mensajeError.length) {
-                this.error = 1;
-            }
-            return this.error;
-        
-      }
+          if(this.mensajeError.length) {
+              this.error = 1;
+          }
+          return this.error;
+        },
+        setFile(e){
+          this.file = e.target.files;
+        },
+        clearForm(){
+          this.file  = '';
+        },
+        // Cargar archivo xlxs
+        importExcel(callback) {
+          // const files = e.target.files;
+          // console.log(this.file[0]);
+          if (!this.file.length) {
+              return ;
+          } else if (!/\.(xls|xlsx)$/.test(this.file[0].name.toLowerCase())) {
+              return alert("El formato de archivo a cargar es incorrecto, formato xls o xlsx requerido");
+          }
+          const fileReader = new FileReader();
+          fileReader.onload = ev => {
+              try {
+                let examsData = [];
+                const data = ev.target.result;
+                // console.log(data);
+                const workbook = XLSX.read(data, {
+                    type: "binary"
+                    , cellDates: true, dateNF: 'yyyy/mm/dd;@'
+                });
+                const wsname = workbook.SheetNames[0]; // Take the first sheet，wb.SheetNames[0] :Take the name of the first sheet in the sheets
+                const ws = XLSX.utils.sheet_to_json(workbook.Sheets[wsname], {raw: false , defval:''}); // Generate JSON table content，wb.Sheets[Sheet]    Get the data of the first sheet
+                
+                // save data            
+                for (var i = 0; i < ws.length; i++) {
+                  examsData.push(ws[i]);
+                }
+
+                callback(examsData);
+
+              } catch (e) {
+                return alert("Read failure!");
+              }
+          };
+          fileReader.readAsBinaryString(this.file[0]);
+        },
+        storeExcel() {
+          if(this.validFormExcel()) {
+            this.modalShow = true;
+            return;
+          }
+
+          Swal.fire({
+            title: '¿Está Seguro de desea cargar el archivo?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Cargar'
+          }).then((result) => {
+              if (result.value) {
+                this.importExcel(function(exams){
+                  if(!exams){
+                    throw new Error("Falla en la carga de datos");
+                  }
+
+                  let post = {
+                    exams: exams,
+                  };
+
+                  // AQUI IRA LA CONFIRMACIÓN DEL BOTON Y PETICIÓN DEL SERVIDOR
+                  var  url = '/exam/setLoadSigteID'
+
+                  axios.post(url,post).then(response => {
+                      // console.log(response.data);
+                      Swal.fire({
+                        icon: 'success',
+                        title: 'Acción Finalizada',
+                        showConfirmButton: false,
+                        timer: 1500
+                      })
+                  }).catch(error => {
+                      if(error.response.status == 400){
+                        Swal.fire(
+                            'Oops!',
+                            error.response.data.error,
+                            'error'
+                        )
+                      }
+                      if(error.response.status == 401){
+                        this.$router.push({name: 'login'})
+                        location.reload();
+                        localStorage.clear();
+                        this.fullscreenLoading = false;
+                      }
+                  })
+                });
+              }
+          })
+        },
+        validFormExcel() {
+          this.error = 0;
+          this.mensajeError = [];
+
+          if(!this.file) {
+              this.mensajeError.push("Debe ingresar un archivo de carga")
+          }
+      
+          if(this.mensajeError.length) {
+              this.error = 1;
+          }
+          return this.error;
+        }
       }
     }
 </script>

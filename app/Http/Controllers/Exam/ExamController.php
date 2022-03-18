@@ -448,6 +448,34 @@ class ExamController extends Controller
         return $exams;
     }
 
+    // Función para cargar examen masivamente
+    // desde un archivo excel, opción "Carga parametro SIGTE_ID en los examenes"
+    public function setLoadSigteID(Request $request)
+    {
+        if(!$request->ajax()) return redirect('/');
+
+        $exams = json_decode($request->getContent(), true);
+
+        if(!isset($exams['exams'][0]['SIGTE_ID']))
+            return response()->json([
+                'error' => 'No se encontró campo SIGTE_ID en el proceso de carga del archivo xlsx'], 400);
+
+        // Se recorre cada una de las filas del archivo cargado
+        foreach($exams['exams'] as $exam) {
+            $id_local = $exam['ID_LOCAL'];
+            $sigte_id = $exam['SIGTE_ID'];
+            if($id_local && $sigte_id){
+                $result = Exam::find($id_local);
+                if($result){
+                    $result->sigte_id = $sigte_id;
+                    $result->save();
+                }
+            }
+        }
+
+        return $exams;
+    }
+
     public function setDeleteExam(Request $request)
     {
         if(!$request->ajax()) return redirect('/');
