@@ -46,6 +46,23 @@
                         </div>
                       </div>
                     </div>
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label class="col-md-3 col-form-label">Tipo exámen</label>
+                        <div class="col-md-9">
+                          <el-select v-model="fillBsqReport.selectExamType"
+                              placeholder="Seleccione" multiple
+                              clearable>
+                                <el-option
+                                  v-for="item in listExamType"
+                                  :key="item.value"
+                                  :label="item.label"
+                                  :value="item.value">
+                                </el-option>
+                            </el-select>
+                        </div>
+                      </div>
+                    </div>
                   </div>
 
                   <div class="row">
@@ -146,7 +163,7 @@
                 <h3 class="card-title">
                     <template v-if="listarUsuariosPaginated.length">
                         <el-tooltip class="item" effect="dark" content="Descargar en Excel" placement="bottom-start">
-                            <i class="fas fa-file-excel text-success" @click.prevent="tableExcel"></i>
+                            <i class="fas fa-file-excel text-success" @click.prevent="exportExcel"></i>
                         </el-tooltip>
                     </template>
                     Bandeja de Resultados</h3>
@@ -163,7 +180,9 @@
                       <th>Dirección</th>
                       <th>Fono</th>
                       <th>Ultimo Exámen</th>
-                      <th>Birads</th>
+                      <th>MAMOGRAFÍA</th>
+                      <th>ECO MAMARIA</th>
+                      <th>PROYECCIÓN</th>
                     </tr>
                     <tr  class="small" v-for="(item, index) in listarUsuariosPaginated" :key="index">
                       <td v-text="item.run+'-'+item.dv"></td>
@@ -174,7 +193,9 @@
                       <td v-text="item.address"></td>
                       <td v-text="item.telephone"></td>
                       <td v-text="item.ultimo_examen"></td>
-                      <td class="text-center align-middle">{{parseInt(fillBsqReport.selectBIRADS)}}</td>
+                      <td class="text-center align-middle" v-text="item.birards_mamografia"></td>
+                      <td class="text-center align-middle" v-text="item.birards_ecografia"></td>
+                      <td class="text-center align-middle" v-text="item.birards_proyeccion"></td>
                     </tr>
                   </table>
                   <div class="card-footer clearfix">
@@ -238,7 +259,8 @@ import XLSX from 'xlsx'
               selectBIRADS: '',
               establishmentRequest: '',
               establishmentExam: '',
-              commune: ''
+              commune: '',
+              selectExamType: ''
             },
             listRolePermissionsByUser: JSON.parse(localStorage.getItem('listRolePermissionsByUser')),
             listEstablishments: [],
@@ -257,6 +279,11 @@ import XLSX from 'xlsx'
               {value: '4', label: 'IV'},
               {value: '5', label: 'V'},
               {value: '6', label: 'VI'}
+            ],
+            listExamType: [
+              {value: 'mam', label: 'Mamografía'},
+              {value: 'eco', label: 'Ecografía mamaria'},
+              {value: 'pro', label: 'Proyección mamaria'}
             ],
             fullscreenLoading: false,
             modalShow: false,
@@ -362,6 +389,7 @@ import XLSX from 'xlsx'
             params: {
               'year' : this.fillBsqReport.year,
               'listBirards' : this.fillBsqReport.selectBIRADS,
+              'listExamType' : this.fillBsqReport.selectExamType,
               'codeDeisRequest' : (!this.fillBsqReport.establishmentRequest) ? '' : this.fillBsqReport.establishmentRequest,
               'codeDeis' : (!this.fillBsqReport.establishmentExam) ? '' : this.fillBsqReport.establishmentExam,
               'commune' : (!this.fillBsqReport.commune) ? '' : this.fillBsqReport.commune,
@@ -399,14 +427,14 @@ import XLSX from 'xlsx'
             console.log(error)
          })  
         },
-        tableExcel(type, fn, dl) {
-          var elt = document.getElementById('data-table');
-          const filename = 'reporte-siremx'
-          var wb = XLSX.utils.table_to_book(elt, {sheet:"Sheet JS"});
-          return dl ?
-            XLSX.write(wb, {bookType:type, bookSST:true, type: 'base64'}) :
-            XLSX.writeFile(wb, `${filename}.xlsx`)
-        },
+        // tableExcel(type, fn, dl) {
+        //   var elt = document.getElementById('data-table');
+        //   const filename = 'reporte-siremx'
+        //   var wb = XLSX.utils.table_to_book(elt, {sheet:"Sheet JS"});
+        //   return dl ?
+        //     XLSX.write(wb, {bookType:type, bookSST:true, type: 'base64'}) :
+        //     XLSX.writeFile(wb, `${filename}.xlsx`)
+        // },
         exportExcel: function () {
         let data = XLSX.utils.json_to_sheet(this.listUsuarios)
         const workbook = XLSX.utils.book_new()

@@ -470,7 +470,8 @@ class ReportController extends Controller
       $code_deis_request  = $request->codeDeisRequest;
       $commune            = $request->commune;
       $listBirards        = $request->listBirards;
-      //dd($listBirards);
+      $listExamType       = $request->listExamType;
+      // return $listExamType;
 
       $dateIni  = ($dateIni == NULL) ? ($dateIni = date("Y-m-d")) : $dateIni;
       $dateEnd  = ($dateEnd == NULL) ? ($dateEnd = '') : $dateEnd;
@@ -500,13 +501,26 @@ class ReportController extends Controller
     }
 
     if(!$listBirards == NULL) {
-          $listBirards = "AND birards_mamografia = (".$listBirards.")";
+
+          $listBirards = "AND ( birards_mamografia = ".$listBirards." OR birards_ecografia = ".$listBirards." OR birards_proyeccion = ".$listBirards." )";
     }
     else {
         $listBirards = '';
     }
 
+    if(!$listExamType == NULL) {
+          $list = implode("','", $listExamType);
+          $listExamType = "AND exam_type IN ('".$list."')";
+    }
+    else {
+        $listExamType = '';
+    }
+
+
     $sql="SELECT ultimo_examen
+                ,a.birards_mamografia
+                ,a.birards_ecografia
+                ,a.birards_proyeccion
                 ,YEAR(CURDATE())-YEAR(b.birthday) AS age
                 ,TIMESTAMPDIFF(Month,a.ultimo_examen, NOW()) AS years
                 ,b.name
@@ -519,14 +533,14 @@ class ReportController extends Controller
                 ,b.run
                 ,b.dv
           FROM (
-            SELECT  MAX(date_exam) as ultimo_examen, p.patient_id FROM  exams p WHERE 1=1 ".$listBirards ."  GROUP By p.patient_id
+            SELECT  MAX(date_exam) as ultimo_examen, p.patient_id, p.birards_mamografia, p.birards_ecografia, p.birards_proyeccion FROM  exams p WHERE 1=1 ".$listBirards ." ". $listExamType."  GROUP By p.patient_id, p.birards_mamografia, p.birards_ecografia, p.birards_proyeccion
           ) a
           INNER JOIN patients b ON a.patient_id = b.id
           WHERE TIMESTAMPDIFF(Month,a.ultimo_examen, NOW()) >= ".$year."";
 
-    $patient = DB::select($sql);
-
-      return $patient;
+          $patient = DB::select($sql);
+          
+    return $patient;
   }
 
   public function getMXCoverage(Request $request)

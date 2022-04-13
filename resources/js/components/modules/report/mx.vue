@@ -193,7 +193,7 @@
             <h3 class="card-title">
                 <template v-if="listarUsuariosPaginated.length">
                     <el-tooltip class="item" effect="dark" content="Descargar en Excel" placement="bottom-start">
-                        <i class="fas fa-file-excel text-success" @click.prevent="tableExcel"></i>
+                        <i class="fas fa-file-excel text-success" @click.prevent="exportExcel"></i>
                     </el-tooltip>
                 </template>
                 Bandeja de Resultados</h3>
@@ -447,14 +447,14 @@ import XLSX from 'xlsx'
         XLSX.utils.book_append_sheet(workbook, data, filename)
         XLSX.writeFile(workbook, `${filename}.xlsx`)
         },
-        tableExcel(type, fn, dl) {
-          var elt = document.getElementById('data-table');
-          const filename = 'reporte-sismam'
-          var wb = XLSX.utils.table_to_book(elt, {sheet:"Sheet JS"});
-          return dl ?
-            XLSX.write(wb, {bookType:type, bookSST:true, type: 'base64'}) :
-            XLSX.writeFile(wb, `${filename}.xlsx`)
-        },
+        // tableExcel(type, fn, dl) {
+        //   var elt = document.getElementById('data-table');
+        //   const filename = 'reporte-sismam'
+        //   var wb = XLSX.utils.table_to_book(elt, {sheet:"Sheet JS"});
+        //   return dl ?
+        //     XLSX.write(wb, {bookType:type, bookSST:true, type: 'base64'}) :
+        //     XLSX.writeFile(wb, `${filename}.xlsx`)
+        // },
         nextPage() {
           this.pageNumber++;
         },
