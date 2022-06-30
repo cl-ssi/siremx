@@ -302,6 +302,13 @@
                       timer: 1500
                     })
                 }).catch(error => {
+                    if(error.response.status == 400){
+                      Swal.fire(
+                          'Oops!',
+                          error.response.data.error,
+                          'error'
+                      )
+                    }
                     if(error.response.status == 401){
                       this.$router.push({name: 'login'})
                       location.reload();

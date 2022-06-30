@@ -151,6 +151,7 @@ class ReportController extends Controller
       $code_deis          = $request->codeDeis;
       $code_deis_request  = $request->codeDeisRequest;
       $commune            = $request->commune;
+      $listExamType       = $request->listExamType;
 
       $dateIni  = ($dateIni == NULL) ? ($dateIni = date("Y-m-d")) : $dateIni;
       $dateEnd  = ($dateEnd == NULL) ? ($dateEnd = '') : $dateEnd;
@@ -185,7 +186,14 @@ class ReportController extends Controller
         $commune = "AND T0.comuna = ".$commune;
       }
 
-    
+      if($listExamType != NULL) {
+          $list = implode("','", $listExamType);
+          $listExamType = "AND exam_type IN ('".$list."')";
+      }
+      else {
+          $listExamType = '';
+      }
+
       $sql=" SELECT T1.run,
                   T1.dv,
                   T1.name,
@@ -217,7 +225,8 @@ class ReportController extends Controller
             WHERE T0.date_exam >= '".$dateIni ."' AND T0.date_exam <= '".$dateEnd ."'
                   ".$code_deis_request ."
                   ".$code_deis ."
-                  ".$commune." ";
+                  ".$commune."
+                  ".$listExamType;
 
       $patient = DB::select($sql);
 

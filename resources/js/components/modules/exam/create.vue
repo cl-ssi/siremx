@@ -233,6 +233,21 @@
                    <div class="row">
                     <div class="col-12 col-sm-4">
                       <div class="form-group">
+                        <label>Establecimiento quien deriva Examen (opcional)</label>
+                        <el-select v-model="fillCreateExam.establishmentExamDerivation" filterable
+                              placeholder="Seleccione"
+                              clearable>
+                                <el-option
+                                  v-for="item in listEstablishments"
+                                  :key="item.id"
+                                  :label="item.new_code_deis+' - '+item.alias"
+                                  :value="item.new_code_deis">
+                                </el-option>
+                        </el-select>
+                      </div>
+                    </div>
+                    <div class="col-12 col-sm-4">
+                      <div class="form-group">
                         <label>Motivo Derivación</label>
                         <el-select v-model="fillCreateExam.derivation" filterable
                             placeholder="Seleccione"
@@ -322,6 +337,7 @@
               establishmentExam: '',
               doctor: '',
               date_exam: '',
+              establishmentExamDerivation: '',
               derivation: '',
               listBIRADSMam: '',
               listBIRADSEcoMam: '',
@@ -412,7 +428,8 @@
           this.fillCreateExam.date_exam_order = '';   
           this.fillCreateExam.establishmentExam = ''; 
           this.fillCreateExam.doctor = '';          
-          this.fillCreateExam.date_exam = '';         
+          this.fillCreateExam.date_exam = '';
+          this.fillCreateExam.establishmentExamDerivation = '';         
           this.fillCreateExam.derivation = '';
           this.fillCreateExam.examType = '';
           this.$refs.run.focus();
@@ -642,6 +659,7 @@
             'establishmentExam': this.fillCreateExam.establishmentExam,
             'doctor'         : this.fillCreateExam.doctor,
             'date_exam'      : this.fillCreateExam.date_exam,
+            'establishmentExamDerivation' : this.fillCreateExam.establishmentExamDerivation,
             'derivation'     : this.fillCreateExam.derivation,
             'listBIRADSMam'  : this.fillCreateExam.listBIRADSMam,
             'listBIRADSEcoMam': this.fillCreateExam.listBIRADSEcoMam,

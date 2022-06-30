@@ -119,6 +119,23 @@
                     </div>
                   </div>
                 </template>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label class="col-md-3 col-form-label">Tipo exámen</label>
+                    <div class="col-md-9">
+                      <el-select v-model="fillBsqReport.selectExamType"
+                          placeholder="Seleccione" multiple
+                          clearable>
+                            <el-option
+                              v-for="item in listExamType"
+                              :key="item.value"
+                              :label="item.label"
+                              :value="item.value">
+                            </el-option>
+                        </el-select>
+                    </div>
+                  </div>
+                </div>
               </div>
               
             </form>
@@ -135,13 +152,66 @@
 
         <!-- Examenes por BIRADS -->
         <div class="card card-default">
+              <div class="card-header">
+                <h3 class="card-title">
+                     Bandeja de Resultados</h3>
+              </div>
+              <div class="card-body table-responsive p-1">
+                <template v-if="listBirardsMamAgeMX.length">
+                 <table id="data-table" class="table table-hover table-sm table-striped table-bordered table-header-fixed text-nowrap table-valign-middle">
+                    <thead class=" text-nowrap">
+                        <tr>
+                            <th colspan="11" class="text-center bordered align-middle table-default">BIRARDS POR RANGO DE EDAD MAMOGRAFÍA</th>
+                        </tr>
+                        <tr class="text-center align-middle table-default">
+                            <th>BIRARDS</th>
+                            <th>< 35</th>
+                            <th>35 a 49</th>
+                            <th>50 a 54</th>
+                            <th>55 a 59</th>
+                            <th>60 a 64</th>
+                            <th>65 a 69</th>
+                            <th>70 a 74</th>
+                            <th>75 a 79</th>
+                            <th>80 y más</th>
+                            <th>total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                      <tr v-for="(item, index) in listBirardsMamAgeMX" :key="index">
+                        <td class="text-center" v-text="item.birards"></td>
+                        <td class="text-center" v-text="item.range1"></td>
+                        <td class="text-center" v-text="item.range2"></td>
+                        <td class="text-center" v-text="item.range3"></td>
+                        <td class="text-center" v-text="item.range4"></td>
+                        <td class="text-center" v-text="item.range5"></td>
+                        <td class="text-center" v-text="item.range6"></td>
+                        <td class="text-center" v-text="item.range7"></td>
+                        <td class="text-center" v-text="item.range8"></td>
+                        <td class="text-center" v-text="item.range9"></td>
+                        <td class="text-center" v-text="item.total"></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                  <div class="card-footer clearfix">
+                  </div>
+                </template>
+                <template v-else>
+                  <div class="callout callout-info">
+                      <h5>No se encontraron resultados...</h5>
+                  </div>
+                </template>
+              </div>
+            </div>
+
+        <div class="card card-default">
           <div class="card-header">
             <h3 class="card-title">
                 
                   Bandeja de Resultados</h3>
           </div>
           <div class="card-body table-responsive p-1">
-            <template v-if="listBirardsMamAgeMX.length">
+            <template v-if="listBirardsEcoAgeMX.length">
               <table id="data-table-eco" class="table table-hover table-sm  table-striped table-bordered table-header-fixed text-nowrap table-valign-middle">
                 <thead >
                     <tr>
@@ -162,7 +232,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                  <tr v-for="(item, index) in listBirardsMamAgeMX" :key="index">
+                  <tr v-for="(item, index) in listBirardsEcoAgeMX" :key="index">
                     <td class="text-center" v-text="item.birards"></td>
                     <td class="text-center" v-text="item.range1"></td>
                     <td class="text-center" v-text="item.range2"></td>
@@ -276,7 +346,8 @@ import XLSX from 'xlsx'
               date_end: '',
               establishmentRequest: '',
               establishmentExam: '',
-              commune: ''
+              commune: '',
+              selectExamType: ''
             },
             listRolePermissionsByUser: JSON.parse(localStorage.getItem('listRolePermissionsByUser')),
             listEstablishments: [],
@@ -284,6 +355,11 @@ import XLSX from 'xlsx'
             listUsuarios: [],
             listBirardsMamAgeMX: [],
             listBirardsEcoAgeMX: [],
+            listExamType: [
+              {value: 'mam', label: 'Mamografía'},
+              {value: 'eco', label: 'Ecografía mamaria'},
+              {value: 'pro', label: 'Proyección mamaria'}
+            ],
             pageNumber: 0,
             perPage: 75
           }
@@ -328,6 +404,7 @@ import XLSX from 'xlsx'
           this.fillBsqReport.establishmentRequest  = '';
           this.fillBsqReport.establishmentExam  = '';
           this.fillBsqReport.commune  = '';
+          this.fillBsqReport.selectExamType  = '';
         },
         limpiarBandejaUsuarios(){
           this.listUsuarios = [];
@@ -375,6 +452,7 @@ import XLSX from 'xlsx'
               'codeDeisRequest' : (!this.fillBsqReport.establishmentRequest) ? '' : this.fillBsqReport.establishmentRequest,
               'codeDeis' : (!this.fillBsqReport.establishmentExam) ? '' : this.fillBsqReport.establishmentExam,
               'commune' : (!this.fillBsqReport.commune) ? '' : this.fillBsqReport.commune,
+              'listExamType' : this.fillBsqReport.selectExamType
             }
           }).then(response => {
             console.log(response.data);
@@ -385,34 +463,38 @@ import XLSX from 'xlsx'
         },
 
          getRespReportAge(){
+          this.listBirardsMamAgeMX = this.listBirardsEcoAgeMX = [];
+          if(this.fillBsqReport.selectExamType == '' || this.fillBsqReport.selectExamType.includes('mam')){
+            var url = '/report/exams/getBirardsAgeMX'
+            axios.get(url, {
+              params: {
+                'dateIni' : (!this.fillBsqReport.date_ini) ? '' : this.fillBsqReport.date_ini,
+                'dateEnd' : (!this.fillBsqReport.date_end) ? '' : this.fillBsqReport.date_end,
+                'codeDeisRequest' : (!this.fillBsqReport.establishmentRequest) ? '' : this.fillBsqReport.establishmentRequest,
+                'codeDeis' : (!this.fillBsqReport.establishmentExam) ? '' : this.fillBsqReport.establishmentExam,
+                'commune' : (!this.fillBsqReport.commune) ? '' : this.fillBsqReport.commune,
+              }
+            }).then(response => {
+              this.inicializarPaginacion();
+              this.listBirardsMamAgeMX = response.data;
+            })
+          }
 
-          var url = '/report/exams/getBirardsAgeMX'
-          axios.get(url, {
-            params: {
-              'dateIni' : (!this.fillBsqReport.date_ini) ? '' : this.fillBsqReport.date_ini,
-              'dateEnd' : (!this.fillBsqReport.date_end) ? '' : this.fillBsqReport.date_end,
-              'codeDeisRequest' : (!this.fillBsqReport.establishmentRequest) ? '' : this.fillBsqReport.establishmentRequest,
-              'codeDeis' : (!this.fillBsqReport.establishmentExam) ? '' : this.fillBsqReport.establishmentExam,
-              'commune' : (!this.fillBsqReport.commune) ? '' : this.fillBsqReport.commune,
-            }
-          }).then(response => {
-            this.inicializarPaginacion();
-            this.listBirardsMamAgeMX = response.data;
-          })
-
-          var url = '/report/exams/getBirardsEcoAgeMX'
-          axios.get(url, {
-            params: {
-              'dateIni' : (!this.fillBsqReport.date_ini) ? '' : this.fillBsqReport.date_ini,
-              'dateEnd' : (!this.fillBsqReport.date_end) ? '' : this.fillBsqReport.date_end,
-              'codeDeisRequest' : (!this.fillBsqReport.establishmentRequest) ? '' : this.fillBsqReport.establishmentRequest,
-              'codeDeis' : (!this.fillBsqReport.establishmentExam) ? '' : this.fillBsqReport.establishmentExam,
-              'commune' : (!this.fillBsqReport.commune) ? '' : this.fillBsqReport.commune,
-            }
-          }).then(response => {
-            this.inicializarPaginacion();
-            this.listBirardsEcoAgeMX = response.data;
-          })
+          if(this.fillBsqReport.selectExamType == '' || this.fillBsqReport.selectExamType.includes('eco')){
+            var url = '/report/exams/getBirardsEcoAgeMX'
+            axios.get(url, {
+              params: {
+                'dateIni' : (!this.fillBsqReport.date_ini) ? '' : this.fillBsqReport.date_ini,
+                'dateEnd' : (!this.fillBsqReport.date_end) ? '' : this.fillBsqReport.date_end,
+                'codeDeisRequest' : (!this.fillBsqReport.establishmentRequest) ? '' : this.fillBsqReport.establishmentRequest,
+                'codeDeis' : (!this.fillBsqReport.establishmentExam) ? '' : this.fillBsqReport.establishmentExam,
+                'commune' : (!this.fillBsqReport.commune) ? '' : this.fillBsqReport.commune,
+              }
+            }).then(response => {
+              this.inicializarPaginacion();
+              this.listBirardsEcoAgeMX = response.data;
+            })
+          }
         },
 
         setGenerateDocument() {

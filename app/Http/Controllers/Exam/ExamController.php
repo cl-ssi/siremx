@@ -42,6 +42,7 @@ class ExamController extends Controller
         $establishmentExam     = $request->establishmentExam;
         $doctor                = $request->doctor;
         $date_exam             = $request->date_exam;
+        $establishmentExamDerivation = $request->establishmentExamDerivation;
         $derivation            = $request->derivation;
         $examType              = $request->examType;
         $birards               = $request->birards;
@@ -80,6 +81,7 @@ class ExamController extends Controller
         $establishmentExam    = ($establishmentExam == NULL) ? ($establishmentExam = '') : $establishmentExam;
         $doctor               = ($doctor == NULL) ? ($doctor = '') : $doctor;
         $date_exam            = ($date_exam == NULL) ? ($date_exam = NULL) : $date_exam;
+        $establishmentExamDerivation = ($establishmentExamDerivation == NULL) ? ($establishmentExamDerivation = NULL) : $establishmentExamDerivation;
         $derivation           = ($derivation == NULL) ? ($derivation = '') : $derivation;
         $date_exam_reception  = ($date_exam_reception ==  NULL) ? ($date_exam_reception = NULL) : $date_exam_reception;
         $diagnostic           = ($diagnostic == NULL) ? ($diagnostic = '') : $diagnostic;
@@ -94,6 +96,7 @@ class ExamController extends Controller
         $exam->profesional_solicita             = $professional;
         $exam->medico                           = $doctor;
         $exam->date_exam                        = $date_exam;
+        $exam->establecimiento_deriva_examen    = $establishmentExamDerivation;
         $exam->derivation_reason                = $derivation;
         $exam->birards_mamografia               = $birards_mam;
         $exam->birards_ecografia                = $birards_eco;
@@ -240,6 +243,7 @@ class ExamController extends Controller
         $professional          = $request->professional;
         $date_exam_order       = $request->date_exam_order;
         $establishmentExam     = $request->establishmentExam;
+        $establishmentExamDerivation = $request->establishmentExamDerivation;
         $doctor                = $request->doctor;
         $date_exam             = $request->date_exam;
         $derivation            = $request->derivation;
@@ -254,6 +258,7 @@ class ExamController extends Controller
         $exams->medico                         = $doctor;
         $exams->date_exam_order                = $date_exam_order;
         $exams->date_exam                      = $date_exam;
+        $exams->establecimiento_deriva_examen  = $establishmentExamDerivation;
         $exams->derivation_reason              = $derivation;
         $exams->exam_type                      = $examType;
         $exams->load_source                    = 'app';
@@ -276,6 +281,16 @@ class ExamController extends Controller
         $description  = $request->description;
         $exams        = json_decode($request->getContent(), true);
 
+        $fields = array('SERVICIO SALUD', 'FECHA TOMA', 'FECHA SOLICITUD', 'FECHA RECEPCION', 'NOMBRES', 'APELLIDO PATERNO', 'APELLIDO MATERNO', 'RUN',
+                        'FECHA NAC', 'DIRECCION', 'FONO', 'GENERO', 'PROFESIONAL', 'DIAGNOSTICO', 'ESTABLECIMIENTO EXAMEN', 'ESTABLECIMIENTO SOLICITA',
+                        'CESFAM', 'MEDICO', 'FONASA', 'MDERIVACION', 'BIRADS MAM', 'BIRADS ECO', 'BIRADS PRO', 'COMUNA');
+
+        foreach($fields as $field){
+            if(!isset($exams['exams'][0][$field]))
+                return response()->json([
+                    'error' => 'No se encontró campo '. $field . ' en el proceso de carga del archivo xlsx'], 400);
+        }
+
         $load = new Load();
         $load->title       = $title;
         $load->description = $description;
@@ -293,49 +308,59 @@ class ExamController extends Controller
             // y se obtiene id para asignarlo al registro de examen
             if($patient_id == null)
             {
-                // Separar el nombre completo en espacios
-                $tokens = explode(' ', trim($exam['NOMBRE']));
-                // Arreglo donde se guardan las "palabras" del nombre
-                $names = array();
-                // Palabras de apellidos (y nombres) compuetos
-                $special_tokens = array('da', 'de', 'del', 'la', 'las', 'los', 'mac', 'mc', 'van', 'von', 'y', 'i', 'san', 'santa');
+                // // Separar el nombre completo en espacios
+                // $tokens = explode(' ', trim($exam['NOMBRE']));
+                // // Arreglo donde se guardan las "palabras" del nombre
+                // $names = array();
+                // // Palabras de apellidos (y nombres) compuetos
+                // $special_tokens = array('da', 'de', 'del', 'la', 'las', 'los', 'mac', 'mc', 'van', 'von', 'y', 'i', 'san', 'santa');
                 
-                $prev = "";
-                foreach($tokens as $token) {
-                    $_token = strtolower($token);
-                    if(in_array($_token, $special_tokens)) {
-                        $prev .= "$token ";
-                    } else {
-                        $names[] = $prev. $token;
-                        $prev = "";
-                    }
-                }
+                // $prev = "";
+                // foreach($tokens as $token) {
+                //     $_token = strtolower($token);
+                //     if(in_array($_token, $special_tokens)) {
+                //         $prev .= "$token ";
+                //     } else {
+                //         $names[] = $prev. $token;
+                //         $prev = "";
+                //     }
+                // }
                 
-                $num_nombres = count($names);
-                $nombres = $apellidos = "";
-                switch ($num_nombres) {
-                    case 0:
-                        $nombres = '';
-                        break;
-                    case 1: 
-                        $nombres = $names[0];
-                        break;
-                    case 2:
-                        $nombres    = $names[0];
-                        $apellidos  = $names[1];
-                        break;
-                    case 3:
-                        $apellidos = $names[1] . ' ' . $names[2];
-                        $nombres   = $names[0];
-                    default:
-                        $apellidos = $names[1] . ' '. $names[2];
-                        $nombres   = $names[0];
-                        break;
-                }
+                // $num_nombres = count($names);
+                // $nombres = $apellidos = "";
+                // switch ($num_nombres) {
+                //     case 0:
+                //         $nombres = '';
+                //         break;
+                //     case 1: 
+                //         $nombres = $names[0];
+                //         break;
+                //     case 2:
+                //         $nombres    = $names[0];
+                //         $apellidos  = $names[1];
+                //         break;
+                //     case 3:
+                //         $apellidos = $names[1] . ' ' . $names[2];
+                //         $nombres   = $names[0];
+                //     default:
+                //         $apellidos = $names[1] . ' '. $names[2];
+                //         $nombres   = $names[0];
+                //         break;
+                // }
                 
-                $nombres    = mb_convert_case($nombres, MB_CASE_TITLE, 'UTF-8');
-                $apellidos  = mb_convert_case($apellidos, MB_CASE_TITLE, 'UTF-8');
-                $apellidos  = ($apellidos == NULL) ? ($apellidos = '') : $apellidos;
+                // $nombres    = mb_convert_case($nombres, MB_CASE_TITLE, 'UTF-8');
+                // $apellidos  = mb_convert_case($apellidos, MB_CASE_TITLE, 'UTF-8');
+                // $apellidos  = ($apellidos == NULL) ? ($apellidos = '') : $apellidos;
+
+                $nombres          = strtolower(trim($exam['NOMBRES']));
+                $nombres          = mb_convert_case($nombres, MB_CASE_TITLE, 'UTF-8');
+                $nombres          = ($nombres == NULL) ? ($nombres = '') : $nombres;
+                $apellido_paterno = strtolower(trim($exam['APELLIDO PATERNO']));
+                $apellido_paterno = mb_convert_case($apellido_paterno, MB_CASE_TITLE, 'UTF-8');
+                $apellido_paterno = ($apellido_paterno == NULL) ? ($apellido_paterno = '') : $apellido_paterno;
+                $apellido_materno = strtolower(trim($exam['APELLIDO MATERNO']));
+                $apellido_materno = mb_convert_case($apellido_materno, MB_CASE_TITLE, 'UTF-8');
+                $apellido_materno = ($apellido_materno == NULL) ? ($apellido_materno = '') : $apellido_materno;
 
                 list($run,$dv) = array_pad(explode('-',str_replace(".", "",$exam['RUN'])),2,null);
      
@@ -359,8 +384,8 @@ class ExamController extends Controller
                 $newPatient->run            = $run;
                 $newPatient->dv             = $dv;
                 $newPatient->name           = $nombres;
-                $newPatient->fathers_family = $apellidos;
-                $newPatient->mothers_family = '';
+                $newPatient->fathers_family = $apellido_paterno;
+                $newPatient->mothers_family = $apellido_materno;
                 $newPatient->birthday       = $date_birthday;
                 $newPatient->address        = $exam['DIRECCION'];
                 $newPatient->telephone      = $exam['FONO'];
@@ -424,6 +449,7 @@ class ExamController extends Controller
             $examDet->comuna   = $commune;
             $examDet->profesional_solicita   = $exam['PROFESIONAL'];
             $examDet->establecimiento_realiza_examen   = $exam['ESTABLECIMIENTO EXAMEN'];
+            $examDet->establecimiento_deriva_examen   = $exam['ESTABLECIMIENTO SOLICITA'];
             $examDet->cesfam   = $exam['CESFAM'];
             $examDet->medico   = $exam['MEDICO'];
             $examDet->fonasa   = $exam['FONASA'];

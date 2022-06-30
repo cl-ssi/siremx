@@ -157,6 +157,21 @@
                    <div class="row">
                     <div class="col-12 col-sm-4">
                       <div class="form-group">
+                        <label>Establecimiento quien deriva Examen (opcional)</label>
+                        <el-select v-model="fillEditExam.establishmentExamDerivation" filterable
+                              placeholder="Seleccione"
+                              clearable>
+                                <el-option
+                                  v-for="item in listEstablishments"
+                                  :key="item.id"
+                                  :label="item.new_code_deis+' - '+item.alias"
+                                  :value="item.new_code_deis">
+                                </el-option>
+                        </el-select>
+                      </div>
+                    </div>
+                    <div class="col-12 col-sm-4">
+                      <div class="form-group">
                         <label>Motivo Derivación</label>
                         <el-select v-model="fillEditExam.derivation" filterable
                             placeholder="Seleccione"
@@ -330,6 +345,7 @@
               establishmentExam: '',
               doctor: '',
               date_exam: '',
+              establishmentExamDerivation: '',
               derivation: '',
               birards: '',
               date_exam_reception: '',
@@ -461,6 +477,7 @@
             this.fillEditExam.establishmentExam    = (response.data[0].establecimiento_realiza_examen)? response.data[0].establecimiento_realiza_examen : ''; 
             this.fillEditExam.doctor               = response.data[0].medico;
             this.fillEditExam.date_exam            = response.data[0].date_exam;
+            this.fillEditExam.establishmentExamDerivation = (response.data[0].establecimiento_deriva_examen)? response.data[0].establecimiento_deriva_examen : ''; 
             this.fillEditExam.derivation           = (Number(response.data[0].derivation_reason))? Number(response.data[0].derivation_reason) : ''; 
             this.fillEditExam.date_exam_reception  = response.data[0].date_exam_reception;
             this.fillEditExam.diagnostic           = response.data[0].diagnostico? response.data[0].diagnostico : ''; 
@@ -518,6 +535,7 @@
            this.form.append('establishmentExam'   ,this.fillEditExam.establishmentExam)
            this.form.append('doctor'              ,this.fillEditExam.doctor)
            this.form.append('date_exam'           ,this.fillEditExam.date_exam)
+           this.form.append('establishmentExamDerivation',this.fillEditExam.establishmentExamDerivation)
            this.form.append('derivation'          ,this.fillEditExam.derivation)
            this.form.append('birards'             ,this.fillEditExam.birards)
            this.form.append('date_exam_reception' ,this.fillEditExam.date_exam_reception)

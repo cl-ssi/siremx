@@ -20,7 +20,8 @@ class EstablishmentController extends Controller
                                      ->Where('id','LIKE','%'.$idRole.'%')
                                      ->Where('exam_emits','LIKE','Y')
                                      ->Where('exam_center','LIKE','Y')
-                                     ->Wherein('commune_id',['5', '6','7', '8','9', '10', '11'])->get();
+                                     ->Wherein('commune_id',['5', '6','7', '8','9', '10', '11'])
+                                     ->orderBy('new_code_deis')->get();
 
        return $establishment->toArray();
     }
