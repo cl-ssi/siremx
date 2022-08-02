@@ -412,22 +412,19 @@ class ExamController extends Controller
             $commune = $exam['COMUNA'];
             $commune = ($commune == NULL) ? ($commune = NULL) : $commune;
 
-            $birardsMam = $exam['BIRADS MAM'];
-            $birardsMam = ($birardsMam == NULL) ? ($birardsMam = NULL) : $birardsMam;
-            $birardsEco = $exam['BIRADS ECO'];
-            $birardsEco = ($birardsEco == NULL) ? ($birardsEco = NULL) : $birardsEco;
-            $birardsPro = $exam['BIRADS PRO'];
-            $birardsPro = ($birardsPro == NULL) ? ($birardsPro = NULL) : $birardsPro;
+            $birardsMam = $exam['BIRADS MAM'] ?? NULL;
+            $birardsEco = $exam['BIRADS ECO'] ?? NULL;
+            $birardsPro = $exam['BIRADS PRO'] ?? NULL;
 
-            if($birardsMam)
+            if($birardsMam != NULL)
             {
                 $examType = 'mam';
             }
-            elseif($birardsEco)
+            elseif($birardsEco != NULL)
             {
                 $examType = 'eco';
             }
-            elseif($birardsPro)
+            elseif($birardsPro != NULL)
             {
                 $examType = 'pro';
             }
