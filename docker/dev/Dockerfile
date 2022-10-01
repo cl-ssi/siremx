@@ -15,7 +15,7 @@ RUN apk add --no-cache \
 
 RUN apk upgrade
 
-RUN docker-php-ext-install mysqli
+RUN docker-php-ext-install mysqli pdo pdo_mysql
 
 RUN docker-php-ext-enable pdo_mysql
 
