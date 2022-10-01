@@ -16,7 +16,9 @@ RUN apk add --no-cache \
 
 RUN apk upgrade
 
-RUN docker-php-ext-install mysqli
+RUN docker-php-ext-install mysqli pdo pdo_mysql
+
+RUN docker-php-ext-enable pdo_mysql
 
 # As of PHP 7.4 we don't need to add --with-png
 RUN docker-php-ext-configure gd --with-jpeg --with-webp --with-freetype
