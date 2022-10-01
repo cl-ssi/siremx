@@ -24,10 +24,6 @@ RUN docker-php-ext-install soap
 
 RUN docker-php-ext-install zip
 
-RUN docker-php-ext-install ctype
-
-RUN docker-php-ext-install iconv
-
 RUN sh -c "wget http://getcomposer.org/composer.phar && chmod a+x composer.phar && mv composer.phar /usr/local/bin/composer"
 
 # Algunos alias
