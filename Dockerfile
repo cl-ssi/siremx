@@ -4,8 +4,6 @@ RUN apk add --no-cache nginx wget
 
 RUN apk add --no-cache nodejs npm
 
-RUN apk upgrade
-
 # Install dependencies for GD and install GD with support for jpeg, png webp and freetype
 # Info about installing GD in PHP https://www.php.net/manual/en/image.installation.php
 RUN apk add --no-cache \
@@ -15,6 +13,8 @@ RUN apk add --no-cache \
         freetype-dev \
         libxml2-dev \
         libzip-dev
+
+RUN apk upgrade
 
 RUN docker-php-ext-install mysqli
 

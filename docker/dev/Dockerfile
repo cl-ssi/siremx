@@ -1,5 +1,7 @@
 FROM php:7.4.3-fpm-alpine
 
+RUN apk add --no-cache nodejs npm
+
 # Install dependencies for GD and install GD with support for jpeg, png webp and freetype
 # Info about installing GD in PHP https://www.php.net/manual/en/image.installation.php
 RUN apk add --no-cache \
@@ -10,6 +12,8 @@ RUN apk add --no-cache \
         libxml2-dev \
         libzip-dev \
         bash
+
+RUN apk upgrade
 
 RUN docker-php-ext-install mysqli pdo pdo_mysql
 
