@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\Route;
 Route::post('/authenticate/login','Auth\LoginController@login');
 Route::get('/authenticate/logincu/{access_token}','Auth\LoginController@logincu');
 
+Route::get('/claveunica/login','ClaveUnicaController@login');
+
 //Route::get('/logincu/{access_token}','Auth\LoginController@logincu');
 
 Route::group(['middleware' => ['auth']], function () {
