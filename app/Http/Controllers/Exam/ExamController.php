@@ -112,10 +112,10 @@ class ExamController extends Controller
             $flag                  = $idExam;
             $filename              = $file->getClientOriginalName();
             $fileserver            = $flag.'_'.$filename;
-            Storage::delete('public/reports/'.$flag.'_'.$exam->filename);
+            Storage::disk('gcs')->delete('public/reports/'.$flag.'_'.$exam->filename);
             $exam->path                 = asset('storage/reports/'.$fileserver);
             $exam->filename             = $filename;
-            Storage::putFileAs('public/reports',$file, $fileserver);
+            Storage::disk('gcs')->putFileAs('public/reports',$file, $fileserver);
         }
         else {
             $exam->path                 = $exam->path;
@@ -509,5 +509,10 @@ class ExamController extends Controller
         $exam ->delete(); 
 
         return $exam;
+    }
+
+    public function downloadExamById(Exam $exam)
+    {
+        return Storage::disk('gcs')->response($exam->path);        
     }
 }

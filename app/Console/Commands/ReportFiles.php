@@ -41,11 +41,20 @@ class ReportFiles extends Command
         $exams = \App\Exam::orderByDesc('id')->whereNotNull
         ('path')->get();
         foreach($exams as $exam) {
-            list($folder,$name) = explode('/',$exam->path);
+               
+            $nombres = explode('/',$exam->path);
+            $name = end($nombres);
+            $namecomienzo = reset($nombres);
+            if($namecomienzo=='https:')
+            {
             echo $name."\n";
-            //$exam->update(['file' => 'siremx/reports/'.$name]);
-            //$file = Storage::disk('local')->get($exam->path);
-            //Storage::disk('gcs')->put('siremx/reports/'.$name, $file);
+            
+            // $file = asset('storage/reports/'.$name);
+            $file = Storage::disk('public')->get('reports/'.$name);
+            Storage::disk('gcs')->put('siremx/reports/'.$name, $file);
+            $exam->update(['path' => 'siremx/reports/'.$name]);
+            }
+            
         }
         return 0;
     }

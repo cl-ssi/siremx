@@ -64,6 +64,7 @@
                 <template v-if="listPatientsPaginated.length">
                  <table id="data-table" class="table table-hover table-sm table-striped table-bordered table-header-fixed text-nowrap table-valign-middle table-responsive">
                     <tr class="small text-nowrap">
+                      <th class="text-center bg-secondary">ID</th>
                       <th class="text-center bg-secondary">S. SALUD</th>
                       <th class="text-center bg-secondary">CESFAM</th>
                       <th class="text-center bg-secondary">PROFESIONA SOL.</th>
@@ -84,6 +85,7 @@
                       <th class="text-center bg-secondary">INFORME</th>
                     </tr>
                     <tr class="small " v-for="(item, index) in listPatients" :key="index">
+                      <td v-text="item.id"></td>
                       <td v-text="item.servicio_salud"></td>
                       <td v-text="item.cesfam_name"></td>
                       <td v-text="item.profesional_solicita"></td>
@@ -103,7 +105,7 @@
                       <td v-text="item.medico"></td>
                       <td >
                         <template v-if="item.path">
-                            <a class="btn btb-flat btn-xs btn-default" target="_blank" :href="item.path" >
+                            <a class="btn btb-flat btn-xs btn-default" target="_blank" :href="'/exam/downloadExamById/'+ item.id">
                                 <i class="fas fa-search text-dark"></i> Ver Informe
                             </a>
                          </template>

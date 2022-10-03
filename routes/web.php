@@ -52,6 +52,7 @@ Route::group(['middleware' => ['auth']], function () {
   Route::post('/administracion/patient/setEditPatient','PatientController@setEditPatient');
 
   Route::get('/exam/getExamById','Exam\ExamController@getExamById');
+  Route::get('/exam/downloadExamById/{exam}','Exam\ExamController@downloadExamById');
   Route::get('/exam/getListExams','Exam\ExamController@getListExams');
   Route::post('/exam/setStoreExam','Exam\ExamController@setStoreExam');
   Route::post('/exam/setLoadExams','Exam\ExamController@setLoadExams');

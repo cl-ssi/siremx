@@ -27,6 +27,7 @@ class ReportController extends Controller
     list($run,$dv) = array_pad(explode('-',str_replace(".", "", $run)),2,null);
 
      $sql=" SELECT 
+                  T0.id,
                   T1.run,
                   T1.dv,
                   T1.name,
