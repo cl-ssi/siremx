@@ -46,7 +46,7 @@ RUN cd /app && \
     /usr/bin/npm install
 
 RUN cd /app && \
-    /usr/bin/npm run dev
+    /usr/bin/npm run prod
 
 RUN chown -R www-data: /app
 
