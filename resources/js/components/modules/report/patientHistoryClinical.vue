@@ -105,7 +105,7 @@
                       <td v-text="item.medico"></td>
                       <td >
                         <template v-if="item.path">
-                            <a class="btn btb-flat btn-xs btn-default" target="_blank" :href="'/exam/downloadExamById/'+ item.id">
+                            <a class="btn btb-flat btn-xs btn-default" target="_blank" :href="'/siremx/exam/downloadExamById/'+ item.id">
                                 <i class="fas fa-search text-dark"></i> Ver Informe
                             </a>
                          </template>

@@ -120,7 +120,7 @@
                           </template>
 
                           <template v-if="item.path">
-                              <a class="btn btb-flat btn-xs btn-default" target="_blank" :href="'/exam/downloadExamById/'+ item.id" >
+                              <a class="btn btb-flat btn-xs btn-default" target="_blank" :href="'/siremx/exam/downloadExamById/'+ item.id" >
                                   <i class="fas fa-search text-dark"></i> Informe
                               </a>
                           </template>
