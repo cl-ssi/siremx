@@ -11,6 +11,9 @@ class ClaveUnicaController extends Controller
 	*/
 	public function login()
 	{
+		app('log')->notice("test");
+
 		return "en login clave única";
+
 	}
 }

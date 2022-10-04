@@ -46,6 +46,9 @@ RUN cd /app && \
     /usr/bin/npm install
 
 RUN cd /app && \
+    /usr/bin/npm audit fix
+
+RUN cd /app && \
     /usr/bin/npm run prod
 
 RUN chown -R www-data: /app
