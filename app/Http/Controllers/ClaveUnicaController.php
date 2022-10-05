@@ -68,33 +68,8 @@ class ClaveUnicaController extends Controller
 		}
 
 		/* Paso 3, obtener los datos del usuario en base al $access_token */
-		$url_base = "https://accounts.claveunica.gob.cl/openid/userinfo/";
-		$response = Http::withToken($access_token)->post($url_base);
-		$user_cu = json_decode($response);
-
-		$u = User::where('run',$user_cu->RolUnico->numero)->first();
+		return redirect()->url('/siremx/logincu/'.$access_token);
 		
-		if($u) {
-			Auth::login($u, true);
-			$resp = auth()->id();
-			if($resp) {
-				return response()->json([
-					'authUser' => Auth::user(),
-					'code'     => 200
-					
-				]);
-			}
-			else {
-				return response()->json([
-					'code'     => 401
-				]);
-			}
-		}
-		else {
-			return response()->json([
-				'code'     => 401
-			]);
-		}
 
 	}
 
