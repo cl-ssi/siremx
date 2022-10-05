@@ -48,7 +48,7 @@ class RoleController extends Controller
             LEFT OUTER JOIN roles_permissions rol_permiso ON permiso.id = rol_permiso.permission_id
                                                 AND rol_permiso.role_id = ".$idRole;
 
-         $permission = DB::select($sql,array(1));
+         $permission = DB::select($sql);
 
        return $permission;
     }

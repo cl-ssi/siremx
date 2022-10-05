@@ -63,7 +63,7 @@ class UsersController extends Controller
             AND (usuario.id = '".$idUser."' OR '".$idUser."' = 0)
          ORDER BY usuario.id DESC";
       
-       $rpta = DB::select($sql,array(1));
+       $rpta = DB::select($sql);
 
       return $rpta;
     }
@@ -222,7 +222,7 @@ class UsersController extends Controller
             INNER JOIN roles RO ON UR.role_id = RO.id
             WHERE UR.user_id = ".$idUser;
 
-      $roleId = DB::select($sql,array(1));
+      $roleId = DB::select($sql);
 
       return $roleId;
     }
@@ -243,7 +243,7 @@ class UsersController extends Controller
             INNER JOIN permissions P ON RP.permission_id = P.id
             WHERE UR.user_id = ".$idUser;
 
-      $rpta = DB::select($sql,array(1));
+      $rpta = DB::select($sql);
 
       return $rpta;
     }
@@ -265,7 +265,7 @@ class UsersController extends Controller
             LEFT OUTER JOIN users_permissions UP ON P.id = UP.permission_id
                                                 AND UP.user_id = ".$idUser;
 
-      $rpta = DB::select($sql,array(1));
+      $rpta = DB::select($sql);
 
       return $rpta;
     }
@@ -330,7 +330,7 @@ class UsersController extends Controller
             INNER JOIN permissions P ON RP.permission_id = P.id
             WHERE UR.user_id = ".$idUser;
 
-      $rpta = DB::select($sql,array(1));
+      $rpta = DB::select($sql);
 
       return $rpta;
     }

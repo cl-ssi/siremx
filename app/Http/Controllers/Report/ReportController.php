@@ -60,7 +60,7 @@ class ReportController extends Controller
              WHERE T1.run = '".$run."' 
              ORDER BY T0.id DESC ";
 
-     $patient = DB::select($sql,array(1));
+     $patient = DB::select($sql);
 
      return $patient;
   }
@@ -137,7 +137,7 @@ class ReportController extends Controller
                   ".$commune." 
             ORDER BY T0.id DESC";
 
-      $patient = DB::select($sql,array(1));
+      $patient = DB::select($sql);
 
       return $patient;
   }
@@ -391,7 +391,7 @@ class ReportController extends Controller
                     ".$commune ."
                   GROUP BY T0.birards_mamografia";
 
-      $birardsAge = DB::select($sql,array(1));
+      $birardsAge = DB::select($sql);
 
       return $birardsAge;
   }
@@ -458,7 +458,7 @@ class ReportController extends Controller
                     ".$commune ."
                   GROUP BY T0.birards_ecografia";
 
-      $birardsAge = DB::select($sql,array(1));
+      $birardsAge = DB::select($sql);
 
       return $birardsAge;
   }
@@ -824,7 +824,7 @@ class ReportController extends Controller
       ";
 
 
-      $result = DB::select($sql,array(1));
+      $result = DB::select($sql);
 
       return $result;
   }

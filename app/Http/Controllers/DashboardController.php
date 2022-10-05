@@ -24,7 +24,7 @@ class DashboardController extends Controller
                     MONTH(T0.date_exam)
                     ,MONTHNAME(T0.date_exam)";
 
-        $patient = DB::select($sql,array(1));
+        $patient = DB::select($sql);
 
         return $patient;
     }
@@ -44,7 +44,7 @@ class DashboardController extends Controller
                 GROUP BY 
                         CO.name";
 
-        $patient = DB::select($sql,array(1));
+        $patient = DB::select($sql);
 
         return $patient;
     }
@@ -66,7 +66,7 @@ class DashboardController extends Controller
                         CO.name
                 ORDER BY exam_quantity DESC";
 
-        $resp = DB::select($sql,array(1));
+        $resp = DB::select($sql);
 
         return $resp;
     }
@@ -114,7 +114,7 @@ class DashboardController extends Controller
                                     T0.birards_proyeccion ) AS T
                 GROUP BY T.birads";
 
-        $resp = DB::select($sql,array(1));
+        $resp = DB::select($sql);
 
         return $resp;
     }
@@ -153,7 +153,7 @@ class DashboardController extends Controller
                     AND YEAR(T0.date_exam) = ".$year."
                 ";
 
-        $patient = DB::select($sql,array(1));
+        $patient = DB::select($sql);
 
         return $patient;
     }
@@ -175,7 +175,7 @@ class DashboardController extends Controller
                   AND T0.birards_mamografia <> ''
                 ";
 
-        $patient = DB::select($sql,array(1));
+        $patient = DB::select($sql);
 
         return $patient;
     }
@@ -210,7 +210,7 @@ class DashboardController extends Controller
                     
             ";
 
-        $patient = DB::select($sql,array(1));
+        $patient = DB::select($sql);
 
         return $patient;
     }
@@ -328,7 +328,7 @@ class DashboardController extends Controller
                 ,MONTHNAME(T0.date_exam)
                 ORDER BY T0.cesfam ";
 
-        $patient = DB::select($sql,array(1));
+        $patient = DB::select($sql);
 
         return $patient;
     }
