@@ -68,7 +68,7 @@ class ClaveUnicaController extends Controller
 		}
 
 		/* Paso 3, obtener los datos del usuario en base al $access_token */
-		return redirect()->url('/siremx/logincu/'.$access_token);
+		return redirect('/siremx/logincu/'.$access_token);
 	}
 
 	public function logout() {
