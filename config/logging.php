@@ -17,7 +17,7 @@ return [
     |
     */
 
-    'default' => env('LOG_CHANNEL', 'slack'),
+    'default' => env('LOG_CHANNEL', 'stack'),
 
     /*
     |--------------------------------------------------------------------------
@@ -57,9 +57,9 @@ return [
         'slack' => [
             'driver' => 'slack',
             'url' => env('LOG_SLACK_WEBHOOK_URL'),
-            'username' => env('APP_NAME'),
+            'username' => 'Laravel Log',
             'emoji' => ':boom:',
-            'level' => 'debug',
+            'level' => 'critical',
         ],
 
         'papertrail' => [

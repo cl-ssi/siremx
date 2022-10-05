@@ -1,4 +1,4 @@
-FROM php:8.1-fpm-alpine
+FROM php:7.4.3-fpm-alpine
 
 RUN apk add --no-cache nginx wget
 
@@ -44,9 +44,6 @@ RUN cd /app && \
 
 RUN cd /app && \
     /usr/bin/npm install
-
-RUN cd /app && \
-    /usr/bin/npm audit fix
 
 RUN cd /app && \
     /usr/bin/npm run prod
