@@ -8,7 +8,18 @@
         <!-- /.login-logo -->
         <div class="card">
             <div class="card-body login-card-body">
-            <p class="login-box-msg">Ingresa tus credenciales para iniciar Sesión</p>
+
+			<h6 class="mb-3 text-center">Utilizando tu Clave Única</h6>
+			
+			<a class="btn-cu btn-m btn-color-estandar m-auto" 
+				href="/claveunica" title="Este es el botón Iniciar sesión de ClaveÚnica">
+				<span class="cl-claveunica"></span>
+				<span class="texto">Iniciar sesión</span>
+			</a>
+
+			<hr>
+
+            <h6 class="login-box-msg">O con tu cuenta del sistema</h6>
 
             <form  method="post">
                 <div class="input-group mb-3">
