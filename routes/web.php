@@ -5,7 +5,7 @@ use App\Http\Controllers\ClaveUnicaController;
 
 
 Route::post('/authenticate/login','Auth\LoginController@login');
-Route::get('/authenticate/logincu/{access_token}','Auth\LoginController@logincu');
+Route::get('/authenticate/logincu/{access_token}','Auth\LoginController@logincu')->name('logincu');
 
 // Route::get('/claveunica/login','ClaveUnicaController@login');
 Route::get('/claveunica', [ClaveUnicaController::class,'autenticar'])->name('claveunica.login');

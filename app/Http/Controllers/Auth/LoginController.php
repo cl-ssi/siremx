@@ -47,34 +47,34 @@ class LoginController extends Controller
     public function logincu($access_token = null)
     {
         if ($access_token) {
-            // Cambiar url base por variable ENV
-            $url_base = "https://www.claveunica.gob.cl/openid/userinfo/";
-            $response = Http::withToken($access_token)->post($url_base);
-            $user_cu = json_decode($response);
+			/* Paso 3, obtener los datos del usuario en base al $access_token */
+			$url_base = "https://accounts.claveunica.gob.cl/openid/userinfo/";
+			$response = Http::withToken($access_token)->post($url_base);
+			$user_cu = json_decode($response);
 
-            $u = User::where('run',$user_cu->RolUnico->numero)->first();
-           
-            if($u) {
-                Auth::login($u, true);
-                $resp = auth()->id();
-                if($resp) {
-                    return response()->json([
-                        'authUser' => Auth::user(),
-                        'code'     => 200
-                        
-                    ]);
-                }
-                else {
-                    return response()->json([
-                        'code'     => 401
-                    ]);
-                }
-            }
-            else {
-                return response()->json([
-                    'code'     => 401
-                ]);
-            }
+			$u = User::where('run',$user_cu->RolUnico->numero)->first();
+			
+			if($u) {
+				Auth::login($u, true);
+				$resp = auth()->id();
+				if($resp) {
+					return response()->json([
+						'authUser' => Auth::user(),
+						'code'     => 200
+						
+					]);
+				}
+				else {
+					return response()->json([
+						'code'     => 401
+					]);
+				}
+			}
+			else {
+				return response()->json([
+					'code'     => 401
+				]);
+			}
             
         }
     }
