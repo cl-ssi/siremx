@@ -61,7 +61,7 @@ class ClaveUnicaController extends Controller
 		
 		$access_token = json_decode($response)->access_token ?? null;
 
-		/** Si no existe el acces token */
+		/** Si no existe el access token */
 		if(is_null($access_token))
 		{
 			return redirect()->route('claveunica.login');
@@ -76,6 +76,7 @@ class ClaveUnicaController extends Controller
 		if(env('APP_ENV') == 'local')
 		{
 			/* Si es ambiente de desarrollo cerramos sólo localmente */
+			//dd('llegue');
 			return redirect()->route('logout');
 		}
 		else
@@ -83,8 +84,8 @@ class ClaveUnicaController extends Controller
 			/** Cerrar sesión clave única */
 			/* Url para cerrar sesión en clave única */
 			$url_logout     = "https://accounts.claveunica.gob.cl/api/v1/accounts/app/logout?redirect=";
-			/* Url para luego cerrar sesión en nuestro sisetema */
-			$url_redirect   = env('APP_URL')."/logout";
+			/* Url para luego cerrar sesión en nuestro sistema */
+			$url_redirect   = env('APP_URL')."/authenticate/logout";
 			$url            = $url_logout.urlencode($url_redirect);
 			return redirect($url);
 		}
