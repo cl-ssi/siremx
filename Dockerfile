@@ -2,6 +2,8 @@ FROM php:8.1-fpm-alpine
 
 RUN apk add --no-cache nginx wget
 
+RUN apk add --no-cache bash
+
 # RUN apk add --no-cache nodejs npm
 RUN curl -sL https://deb.nodesource.com/setup_16.x | bash - 
 RUN apt-get install -y nodejs
