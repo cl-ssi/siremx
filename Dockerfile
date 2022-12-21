@@ -2,7 +2,7 @@ FROM php:8.1-fpm-alpine
 
 RUN apk add --no-cache nginx wget
 
-RUN apk add --no-cache nodejs npm
+RUN apk add --no-cache nodejs-lts npm
 
 # Install dependencies for GD and install GD with support for jpeg, png webp and freetype
 # Info about installing GD in PHP https://www.php.net/manual/en/image.installation.php
