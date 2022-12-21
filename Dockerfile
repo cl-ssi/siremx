@@ -2,7 +2,9 @@ FROM php:8.1-fpm-alpine
 
 RUN apk add --no-cache nginx wget
 
-RUN apk add --no-cache nodejs-lts npm
+# RUN apk add --no-cache nodejs npm
+RUN curl -sL https://deb.nodesource.com/setup_16.x | bash - 
+RUN apt-get install -y nodejs
 
 # Install dependencies for GD and install GD with support for jpeg, png webp and freetype
 # Info about installing GD in PHP https://www.php.net/manual/en/image.installation.php
