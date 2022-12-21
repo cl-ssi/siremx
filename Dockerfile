@@ -1,12 +1,8 @@
-# FROM php:8.0-fpm-alpine
 FROM php:8.1.10-fpm-alpine
-# FROM php:7.4.3-fpm-alpine
+# FROM php:8.0-fpm-alpine  // No compatible la version de node 18
 
 RUN apk add --no-cache nginx wget
 
-# RUN apk add --no-cache bash
-
-# RUN curl -sL https://deb.nodesource.com/setup_16.x | bash - 
 RUN apk add --no-cache nodejs npm
 
 # Install dependencies for GD and install GD with support for jpeg, png webp and freetype
