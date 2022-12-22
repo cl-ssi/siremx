@@ -513,6 +513,6 @@ class ExamController extends Controller
 
     public function downloadExamById(Exam $exam)
     {
-        return Storage::disk('gcs')->response($exam->path);        
+        return Storage::disk('gcs')->response($exam->path, mb_convert_encoding($exam->filename,'ASCII'));
     }
 }
