@@ -367,12 +367,12 @@ class ExamController extends Controller
                 $date_birthday = date('Y-m-d',strtotime(str_replace('/', '-',$exam['FECHA NAC'])));
                 $date_birthday = ($date_birthday == NULL) ? ($date_birthday = '') : $date_birthday;
 
-                $gender = $exam['GENERO'];
+                $gender = mb_strtoupper($exam['GENERO']);
 
-                if($gender == 'F'){
+                if(in_array($gender, ['F','FEMALE'])){
                     $gender = 'female';
                 }
-                else if($gender == 'M'){
+                else if(in_array($gender, ['M', 'MALE'])){
                     $gender = 'male';
                 }
                 else{
