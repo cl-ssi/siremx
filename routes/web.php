@@ -10,13 +10,14 @@ Route::get('/authenticate/logincu/{access_token}','Auth\LoginController@logincu'
 // Route::get('/claveunica/login','ClaveUnicaController@login');
 Route::get('/claveunica', [ClaveUnicaController::class,'autenticar'])->name('claveunica.login');
 Route::get('/claveunica/callback', [ClaveUnicaController::class,'callback']);
-Route::get('/claveunica/logout', [ClaveUnicaController::class,'logout'])->name('claveunica.logout');
+Route::get('/logout', [ClaveUnicaController::class,'logout'])->name('claveunica.logout');
 
 //Route::get('/logincu/{access_token}','Auth\LoginController@logincu');
 
 Route::group(['middleware' => ['auth']], function () {
   
   Route::post('/authenticate/logout','Auth\LoginController@logout')->name('logout');
+  Route::post('/claveunica/logout','Auth\LoginController@logout')->name('logout-local');
 
   Route::get('/administracion/user/getListRolePermissionsByUser','Management\UsersController@getListRolePermissionsByUser');
   Route::get('/administracion/usuario/getListarUsuarios','Management\UsersController@getListarUsuarios');

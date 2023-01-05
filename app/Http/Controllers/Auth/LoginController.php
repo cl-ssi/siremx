@@ -76,7 +76,7 @@ class LoginController extends Controller
                 /* Url para cerrar sesión en clave única */
                 $url_logout     = "https://accounts.claveunica.gob.cl/api/v1/accounts/app/logout?redirect=";
                 /* Url para luego cerrar sesión en nuestro sisetema */
-                $url_redirect   = env('APP_URL') . "/login";
+                $url_redirect   = env('APP_URL') . "/claveunica/logout";
                 $url            = $url_logout . urlencode($url_redirect);
                 session()->flash('danger', 'Esta cuenta no coincide con nuestros registros');
                 return redirect($url);
