@@ -253,7 +253,14 @@
       methods: {
         logout() {
           this.fullscreenLoading = true;
-          var  url = '/authenticate/logout'
+
+          var url = '/claveunica/logout'
+          axios.post(url).then(response => {
+              alert(response.data)
+              console.log('Logout desde clave unica se ha completado satisfactoriamente')
+          })
+
+          url = '/authenticate/logout'
           axios.post(url).then(response => {
             if(response.data.code == 204){
               location.reload();

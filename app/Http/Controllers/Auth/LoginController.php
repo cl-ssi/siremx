@@ -39,7 +39,7 @@ class LoginController extends Controller
     {        
         Auth::logout();
 
-        return redirect()->route('claveunica.logout');
+        // return redirect()->route('claveunica.logout');
         
 
         return response()->json([
