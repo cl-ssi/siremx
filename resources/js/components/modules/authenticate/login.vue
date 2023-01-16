@@ -12,7 +12,7 @@
 			<h6 class="mb-3 text-center">Utilizando tu Clave Única</h6>
 			
 			<a class="btn-cu btn-m btn-color-estandar m-auto" 
-				href="/claveunica" title="Este es el botón Iniciar sesión de ClaveÚnica">
+				href="/claveunica?redirect=L3NpcmVteC9sb2dpbmN1" title="Este es el botón Iniciar sesión de ClaveÚnica">
 				<span class="cl-claveunica"></span>
 				<span class="texto">Iniciar sesión</span>
 			</a>
