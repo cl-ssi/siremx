@@ -7,7 +7,7 @@ use App\Http\Controllers\ClaveUnicaController;
 Route::post('/authenticate/login','Auth\LoginController@login');
 /** https://siremx.saludtarapaca.gob.cl/authenticate/logincu/{token} */
 Route::get('/authenticate/logincu/{access_token}','Auth\LoginController@logincu');
-
+/** Ruta que redirecciona a logear utilizando vue */
 Route::get('/claveunica/login/{access_token}','Auth\LoginController@redirectVueLogin');
 
 // Route::get('/claveunica/login','ClaveUnicaController@login');
