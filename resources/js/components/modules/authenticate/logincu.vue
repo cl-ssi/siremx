@@ -18,8 +18,8 @@
             }
         },
         mounted(){
-        this.login();
-         },
+            this.login();
+        },
         methods: {
             login() {
               
