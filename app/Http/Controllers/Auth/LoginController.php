@@ -87,4 +87,13 @@ class LoginController extends Controller
             }
         }
     }
+
+    /**
+    * Redirect Vue Login
+    */
+    public function redirectVueLogin($access_token)
+    {
+        $url = config('app.url').'/siremx/logincu/'.$access_token;
+        return redirect($url);
+    }
 }

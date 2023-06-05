@@ -3,9 +3,12 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ClaveUnicaController;
 
-
+/** https://siremx.saludtarapaca.gob.cl/authenticate/login */
 Route::post('/authenticate/login','Auth\LoginController@login');
+/** https://siremx.saludtarapaca.gob.cl/authenticate/logincu/{token} */
 Route::get('/authenticate/logincu/{access_token}','Auth\LoginController@logincu');
+
+Route::get('/claveunica/login/{access_token}','Auth\LoginController@redirectVueLogin');
 
 // Route::get('/claveunica/login','ClaveUnicaController@login');
 Route::get('/claveunica', [ClaveUnicaController::class,'autenticar'])->name('claveunica.login');
