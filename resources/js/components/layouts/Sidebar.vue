@@ -244,32 +244,32 @@
 
 <script>
     export default {
-      props:['ruta', 'user', 'listPermissions'],
-      data() {
+        props:['ruta', 'user', 'listPermissions'],
+        data() {
             return {
                 fullscreenLoading: false
             }
         },
-      methods: {
-        logout() {
-          this.fullscreenLoading = true;
+        methods: {
+            logout() {
+                this.fullscreenLoading = true;
 
-        //   var url = '/claveunica/logout'
-        //   axios.post(url).then(response => {
-        //       alert(response.data)
-        //       console.log('Logout desde clave unica se ha completado satisfactoriamente')
-        //   })
+            //   var url = '/claveunica/logout'
+            //   axios.post(url).then(response => {
+            //       alert(response.data)
+            //       console.log('Logout desde clave unica se ha completado satisfactoriamente')
+            //   })
 
-          url = '/authenticate/logout'
-          axios.post(url).then(response => {
-            if(response.data.code == 204){
-              location.reload();
-              this.$router.push({name: 'login'})
-              localStorage.clear();
-              this.fullscreenLoading = false;
+                var url = '/authenticate/logout'
+                axios.get(url).then(response => {
+                    if(response.data.code == 204){
+                        location.reload();
+                        this.$router.push({name: 'login'})
+                        localStorage.clear();
+                        this.fullscreenLoading = false;
+                    }
+                })
             }
-          })
         }
-      }
     }
 </script>
