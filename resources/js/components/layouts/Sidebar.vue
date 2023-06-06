@@ -23,10 +23,12 @@
           <nav class="mt-3 pb-3 mb-3  user-panel ">
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
               <li class="nav-item has-treeview">
-                  <a class="nav-link" href="#" @click.prevent="logout" v-loading.fullscreen.lock="fullscreenLoading">
+
+                  <router-link class="nav-link" :to="'/logout'" v-loading.fullscreen.lock="fullscreenLoading">
                     <i class="nav-icon fas fa-sign-out-alt"></i>
                     <p>Cerrar Sesión</p>
-                  </a>
+                  </router-link>
+
               </li>
             </ul>
           </nav>
@@ -251,25 +253,7 @@
             }
         },
         methods: {
-            logout() {
-                this.fullscreenLoading = true;
-
-            //   var url = '/claveunica/logout'
-            //   axios.post(url).then(response => {
-            //       alert(response.data)
-            //       console.log('Logout desde clave unica se ha completado satisfactoriamente')
-            //   })
-
-                var url = '/authenticate/logout'
-                axios.get(url).then(response => {
-                    if(response.data.code == 204){
-                        location.reload();
-                        this.$router.push({name: 'login'})
-                        localStorage.clear();
-                        this.fullscreenLoading = false;
-                    }
-                })
-            }
+            //
         }
     }
 </script>
