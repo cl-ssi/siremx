@@ -40,3 +40,4 @@ window.axios.defaults.baseURL = process.env.MIX_VUE_APP_BE_URL;
 //     cluster: process.env.MIX_PUSHER_APP_CLUSTER,
 //     forceTLS: true
 // });
+ 
