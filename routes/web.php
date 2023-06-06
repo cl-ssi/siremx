@@ -10,6 +10,8 @@ Route::get('/authenticate/logincu/{access_token}','Auth\LoginController@logincu'
 /** Ruta que redirecciona a logear utilizando vue */
 Route::get('/claveunica/login/{access_token}','Auth\LoginController@redirectVueLogin');
 
+Route::get('/authenticate/logout','Auth\LoginController@logout')->name('logout');
+
 // Route::get('/claveunica/login','ClaveUnicaController@login');
 Route::get('/claveunica', [ClaveUnicaController::class,'autenticar'])->name('claveunica.login');
 Route::get('/claveunica/callback', [ClaveUnicaController::class,'callback']);
@@ -19,7 +21,6 @@ Route::get('/logout', [ClaveUnicaController::class,'logout'])->name('claveunica.
 
 Route::group(['middleware' => ['auth']], function () {
   
-  Route::get('/authenticate/logout','Auth\LoginController@logout')->name('logout');
   Route::post('/claveunica/logout', [ClaveUnicaController::class,'logout'])->name('logout-local');
 
   Route::get('/administracion/user/getListRolePermissionsByUser','Management\UsersController@getListRolePermissionsByUser');
