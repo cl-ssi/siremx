@@ -20,11 +20,11 @@
             logout() {
                 this.fullscreenLoading = true;
 
-            //   var url = '/claveunica/logout'
-            //   axios.post(url).then(response => {
-            //       alert(response.data)
-            //       console.log('Logout desde clave unica se ha completado satisfactoriamente')
-            //   })
+                // var url = '/claveunica/logout'
+                // axios.post(url).then(response => {
+                //     alert(response.data)
+                //     console.log('Logout desde clave unica se ha completado satisfactoriamente')
+                // })
 
                 var url = '/authenticate/logout'
                 axios.get(url).then(response => {
