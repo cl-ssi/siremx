@@ -1,8 +1,8 @@
 ## Autoría
 
-Sistema desarrollado en la unidad TIC del Servicio de Salud de Iquique.
+Sistema desarrollado en la unidad TIC del Servicio de Salud de Tarapacá.
 
-sistemas.ssi@redsalud.gob.cl
+sistemas.sst@redsalud.gob.cl
 
 ## Instalación
 > Este proyecto está desarrollado en Laravel 7.0 y VueJS
@@ -36,3 +36,12 @@ npm run watch
 
 ### Usuario por defecto
 Usuario: Admin clave: 123465
+
+
+1. En archivo .env, la variable MIX_VUE_APP_URL se le agregar ruta /siremx/
+2. Se modifica el archivo bootstrap.js (abrir archivo, agregar o quitar un espacio es mas que suficiente)
+3. Ejecutar en tu consola el siguiente comando: npm run prod
+4. Guardas tu cambios git commit y git push
+5. En el servidor se dirige a carpeta siremx y se ejecuta comando git pull
+
+Cada vez que guardas en tu editor de texto puedes ver los cambios con el comando: npm run watch

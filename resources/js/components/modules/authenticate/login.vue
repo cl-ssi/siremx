@@ -9,51 +9,60 @@
         <div class="card">
             <div class="card-body login-card-body">
 
-			<h6 class="mb-3 text-center">Utilizando tu Clave Única</h6>
-			
-			<a class="btn-cu btn-m btn-color-estandar m-auto" 
-				href="/claveunica" title="Este es el botón Iniciar sesión de ClaveÚnica">
-				<span class="cl-claveunica"></span>
-				<span class="texto">Iniciar sesión</span>
-			</a>
+                <h6 class="mb-3 text-center">Utilizando tu Clave Única</h6>
 
-			<hr>
+                <a class="btn-cu btn-m btn-color-estandar m-auto" 
+                    href="https://uni.saludtarapaca.gob.cl/claveunica/siremx" title="Este es el botón Iniciar sesión de ClaveÚnica">
+                    <span class="cl-claveunica"></span>
+                    <span class="texto">Iniciar sesión</span>
+                </a>
 
-            <h6 class="login-box-msg">O con tu cuenta del sistema</h6>
+                <hr>
 
-            <form  method="post">
-                <div class="input-group mb-3">
-                    <input type="email" @keyup.enter="login" v-model="fillLogin.email" class="form-control" placeholder="Usuario">
-                    <div class="input-group-append">
-                        <div class="input-group-text">
-                        <span class="fas fa-user"></span>
+                <h6 class="login-box-msg">O con tu cuenta del sistema</h6>
+
+                <form  method="post">
+                    <div class="input-group mb-3">
+                        <input type="email" @keyup.enter="login" v-model="fillLogin.email" class="form-control" placeholder="Usuario">
+                        <div class="input-group-append">
+                            <div class="input-group-text">
+                            <span class="fas fa-user"></span>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="input-group mb-3">
-                    <input type="password" @keyup.enter="login" v-model="fillLogin.pass" class="form-control" placeholder="Password">
-                    <div class="input-group-append">
-                        <div class="input-group-text">
-                        <span class="fas fa-lock"></span>
+                    <div class="input-group mb-3">
+                        <input type="password" @keyup.enter="login" v-model="fillLogin.pass" class="form-control" placeholder="Password">
+                        <div class="input-group-append">
+                            <div class="input-group-text">
+                            <span class="fas fa-lock"></span>
+                            </div>
                         </div>
                     </div>
+                </form>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <span v-if="error">
+                            <div v-for="(e, index) in messageError" :key="index" v-text="e" class="callout callout-danger"></div>
+
+                        </span>
+                    </div>
                 </div>
-            </form>
 
-            <div class="row">
-                <div class="col-md-12">
-                    <span v-if="error">
-                        <div v-for="(e, index) in messageError" :key="index" v-text="e" class="callout callout-danger"></div>
-
-                    </span>
+                <div class="social-auth-links text-center mb-3">
+                    <button class="btn btn-block btn-info" @click.prevent="login" v-loading.fullscreen.lock="fullscreenLoading">
+                        <i class="fas fa-sign-in-alt mr-2"></i> Iniciar Sesión
+                    </button>
                 </div>
-            </div>
 
-            <div class="social-auth-links text-center mb-3">
-                <button class="btn btn-block btn-info" @click.prevent="login" v-loading.fullscreen.lock="fullscreenLoading">
-                    <i class="fas fa-sign-in-alt mr-2"></i> Iniciar Sesión
-                </button>
-            </div>
+                <hr>
+
+                <a class="btn-cu btn-m btn-color-estandar m-auto bg-secondary" 
+                    href="/claveunica?redirect=L3NpcmVteC9sb2dpbmN1" title="Este es el botón Iniciar sesión de ClaveÚnica">
+                    <span class="cl-claveunica"></span>
+                    <span class="texto">Iniciar sesión</span>
+                </a>
+
             </div>
             <!-- /.login-card-body -->
         </div>

@@ -37,6 +37,14 @@ export default new Router({
             component: require("./components/modules/authenticate/login")
                 .default
         },
+
+        {
+            path: "/logout",
+            name: "logout",
+            component: require("./components/modules/authenticate/logout")
+                .default
+        },
+
         {
             path: "/logincu/:token",
             name: "logincu",

@@ -112,7 +112,7 @@ class ExamController extends Controller
             $flag                  = $idExam;
             $filename              = $file->getClientOriginalName();
             $fileserver            = $flag.'_'.$filename;
-            Storage::disk('gcs')->delete('siremx/reports/'.$flag.'_'.$exam->filename);
+            Storage::disk('gcs')->delete('siremx/reports/'.$fileserver);
             $exam->path                 = 'siremx/reports/'.$fileserver;
             $exam->filename             = $filename;
             Storage::disk('gcs')->putFileAs('siremx/reports',$file, $fileserver);
@@ -367,12 +367,12 @@ class ExamController extends Controller
                 $date_birthday = date('Y-m-d',strtotime(str_replace('/', '-',$exam['FECHA NAC'])));
                 $date_birthday = ($date_birthday == NULL) ? ($date_birthday = '') : $date_birthday;
 
-                $gender = $exam['GENERO'];
+                $gender = mb_strtoupper($exam['GENERO']);
 
-                if($gender == 'F'){
+                if(in_array($gender, ['F','FEMALE'])){
                     $gender = 'female';
                 }
-                else if($gender == 'M'){
+                else if(in_array($gender, ['M', 'MALE'])){
                     $gender = 'male';
                 }
                 else{
@@ -513,6 +513,6 @@ class ExamController extends Controller
 
     public function downloadExamById(Exam $exam)
     {
-        return Storage::disk('gcs')->response($exam->path);        
+        return Storage::disk('gcs')->response($exam->path, mb_convert_encoding($exam->filename,'ASCII'));
     }
 }
