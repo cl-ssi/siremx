@@ -32,6 +32,6 @@
         "vue-moment": "^4.1.0",
         "vue-multiselect": "^1.1.5",
         "vue-router": "^3.3.4",
-        "xlsx": "^0.16.5"
+        "xlsx": "^0.18.5"
     }
 }
