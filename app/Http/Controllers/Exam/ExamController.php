@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 class ExamController extends Controller
@@ -277,198 +277,200 @@ class ExamController extends Controller
 
         if(!$request->ajax()) return redirect('/');
 
-        $title        = $request->title;
-        $description  = $request->description;
-        $exams        = json_decode($request->getContent(), true);
+        return DB::transaction(function () use ($request) {
 
-        $fields = array('SERVICIO SALUD', 'FECHA TOMA', 'FECHA SOLICITUD', 'FECHA RECEPCION', 'NOMBRES', 'APELLIDO PATERNO', 'APELLIDO MATERNO', 'RUN',
-                        'FECHA NAC', 'DIRECCION', 'FONO', 'GENERO', 'PROFESIONAL', 'DIAGNOSTICO', 'ESTABLECIMIENTO EXAMEN', 'ESTABLECIMIENTO SOLICITA',
-                        'CESFAM', 'MEDICO', 'FONASA', 'MDERIVACION', 'BIRADS MAM', 'BIRADS ECO', 'BIRADS PRO', 'COMUNA');
+            $title        = $request->title;
+            $description  = $request->description;
+            $exams        = json_decode($request->getContent(), true);
 
-        foreach($fields as $field){
-            if(!isset($exams['exams'][0][$field]))
-                return response()->json([
-                    'error' => 'No se encontró campo '. $field . ' en el proceso de carga del archivo xlsx'], 400);
-        }
+            $fields = array('SERVICIO SALUD', 'FECHA TOMA', 'FECHA SOLICITUD', 'FECHA RECEPCION', 'NOMBRES', 'APELLIDO PATERNO', 'APELLIDO MATERNO', 'RUN',
+                            'FECHA NAC', 'DIRECCION', 'FONO', 'GENERO', 'PROFESIONAL', 'DIAGNOSTICO', 'ESTABLECIMIENTO EXAMEN', 'ESTABLECIMIENTO SOLICITA',
+                            'CESFAM', 'MEDICO', 'FONASA', 'MDERIVACION', 'BIRADS MAM', 'BIRADS ECO', 'BIRADS PRO', 'COMUNA');
 
-        $load = new Load();
-        $load->title       = $title;
-        $load->description = $description;
-        $load->save();
-        
-        // Se recorre cada una de las filas del archivo cargado
-        foreach($exams['exams'] as $exam) {
+            foreach($fields as $field){
+                if(!isset($exams['exams'][0][$field]))
+                    return response()->json([
+                        'error' => 'No se encontró campo '. $field . ' en el proceso de carga del archivo xlsx'], 400);
+            }
 
-            // Se separa el rut parte numérica y digito verificador
-            list($run,$dv) = array_pad(explode('-',str_replace(".", "",$exam['RUN'])),2,null);
-            // Se busca por cada registro si el paciente existe en la bd
-            $patient_id = Patient::Where('run','LIKE','%'.$run.'%')->first('id');
+            $load = new Load();
+            $load->title       = $title;
+            $load->description = $description;
+            $load->save();
             
-            // Si el paciente no existe se inserta nuevo registro
-            // y se obtiene id para asignarlo al registro de examen
-            if($patient_id == null)
-            {
-                // // Separar el nombre completo en espacios
-                // $tokens = explode(' ', trim($exam['NOMBRE']));
-                // // Arreglo donde se guardan las "palabras" del nombre
-                // $names = array();
-                // // Palabras de apellidos (y nombres) compuetos
-                // $special_tokens = array('da', 'de', 'del', 'la', 'las', 'los', 'mac', 'mc', 'van', 'von', 'y', 'i', 'san', 'santa');
-                
-                // $prev = "";
-                // foreach($tokens as $token) {
-                //     $_token = strtolower($token);
-                //     if(in_array($_token, $special_tokens)) {
-                //         $prev .= "$token ";
-                //     } else {
-                //         $names[] = $prev. $token;
-                //         $prev = "";
-                //     }
-                // }
-                
-                // $num_nombres = count($names);
-                // $nombres = $apellidos = "";
-                // switch ($num_nombres) {
-                //     case 0:
-                //         $nombres = '';
-                //         break;
-                //     case 1: 
-                //         $nombres = $names[0];
-                //         break;
-                //     case 2:
-                //         $nombres    = $names[0];
-                //         $apellidos  = $names[1];
-                //         break;
-                //     case 3:
-                //         $apellidos = $names[1] . ' ' . $names[2];
-                //         $nombres   = $names[0];
-                //     default:
-                //         $apellidos = $names[1] . ' '. $names[2];
-                //         $nombres   = $names[0];
-                //         break;
-                // }
-                
-                // $nombres    = mb_convert_case($nombres, MB_CASE_TITLE, 'UTF-8');
-                // $apellidos  = mb_convert_case($apellidos, MB_CASE_TITLE, 'UTF-8');
-                // $apellidos  = ($apellidos == NULL) ? ($apellidos = '') : $apellidos;
+            // Se recorre cada una de las filas del archivo cargado
+            foreach($exams['exams'] as $exam) {
 
-                $nombres          = strtolower(trim($exam['NOMBRES']));
-                $nombres          = mb_convert_case($nombres, MB_CASE_TITLE, 'UTF-8');
-                $nombres          = ($nombres == NULL) ? ($nombres = '') : $nombres;
-                $apellido_paterno = strtolower(trim($exam['APELLIDO PATERNO']));
-                $apellido_paterno = mb_convert_case($apellido_paterno, MB_CASE_TITLE, 'UTF-8');
-                $apellido_paterno = ($apellido_paterno == NULL) ? ($apellido_paterno = '') : $apellido_paterno;
-                $apellido_materno = strtolower(trim($exam['APELLIDO MATERNO']));
-                $apellido_materno = mb_convert_case($apellido_materno, MB_CASE_TITLE, 'UTF-8');
-                $apellido_materno = ($apellido_materno == NULL) ? ($apellido_materno = '') : $apellido_materno;
-
+                // Se separa el rut parte numérica y digito verificador
                 list($run,$dv) = array_pad(explode('-',str_replace(".", "",$exam['RUN'])),2,null);
-     
-                $date_birthday = date('Y-m-d',strtotime(str_replace('/', '-',$exam['FECHA NAC'])));
-                $date_birthday = ($date_birthday == NULL) ? ($date_birthday = '') : $date_birthday;
-
-                $gender = mb_strtoupper($exam['GENERO']);
-
-                if(in_array($gender, ['F','FEMALE'])){
-                    $gender = 'female';
-                }
-                else if(in_array($gender, ['M', 'MALE'])){
-                    $gender = 'male';
-                }
-                else{
-                    $gender = 'unknown';
-                }
-               
+                // Se busca por cada registro si el paciente existe en la bd
+                $patient_id = Patient::Where('run','LIKE','%'.$run.'%')->first('id');
                 
-                $newPatient = new Patient();
-                $newPatient->run            = $run;
-                $newPatient->dv             = $dv;
-                $newPatient->name           = $nombres;
-                $newPatient->fathers_family = $apellido_paterno;
-                $newPatient->mothers_family = $apellido_materno;
-                $newPatient->birthday       = $date_birthday;
-                $newPatient->address        = $exam['DIRECCION'];
-                $newPatient->telephone      = $exam['FONO'];
-                $newPatient->gender         = $gender;
-                $newPatient->save();
+                // Si el paciente no existe se inserta nuevo registro
+                // y se obtiene id para asignarlo al registro de examen
+                if($patient_id == null)
+                {
+                    // // Separar el nombre completo en espacios
+                    // $tokens = explode(' ', trim($exam['NOMBRE']));
+                    // // Arreglo donde se guardan las "palabras" del nombre
+                    // $names = array();
+                    // // Palabras de apellidos (y nombres) compuetos
+                    // $special_tokens = array('da', 'de', 'del', 'la', 'las', 'los', 'mac', 'mc', 'van', 'von', 'y', 'i', 'san', 'santa');
+                    
+                    // $prev = "";
+                    // foreach($tokens as $token) {
+                    //     $_token = strtolower($token);
+                    //     if(in_array($_token, $special_tokens)) {
+                    //         $prev .= "$token ";
+                    //     } else {
+                    //         $names[] = $prev. $token;
+                    //         $prev = "";
+                    //     }
+                    // }
+                    
+                    // $num_nombres = count($names);
+                    // $nombres = $apellidos = "";
+                    // switch ($num_nombres) {
+                    //     case 0:
+                    //         $nombres = '';
+                    //         break;
+                    //     case 1: 
+                    //         $nombres = $names[0];
+                    //         break;
+                    //     case 2:
+                    //         $nombres    = $names[0];
+                    //         $apellidos  = $names[1];
+                    //         break;
+                    //     case 3:
+                    //         $apellidos = $names[1] . ' ' . $names[2];
+                    //         $nombres   = $names[0];
+                    //     default:
+                    //         $apellidos = $names[1] . ' '. $names[2];
+                    //         $nombres   = $names[0];
+                    //         break;
+                    // }
+                    
+                    // $nombres    = mb_convert_case($nombres, MB_CASE_TITLE, 'UTF-8');
+                    // $apellidos  = mb_convert_case($apellidos, MB_CASE_TITLE, 'UTF-8');
+                    // $apellidos  = ($apellidos == NULL) ? ($apellidos = '') : $apellidos;
 
-                $idInsertPatient = $newPatient->id;
-             
+                    $nombres          = strtolower(trim($exam['NOMBRES']));
+                    $nombres          = mb_convert_case($nombres, MB_CASE_TITLE, 'UTF-8');
+                    $nombres          = ($nombres == NULL) ? ($nombres = '') : $nombres;
+                    $apellido_paterno = strtolower(trim($exam['APELLIDO PATERNO']));
+                    $apellido_paterno = mb_convert_case($apellido_paterno, MB_CASE_TITLE, 'UTF-8');
+                    $apellido_paterno = ($apellido_paterno == NULL) ? ($apellido_paterno = '') : $apellido_paterno;
+                    $apellido_materno = strtolower(trim($exam['APELLIDO MATERNO']));
+                    $apellido_materno = mb_convert_case($apellido_materno, MB_CASE_TITLE, 'UTF-8');
+                    $apellido_materno = ($apellido_materno == NULL) ? ($apellido_materno = '') : $apellido_materno;
+
+                    list($run,$dv) = array_pad(explode('-',str_replace(".", "",$exam['RUN'])),2,null);
+        
+                    $date_birthday = date('Y-m-d',strtotime(str_replace('/', '-',$exam['FECHA NAC'])));
+                    $date_birthday = ($date_birthday == NULL) ? ($date_birthday = '') : $date_birthday;
+
+                    $gender = mb_strtoupper($exam['GENERO']);
+
+                    if(in_array($gender, ['F','FEMALE'])){
+                        $gender = 'female';
+                    }
+                    else if(in_array($gender, ['M', 'MALE'])){
+                        $gender = 'male';
+                    }
+                    else{
+                        $gender = 'unknown';
+                    }
+                
+                    
+                    $newPatient = new Patient();
+                    $newPatient->run            = $run;
+                    $newPatient->dv             = $dv;
+                    $newPatient->name           = $nombres;
+                    $newPatient->fathers_family = $apellido_paterno;
+                    $newPatient->mothers_family = $apellido_materno;
+                    $newPatient->birthday       = $date_birthday;
+                    $newPatient->address        = $exam['DIRECCION'];
+                    $newPatient->telephone      = $exam['FONO'];
+                    $newPatient->gender         = $gender;
+                    $newPatient->save();
+
+                    $idInsertPatient = $newPatient->id;
+                
+                }
+                else {
+                    $idInsertPatient = $patient_id->id;
+                }
+                
+
+                $date_exam_order = date('Y-m-d',strtotime(str_replace('/', '-',$exam['FECHA SOLICITUD'])));
+                $date_exam_order = ($exam['FECHA SOLICITUD'] == NULL) ? ($date_exam_order = NULL) : $date_exam_order;
+
+                $date_exam = date('Y-m-d',strtotime(str_replace('/', '-',$exam['FECHA TOMA'])));
+                $date_exam = ($exam['FECHA TOMA'] == NULL) ? ($date_exam = NULL) : $date_exam;
+
+                $date_exam_reception = date('Y-m-d',strtotime(str_replace('/', '-',$exam['FECHA RECEPCION'])));
+                $date_exam_reception = ($exam['FECHA RECEPCION'] == NULL) ? ($date_exam_reception = NULL) : $date_exam_reception;
+
+                $commune = $exam['COMUNA'];
+                $commune = ($commune == NULL) ? ($commune = NULL) : $commune;
+
+                $birardsMam = $exam['BIRADS MAM'] ?? NULL;
+                $birardsEco = $exam['BIRADS ECO'] ?? NULL;
+                $birardsPro = $exam['BIRADS PRO'] ?? NULL;
+
+                if($birardsMam != NULL)
+                {
+                    $examType = 'mam';
+                }
+                elseif($birardsEco != NULL)
+                {
+                    $examType = 'eco';
+                }
+                elseif($birardsPro != NULL)
+                {
+                    $examType = 'pro';
+                }
+                else
+                {
+                    $examType = NULL;
+                }
+
+                $mDerivation = $exam['MDERIVACION'];
+                $mDerivation  = ($mDerivation == NULL) ? ($mDerivation = '') : $mDerivation;
+
+                $diagnostic = $exam['DIAGNOSTICO'];
+                $diagnostic  = ($diagnostic == NULL) ? ($diagnostic = '') : $diagnostic;
+                
+                
+
+                $examDet = new Exam();
+                $examDet->servicio_salud   = $exam['SERVICIO SALUD'];
+                $examDet->comuna   = $commune;
+                $examDet->profesional_solicita   = $exam['PROFESIONAL'];
+                $examDet->establecimiento_realiza_examen   = $exam['ESTABLECIMIENTO EXAMEN'];
+                $examDet->establecimiento_deriva_examen   = $exam['ESTABLECIMIENTO SOLICITA'];
+                $examDet->cesfam   = $exam['CESFAM'];
+                $examDet->medico   = $exam['MEDICO'];
+                $examDet->fonasa   = $exam['FONASA'];
+
+                $examDet->date_exam_order      = $date_exam_order;
+                $examDet->date_exam            = $date_exam;
+                $examDet->diagnostico          = $diagnostic;
+                $examDet->date_exam_reception  = $date_exam_reception;
+                $examDet->exam_type            = $examType;
+                $examDet->birards_mamografia   = $birardsMam;
+                $examDet->birards_ecografia    = $birardsEco;
+                $examDet->birards_proyeccion   = $birardsPro;
+                $examDet->derivation_reason    = $mDerivation;
+                $examDet->load_source          = 'excel';
+                $examDet->load_id              = $load->id;
+                $examDet->user_id              = Auth::id();
+                $examDet->patient_id           = $idInsertPatient;
+                $examDet->save();
             }
-            else {
-                $idInsertPatient = $patient_id->id;
-            }
-            
 
-            $date_exam_order = date('Y-m-d',strtotime(str_replace('/', '-',$exam['FECHA SOLICITUD'])));
-            $date_exam_order = ($exam['FECHA SOLICITUD'] == NULL) ? ($date_exam_order = NULL) : $date_exam_order;
-
-            $date_exam = date('Y-m-d',strtotime(str_replace('/', '-',$exam['FECHA TOMA'])));
-            $date_exam = ($exam['FECHA TOMA'] == NULL) ? ($date_exam = NULL) : $date_exam;
-
-            $date_exam_reception = date('Y-m-d',strtotime(str_replace('/', '-',$exam['FECHA RECEPCION'])));
-            $date_exam_reception = ($exam['FECHA RECEPCION'] == NULL) ? ($date_exam_reception = NULL) : $date_exam_reception;
-
-            $commune = $exam['COMUNA'];
-            $commune = ($commune == NULL) ? ($commune = NULL) : $commune;
-
-            $birardsMam = $exam['BIRADS MAM'] ?? NULL;
-            $birardsEco = $exam['BIRADS ECO'] ?? NULL;
-            $birardsPro = $exam['BIRADS PRO'] ?? NULL;
-
-            if($birardsMam != NULL)
-            {
-                $examType = 'mam';
-            }
-            elseif($birardsEco != NULL)
-            {
-                $examType = 'eco';
-            }
-            elseif($birardsPro != NULL)
-            {
-                $examType = 'pro';
-            }
-            else
-            {
-                $examType = NULL;
-            }
-
-            $mDerivation = $exam['MDERIVACION'];
-            $mDerivation  = ($mDerivation == NULL) ? ($mDerivation = '') : $mDerivation;
-
-            $diagnostic = $exam['DIAGNOSTICO'];
-            $diagnostic  = ($diagnostic == NULL) ? ($diagnostic = '') : $diagnostic;
-            
-            
-
-            $examDet = new Exam();
-            $examDet->servicio_salud   = $exam['SERVICIO SALUD'];
-            $examDet->comuna   = $commune;
-            $examDet->profesional_solicita   = $exam['PROFESIONAL'];
-            $examDet->establecimiento_realiza_examen   = $exam['ESTABLECIMIENTO EXAMEN'];
-            $examDet->establecimiento_deriva_examen   = $exam['ESTABLECIMIENTO SOLICITA'];
-            $examDet->cesfam   = $exam['CESFAM'];
-            $examDet->medico   = $exam['MEDICO'];
-            $examDet->fonasa   = $exam['FONASA'];
-
-            $examDet->date_exam_order      = $date_exam_order;
-            $examDet->date_exam            = $date_exam;
-            $examDet->diagnostico          = $diagnostic;
-            $examDet->date_exam_reception  = $date_exam_reception;
-            $examDet->exam_type            = $examType;
-            $examDet->birards_mamografia   = $birardsMam;
-            $examDet->birards_ecografia    = $birardsEco;
-            $examDet->birards_proyeccion   = $birardsPro;
-            $examDet->derivation_reason    = $mDerivation;
-            $examDet->load_source          = 'excel';
-            $examDet->load_id              = $load->id;
-            $examDet->user_id              = Auth::id();
-            $examDet->patient_id           = $idInsertPatient;
-            $examDet->save();
-
-        }
-         
-        return $exams;
+            return $exams;
+        });
     }
 
     // Función para cargar examen masivamente

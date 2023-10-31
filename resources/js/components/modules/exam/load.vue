@@ -127,7 +127,7 @@
 </template>
 
 <script>
-    import xlsx from "xlsx";
+    import * as xlsx from 'xlsx';
     export default {
       data(){
           return {

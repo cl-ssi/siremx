@@ -6,7 +6,7 @@
 
 require('./bootstrap');
 
-window.Vue = require('vue');
+window.Vue = require('vue').default;
 
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';

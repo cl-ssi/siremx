@@ -26,7 +26,7 @@
       <!-- Messages Dropdown Menu -->
 
       <li class="nav-item d-none d-sm-inline-block text-light">
-         <!--<i class="fas fa-check"></i> -->SSI
+         <!--<i class="fas fa-check"></i> -->SST
         <!--<a  href="#" class="nav-link" @click.prevent="logout" >
           <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
         </a>-->

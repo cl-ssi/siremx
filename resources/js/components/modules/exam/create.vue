@@ -358,7 +358,7 @@
               {value: 'unknown', label: 'Prefiero no decir'}
             ],
             listServicioSalud: [
-              {value: 'IQUIQUE', label: 'IQUIQUE'}
+              {value: 'TARAPACÁ', label: 'TARAPACÁ'}
             ],
             listProfessional: [
               {value: 'Matrona', label: 'Matrona'},

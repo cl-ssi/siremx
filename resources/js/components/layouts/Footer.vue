@@ -3,7 +3,7 @@
         <div class="float-right d-none d-sm-block">
             <b>Version</b> 1.0
         </div>
-        <strong> &copy; 2020 <a href="https://github.com/cl-ssi/sismam" class="text-dark"><i class="nav-icon fab fa-github"></i> SSI</a>.</strong>
+        <strong> &copy; 2020 <a href="https://github.com/cl-ssi/sismam" class="text-dark"><i class="nav-icon fab fa-github"></i> SST</a>.</strong>
     </footer>
 </template>
 

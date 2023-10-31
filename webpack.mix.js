@@ -18,7 +18,7 @@ mix.styles([
     'resources/vendor/css/adminlte.min.css',
     'resources/vendor/css/config.css'
 ], 'public/css/sismamtheme.css')
-.js('resources/js/app.js', 'public/js')//.sourceMaps() // JQuery, Bootstrap, VueJS
+.js('resources/js/app.js', 'public/js').vue() //.sourceMaps() // JQuery, Bootstrap, VueJS
 .scripts([
     'resources/vendor/js/adminlte.min.js',
     'resources/vendor/js/demo.js'
