@@ -207,7 +207,7 @@
                 <div class="card-tools">
                     
                     <template v-if="fillEditExam.path">
-                      <a target="_blank" :href="'/siremx/exam/downloadExamById/'+ fillEditExam.idExam" >
+                      <a target="_blank" :href="'/exam/downloadExamById/'+ fillEditExam.idExam" >
                           <i class="fas fa-file-pdf text-light"></i> Ver Informe
                       </a>
                     </template>

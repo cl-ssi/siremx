@@ -53,6 +53,7 @@ Route::group(['middleware' => ['auth']], function () {
   Route::post('/archivo/setRegistrarArchivo','FileController@setRegistrarArchivo');
 
   Route::get('/administracion/patient/getListarPatients','PatientController@getListarPatients');
+  Route::get('/administracion/patient/getListPatientsApi','PatientController@getListPatientsApi');
   Route::get('/administracion/patient/getPatientById','PatientController@getPatientById');
   Route::post('/administracion/patient/setStorePatient','PatientController@setStorePatient');
   Route::get('/administracion/patient/getPatient','PatientController@getPatient');

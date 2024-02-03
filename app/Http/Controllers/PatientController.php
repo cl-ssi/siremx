@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Patient;
 use App\Exam;
-
+use App\WebServices\Fonasa;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 
@@ -29,6 +29,12 @@ class PatientController extends Controller
                          ->take(1200)->get();
 
       return $patients->toArray();
+    }
+
+    public function getListPatientsApi(Request $request)
+    {
+      if(!$request->ajax()) return redirect('/');
+      return Fonasa::find((string)$request->run);
     }
 
     public function getPatientById(Request $request)
