@@ -496,23 +496,6 @@
         },
         getListPatientsApi(){
           var run = this.fillCreateExam.run;
-          // var session_url = 'https://i.saludiquique.cl/monitor/api/webservices/fonasa?run='+run[0]+'&dv='+run[1];
-          // var session_url = process.env.MIX_WSSSI_URL + '/fonasa?run='+run[0]+'&dv='+run[1];
-          // var username = 'api@redsalud.gob.cl';
-          // var password = 'apiesmeralda';
-          // var basicAuth = 'Basic ' + btoa(username + ':' + password);
-
-          // const res =  axios.get(session_url, {
-          //   auth: {
-          //     username: username,
-          //     password: password
-          //   }
-          // const res =  axios.get(session_url, {
-          //   withcredentials: false,
-          //   headers: { 
-          //     "Access-Control-Allow-Origin": "*",
-          //     "content-type": "application/json",
-          //    }
           var url = '/administracion/patient/getListPatientsApi'
           const res =  axios.get(url, {
             params: {
