@@ -37,7 +37,7 @@
                   </div>
 
 
-                 
+
 
                 </form>
               </div>
@@ -74,6 +74,7 @@
                       <th class="text-center bg-secondary">F. NAC</th>
                       <th class="text-center bg-secondary">EDAD</th>
                       <th class="text-center bg-secondary">DIRECCION</th>
+                      <th class="text-center bg-secondary">COMUNA</th>
                       <th class="text-center bg-secondary">EST. EXAMEN</th>
                       <th class="text-center bg-secondary">F. ORDEN</th>
                       <th class="text-center bg-secondary">F. EXAMEN</th>
@@ -95,6 +96,7 @@
                       <td v-text="item.birthday"></td>
                       <td class="text-center align-middle" v-text="item.age"></td>
                       <td v-text="item.address"></td>
+                      <td v-text="item.comuna_name"></td>
                       <td v-text="item.establecimiento_realiza_examen"></td>
                       <td v-text="item.date_exam_order"></td>
                       <td v-text="item.date_exam"></td>
@@ -111,7 +113,7 @@
                          </template>
                       </td>
                     </tr>
-                 
+
                   </table>
                 </template>
                 <template v-else>
@@ -119,7 +121,7 @@
                       <h5>No se encontraron resultados...</h5>
                   </div>
                 </template>
-              
+
         </div>
       </div>
     </div>

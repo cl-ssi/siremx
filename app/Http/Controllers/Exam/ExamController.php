@@ -20,23 +20,23 @@ class ExamController extends Controller
     public function getExamById(Request $request)
     {
        if(!$request->ajax()) return redirect('/');
-    
+
        $idExam  = $request->idExam;
        $idExam  = ($idExam == NULL) ? ($idExam = '') : $idExam;
-       
+
        $exam = Exam::Where('id','=',$idExam)->get();
 
        return $exam;
     }
 
-    // Función para editar examen 
+    // Función para editar examen
     public function setEditExam(Request $request)
     {
         if(!$request->ajax()) return redirect('/');
 
         $idExam                = $request->idExam;
         $servicioSalud         = $request->servicioSalud;
-        $commune               = $request->commune; 
+        $commune               = $request->commune;
         $establishmentRequest  = $request->establishmentRequest;
         $date_exam_order       = $request->date_exam_order;
         $establishmentExam     = $request->establishmentExam;
@@ -62,10 +62,10 @@ class ExamController extends Controller
         }
         if($examType == 'eco'){
             $birards_eco = $birards;
-        } 
+        }
         else {
             $birards_eco = NULL;
-        } 
+        }
         if($examType == 'pro'){
             $birards_pro = $birards;
         }
@@ -131,7 +131,7 @@ class ExamController extends Controller
     public function getListExams(Request $request)
     {
         if(!$request->ajax()) return redirect('/');
-    
+
         $cName              = $request->cName;
         $cFathers_family    = $request->cFathers_family;
         $nRun               = $request->nRun;
@@ -150,14 +150,22 @@ class ExamController extends Controller
               $code_deis_request = '';
             }
         }
-       
+
         if($cName || $cFathers_family || $nRun ){
 
-            $patients_list = Patient::Where('run','LIKE','%'.$nRun.'%')
-                                    ->Where('name','LIKE','%'.$cName.'%')
-                                    ->Where('fathers_family','LIKE','%'.$cFathers_family.'%')
-                                    ->get('id');
-            
+            $patients = Patient::Select('id');
+            if($nRun){
+                $patients->Where('run','LIKE','%'.$nRun.'%');
+            }
+            if($cName){
+                $patients->Where('name','LIKE','%'.$cName.'%');
+            }
+            if($cFathers_family){
+                $patients->Where('fathers_family','LIKE','%'.$cFathers_family.'%');
+            }
+            $patients_list = $patients->get('id')->makeHidden(['fullname', 'age']);
+
+            // dd($patients_list);
 
             $exams = Exam::select(
                                   'exams.id'
@@ -186,8 +194,9 @@ class ExamController extends Controller
                     ->leftjoin('establishments AS T2', 'exams.cesfam', '=', 'T2.new_code_deis')
                     ->leftjoin('communes AS T3', 'exams.comuna', '=', 'T3.code_deis')
                     ->leftjoin('users AS T4', 'exams.user_id', '=', 'T4.id')
-                    ->whereIn('patient_id',$patients_list)
+                    ->whereIn('exams.patient_id', $patients_list)
                     ->get();
+
         }
         else {
             $exams = Exam::select(
@@ -219,7 +228,7 @@ class ExamController extends Controller
                     ->orderBy('id','DESC')
                     ->take(1200)->get();
         }
-     
+
        return $exams;
     }
 
@@ -248,7 +257,7 @@ class ExamController extends Controller
         $date_exam             = $request->date_exam;
         $derivation            = $request->derivation;
         $examType              = $request->examType;
-        
+
         $exams = new Exam();
         $exams->servicio_salud                 = $servicioSalud;
         $exams->profesional_solicita           = $professional;
@@ -297,7 +306,7 @@ class ExamController extends Controller
             $load->title       = $title;
             $load->description = $description;
             $load->save();
-            
+
             // Se recorre cada una de las filas del archivo cargado
             foreach($exams['exams'] as $exam) {
 
@@ -305,7 +314,7 @@ class ExamController extends Controller
                 list($run,$dv) = array_pad(explode('-',str_replace(".", "",$exam['RUN'])),2,null);
                 // Se busca por cada registro si el paciente existe en la bd
                 $patient_id = Patient::Where('run','LIKE','%'.$run.'%')->first('id');
-                
+
                 // Si el paciente no existe se inserta nuevo registro
                 // y se obtiene id para asignarlo al registro de examen
                 if($patient_id == null)
@@ -316,7 +325,7 @@ class ExamController extends Controller
                     // $names = array();
                     // // Palabras de apellidos (y nombres) compuetos
                     // $special_tokens = array('da', 'de', 'del', 'la', 'las', 'los', 'mac', 'mc', 'van', 'von', 'y', 'i', 'san', 'santa');
-                    
+
                     // $prev = "";
                     // foreach($tokens as $token) {
                     //     $_token = strtolower($token);
@@ -327,14 +336,14 @@ class ExamController extends Controller
                     //         $prev = "";
                     //     }
                     // }
-                    
+
                     // $num_nombres = count($names);
                     // $nombres = $apellidos = "";
                     // switch ($num_nombres) {
                     //     case 0:
                     //         $nombres = '';
                     //         break;
-                    //     case 1: 
+                    //     case 1:
                     //         $nombres = $names[0];
                     //         break;
                     //     case 2:
@@ -349,7 +358,7 @@ class ExamController extends Controller
                     //         $nombres   = $names[0];
                     //         break;
                     // }
-                    
+
                     // $nombres    = mb_convert_case($nombres, MB_CASE_TITLE, 'UTF-8');
                     // $apellidos  = mb_convert_case($apellidos, MB_CASE_TITLE, 'UTF-8');
                     // $apellidos  = ($apellidos == NULL) ? ($apellidos = '') : $apellidos;
@@ -365,7 +374,7 @@ class ExamController extends Controller
                     $apellido_materno = ($apellido_materno == NULL) ? ($apellido_materno = '') : $apellido_materno;
 
                     list($run,$dv) = array_pad(explode('-',str_replace(".", "",$exam['RUN'])),2,null);
-        
+
                     $date_birthday = date('Y-m-d',strtotime(str_replace('/', '-',$exam['FECHA NAC'])));
                     $date_birthday = ($date_birthday == NULL) ? ($date_birthday = '') : $date_birthday;
 
@@ -380,8 +389,8 @@ class ExamController extends Controller
                     else{
                         $gender = 'unknown';
                     }
-                
-                    
+
+
                     $newPatient = new Patient();
                     $newPatient->run            = $run;
                     $newPatient->dv             = $dv;
@@ -395,12 +404,12 @@ class ExamController extends Controller
                     $newPatient->save();
 
                     $idInsertPatient = $newPatient->id;
-                
+
                 }
                 else {
                     $idInsertPatient = $patient_id->id;
                 }
-                
+
 
                 $date_exam_order = date('Y-m-d',strtotime(str_replace('/', '-',$exam['FECHA SOLICITUD'])));
                 $date_exam_order = ($exam['FECHA SOLICITUD'] == NULL) ? ($date_exam_order = NULL) : $date_exam_order;
@@ -440,8 +449,8 @@ class ExamController extends Controller
 
                 $diagnostic = $exam['DIAGNOSTICO'];
                 $diagnostic  = ($diagnostic == NULL) ? ($diagnostic = '') : $diagnostic;
-                
-                
+
+
 
                 $examDet = new Exam();
                 $examDet->servicio_salud   = $exam['SERVICIO SALUD'];
@@ -508,7 +517,7 @@ class ExamController extends Controller
         $idExam = ($idExam == NULL) ? ($idExam = 0) : $idExam;
 
         $exam = Exam::find($idExam);
-        $exam ->delete(); 
+        $exam ->delete();
 
         return $exam;
     }
