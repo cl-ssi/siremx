@@ -71,7 +71,7 @@
                         <label class="col-md-3 col-form-label">BIRARDS</label>
                         <div class="col-md-9">
                           <el-select v-model="fillBsqReport.selectBIRADS"
-                              placeholder="Seleccione" 
+                              placeholder="Seleccione"
                               clearable>
                                 <el-option
                                   v-for="item in listBIRADS"
@@ -124,7 +124,7 @@
                         </div>
                       </div>
                     </template>
-                    
+
                     <template v-if="listRolePermissionsByUser.includes('establishmentExam.filter')">
                       <div class="col-md-6">
                         <div class="form-group">
@@ -146,7 +146,7 @@
                     </template>
                   </div> -->
 
-                  
+
                 </form>
               </div>
               <div class="card-footer">
@@ -178,6 +178,7 @@
                       <th>F. Nacimiento</th>
                       <th>Edad</th>
                       <th>Dirección</th>
+                      <th>Comuna</th>
                       <th>Fono</th>
                       <th>Ultimo Exámen</th>
                       <th>MAMOGRAFÍA</th>
@@ -191,6 +192,7 @@
                       <td v-text="item.birthday"></td>
                       <td class="text-center align-middle" v-text="item.age"></td>
                       <td v-text="item.address"></td>
+                      <td v-text="item.comuna_name"></td>
                       <td v-text="item.telephone"></td>
                       <td v-text="item.ultimo_examen"></td>
                       <td class="text-center align-middle" v-text="item.birards_mamografia"></td>
@@ -383,7 +385,7 @@ import * as XLSX from 'xlsx'
                 return;
           }
           this.fullscreenLoading = true;
-          
+
           var url = '/report/exams/getMXBiradYears'
           axios.get(url, {
             params: {
@@ -401,7 +403,7 @@ import * as XLSX from 'xlsx'
             this.fullscreenLoading = false;
           })
         },
-        
+
         setGenerateDocument() {
             /*const loading = this.$vs.loading([
                 type: "square",
@@ -413,7 +415,7 @@ import * as XLSX from 'xlsx'
             var config = {
                 responseType: 'blob'
             }
-            
+
             var url = '/report/exam/export'
             axios.get(url, config).then(response => {
                 console.log(response.data);
@@ -425,7 +427,7 @@ import * as XLSX from 'xlsx'
                 window.open(url)
             }).catch((error) => {
             console.log(error)
-         })  
+         })
         },
         // tableExcel(type, fn, dl) {
         //   var elt = document.getElementById('data-table');
@@ -465,7 +467,7 @@ import * as XLSX from 'xlsx'
                 this.error = 1;
             }
             return this.error;
-        
+
       }
       }
     }

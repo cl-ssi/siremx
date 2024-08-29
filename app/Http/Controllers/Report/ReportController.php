@@ -23,10 +23,10 @@ class ReportController extends Controller
 
     $run = $request->run;
     $run  = ($run == NULL) ? ($run = '') : $run;
-    
+
     list($run,$dv) = array_pad(explode('-',str_replace(".", "", $run)),2,null);
 
-     $sql=" SELECT 
+     $sql=" SELECT
                   T0.id,
                   T1.run,
                   T1.dv,
@@ -57,14 +57,14 @@ class ReportController extends Controller
              LEFT JOIN communes CO  ON T0.comuna = CO.code_deis
              LEFT JOIN establishments ES  ON T0.cesfam = ES.new_code_deis
              LEFT JOIN establishments ES2  ON T0.establecimiento_realiza_examen = ES2.new_code_deis
-             WHERE T1.run = '".$run."' 
+             WHERE T1.run = '".$run."'
              ORDER BY T0.id DESC ";
 
      $patient = DB::select($sql);
 
      return $patient;
   }
-    
+
   public function getPatientHistory(Request $request)
   {
     if(!$request->ajax()) return redirect('/');
@@ -102,7 +102,7 @@ class ReportController extends Controller
 
     list($run,$dv) = array_pad(explode('-',str_replace(".", "", $run)),2,null);
 
-    $sql=" SELECT 
+    $sql=" SELECT
                 T1.run,
                 T1.dv,
                 T1.name,
@@ -134,14 +134,14 @@ class ReportController extends Controller
             WHERE T1.run = '".$run."'
                   ".$code_deis_request ."
                   ".$code_deis ."
-                  ".$commune." 
+                  ".$commune."
             ORDER BY T0.id DESC";
 
       $patient = DB::select($sql);
 
       return $patient;
   }
-    
+
 
   public function getMX(Request $request)
   {
@@ -157,7 +157,7 @@ class ReportController extends Controller
       $dateIni  = ($dateIni == NULL) ? ($dateIni = date("Y-m-d")) : $dateIni;
       $dateEnd  = ($dateEnd == NULL) ? ($dateEnd = '') : $dateEnd;
       $code_deis  = ($code_deis == NULL) ? ($code_deis = '') : "AND T0.establecimiento_realiza_examen = ".$code_deis;
-      
+
       if($code_deis_request == NULL) {
         if(Auth::user()->establishment_id){
           $code_deis_request = "AND T0.cesfam = ".Auth::user()->establishment_id;
@@ -318,7 +318,7 @@ class ReportController extends Controller
                   ".$code_deis_request ."
                   ".$code_deis ."
                   ".$commune." ";
-    
+
                   //dd($sql);
 
     $patient = DB::select($sql);
@@ -339,7 +339,7 @@ class ReportController extends Controller
       $commune            = $request->commune;
       $year_start         = date("Y-01-01");
       $date_now           = date("Y-m-d");
-    
+
       $dateIni  = ($dateIni == NULL) ? ($dateIni = $year_start) : $dateIni;
       $dateEnd  = ($dateEnd == NULL) ? ($dateEnd = $date_now) : $dateEnd;
 
@@ -369,7 +369,7 @@ class ReportController extends Controller
       else {
         $commune = "AND T0.comuna = ".$commune;
       }
-      
+
 
       $sql="  SELECT T0.birards_mamografia AS birards,
                       SUM(case when YEAR(CURDATE())-YEAR(T1.birthday) < 35 then 1 else 0 end) as range1,
@@ -407,7 +407,7 @@ class ReportController extends Controller
       $commune            = $request->commune;
       $year_start         = date("Y-01-01");
       $date_now           = date("Y-m-d");
-    
+
 
       $dateIni  = ($dateIni == NULL) ? ($dateIni = $year_start) : $dateIni;
       $dateEnd  = ($dateEnd == NULL) ? ($dateEnd = $date_now) : $dateEnd;
@@ -463,7 +463,7 @@ class ReportController extends Controller
       return $birardsAge;
   }
 
-  public function export() 
+  public function export()
   {
       return Excel::download(new UsersExport, 'Reporte.xlsx');
   }
@@ -539,17 +539,19 @@ class ReportController extends Controller
                 ,b.gender
                 ,b.birthday
                 ,b.address
+                ,c.name AS comuna_name
                 ,b.telephone
                 ,b.run
                 ,b.dv
           FROM (
-            SELECT  MAX(date_exam) as ultimo_examen, p.patient_id, p.birards_mamografia, p.birards_ecografia, p.birards_proyeccion FROM  exams p WHERE 1=1 ".$listBirards ." ". $listExamType."  GROUP By p.patient_id, p.birards_mamografia, p.birards_ecografia, p.birards_proyeccion
+            SELECT  MAX(date_exam) as ultimo_examen, p.patient_id, p.birards_mamografia, p.birards_ecografia, p.birards_proyeccion, p.comuna FROM  exams p WHERE 1=1 ".$listBirards ." ". $listExamType."  GROUP By p.patient_id, p.birards_mamografia, p.birards_ecografia, p.birards_proyeccion, p.comuna
           ) a
           INNER JOIN patients b ON a.patient_id = b.id
+          LEFT JOIN communes c ON a.comuna = c.code_deis
           WHERE TIMESTAMPDIFF(Month,a.ultimo_examen, NOW()) >= ".$year."";
 
           $patient = DB::select($sql);
-          
+
     return $patient;
   }
 
@@ -566,7 +568,7 @@ class ReportController extends Controller
       $dateIni  = ($dateIni == NULL) ? ($dateIni = date("Y-m-d")) : $dateIni;
       $dateEnd  = ($dateEnd == NULL) ? ($dateEnd = '') : $dateEnd;
       $code_deis  = ($code_deis == NULL) ? ($code_deis = '') : "AND T0.establecimiento_realiza_examen = ".$code_deis;
-      
+
       if($code_deis_request == NULL) {
         if(Auth::user()->establishment_id){
           $code_deis_request = "AND T0.cesfam = ".Auth::user()->establishment_id;
@@ -602,7 +604,7 @@ class ReportController extends Controller
                 ,SUM(case when T0.birards_mamografia > 0  then 1 else 0 end)  AS mam
                 ,SUM(case when T0.birards_ecografia  > 0  then 1 else 0 end)  AS eco
                 ,SUM(case when T0.birards_proyeccion > 0  then 1 else 0 end)  AS pro
-              FROM exams T0 
+              FROM exams T0
               LEFT JOIN patients T1 ON T0.patient_id = T1.id
             WHERE T0.date_exam >= '".$dateIni."' AND T0.date_exam <= '".$dateEnd."'
              ".$code_deis_request ."
@@ -617,13 +619,13 @@ class ReportController extends Controller
                 ,SUM(case when T0.birards_mamografia > 0  then 1 else 0 end)  AS mam
                 ,SUM(case when T0.birards_ecografia  > 0  then 1 else 0 end)  AS eco
                 ,SUM(case when T0.birards_proyeccion > 0  then 1 else 0 end)  AS pro
-              FROM exams T0 
+              FROM exams T0
               LEFT JOIN patients T1 ON T0.patient_id = T1.id
             WHERE T0.date_exam >= '".$dateIni."' AND T0.date_exam <= '".$dateEnd."'
              ".$code_deis_request ."
                   ".$code_deis ."
                   ".$commune."
-              AND YEAR(CURDATE())-YEAR(T1.birthday) >= 15 AND YEAR(CURDATE())-YEAR(T1.birthday) <= 19 
+              AND YEAR(CURDATE())-YEAR(T1.birthday) >= 15 AND YEAR(CURDATE())-YEAR(T1.birthday) <= 19
             GROUP BY '15 - 19'
 
             UNION ALL
@@ -632,13 +634,13 @@ class ReportController extends Controller
                 ,SUM(case when T0.birards_mamografia > 0  then 1 else 0 end)  AS mam
                 ,SUM(case when T0.birards_ecografia  > 0  then 1 else 0 end)  AS eco
                 ,SUM(case when T0.birards_proyeccion > 0  then 1 else 0 end)  AS pro
-              FROM exams T0 
+              FROM exams T0
               LEFT JOIN patients T1 ON T0.patient_id = T1.id
             WHERE T0.date_exam >= '".$dateIni."' AND T0.date_exam <= '".$dateEnd."'
              ".$code_deis_request ."
                   ".$code_deis ."
                   ".$commune."
-              AND YEAR(CURDATE())-YEAR(T1.birthday) >= 20 AND YEAR(CURDATE())-YEAR(T1.birthday) <= 24 
+              AND YEAR(CURDATE())-YEAR(T1.birthday) >= 20 AND YEAR(CURDATE())-YEAR(T1.birthday) <= 24
             GROUP BY '20 - 24'
 
             UNION ALL
@@ -647,13 +649,13 @@ class ReportController extends Controller
                 ,SUM(case when T0.birards_mamografia > 0  then 1 else 0 end)  AS mam
                 ,SUM(case when T0.birards_ecografia  > 0  then 1 else 0 end)  AS eco
                 ,SUM(case when T0.birards_proyeccion > 0  then 1 else 0 end)  AS pro
-              FROM exams T0 
+              FROM exams T0
               LEFT JOIN patients T1 ON T0.patient_id = T1.id
             WHERE T0.date_exam >= '".$dateIni."' AND T0.date_exam <= '".$dateEnd."'
              ".$code_deis_request ."
                   ".$code_deis ."
                   ".$commune."
-              AND YEAR(CURDATE())-YEAR(T1.birthday) >= 25 AND YEAR(CURDATE())-YEAR(T1.birthday) <= 29 
+              AND YEAR(CURDATE())-YEAR(T1.birthday) >= 25 AND YEAR(CURDATE())-YEAR(T1.birthday) <= 29
             GROUP BY '25 - 29'
 
             UNION ALL
@@ -662,13 +664,13 @@ class ReportController extends Controller
                 ,SUM(case when T0.birards_mamografia > 0  then 1 else 0 end)  AS mam
                 ,SUM(case when T0.birards_ecografia  > 0  then 1 else 0 end)  AS eco
                 ,SUM(case when T0.birards_proyeccion > 0  then 1 else 0 end)  AS pro
-              FROM exams T0 
+              FROM exams T0
               LEFT JOIN patients T1 ON T0.patient_id = T1.id
             WHERE T0.date_exam >= '".$dateIni."' AND T0.date_exam <= '".$dateEnd."'
              ".$code_deis_request ."
                   ".$code_deis ."
                   ".$commune."
-              AND YEAR(CURDATE())-YEAR(T1.birthday) >= 30 AND YEAR(CURDATE())-YEAR(T1.birthday) <= 34 
+              AND YEAR(CURDATE())-YEAR(T1.birthday) >= 30 AND YEAR(CURDATE())-YEAR(T1.birthday) <= 34
             GROUP BY '30 - 34'
 
             UNION ALL
@@ -677,13 +679,13 @@ class ReportController extends Controller
                 ,SUM(case when T0.birards_mamografia > 0  then 1 else 0 end)  AS mam
                 ,SUM(case when T0.birards_ecografia  > 0  then 1 else 0 end)  AS eco
                 ,SUM(case when T0.birards_proyeccion > 0  then 1 else 0 end)  AS pro
-              FROM exams T0 
+              FROM exams T0
               LEFT JOIN patients T1 ON T0.patient_id = T1.id
             WHERE T0.date_exam >= '".$dateIni."' AND T0.date_exam <= '".$dateEnd."'
              ".$code_deis_request ."
                   ".$code_deis ."
                   ".$commune."
-              AND YEAR(CURDATE())-YEAR(T1.birthday) >= 35 AND YEAR(CURDATE())-YEAR(T1.birthday) <= 39 
+              AND YEAR(CURDATE())-YEAR(T1.birthday) >= 35 AND YEAR(CURDATE())-YEAR(T1.birthday) <= 39
             GROUP BY '35 - 39'
 
             UNION ALL
@@ -692,13 +694,13 @@ class ReportController extends Controller
                 ,SUM(case when T0.birards_mamografia > 0  then 1 else 0 end)  AS mam
                 ,SUM(case when T0.birards_ecografia  > 0  then 1 else 0 end)  AS eco
                 ,SUM(case when T0.birards_proyeccion > 0  then 1 else 0 end)  AS pro
-              FROM exams T0 
+              FROM exams T0
               LEFT JOIN patients T1 ON T0.patient_id = T1.id
             WHERE T0.date_exam >= '".$dateIni."' AND T0.date_exam <= '".$dateEnd."'
              ".$code_deis_request ."
                   ".$code_deis ."
                   ".$commune."
-              AND YEAR(CURDATE())-YEAR(T1.birthday) >= 40 AND YEAR(CURDATE())-YEAR(T1.birthday) <= 44 
+              AND YEAR(CURDATE())-YEAR(T1.birthday) >= 40 AND YEAR(CURDATE())-YEAR(T1.birthday) <= 44
             GROUP BY '40 - 44'
 
             UNION ALL
@@ -707,13 +709,13 @@ class ReportController extends Controller
                 ,SUM(case when T0.birards_mamografia > 0  then 1 else 0 end)  AS mam
                 ,SUM(case when T0.birards_ecografia  > 0  then 1 else 0 end)  AS eco
                 ,SUM(case when T0.birards_proyeccion > 0  then 1 else 0 end)  AS pro
-              FROM exams T0 
+              FROM exams T0
               LEFT JOIN patients T1 ON T0.patient_id = T1.id
             WHERE T0.date_exam >= '".$dateIni."' AND T0.date_exam <= '".$dateEnd."'
              ".$code_deis_request ."
                   ".$code_deis ."
                   ".$commune."
-              AND YEAR(CURDATE())-YEAR(T1.birthday) >= 45 AND YEAR(CURDATE())-YEAR(T1.birthday) <= 49 
+              AND YEAR(CURDATE())-YEAR(T1.birthday) >= 45 AND YEAR(CURDATE())-YEAR(T1.birthday) <= 49
             GROUP BY '45 - 49'
 
             UNION ALL
@@ -722,13 +724,13 @@ class ReportController extends Controller
                 ,SUM(case when T0.birards_mamografia > 0  then 1 else 0 end)  AS mam
                 ,SUM(case when T0.birards_ecografia  > 0  then 1 else 0 end)  AS eco
                 ,SUM(case when T0.birards_proyeccion > 0  then 1 else 0 end)  AS pro
-              FROM exams T0 
+              FROM exams T0
               LEFT JOIN patients T1 ON T0.patient_id = T1.id
             WHERE T0.date_exam >= '".$dateIni."' AND T0.date_exam <= '".$dateEnd."'
              ".$code_deis_request ."
                   ".$code_deis ."
                   ".$commune."
-              AND YEAR(CURDATE())-YEAR(T1.birthday) >= 50 AND YEAR(CURDATE())-YEAR(T1.birthday) <= 54 
+              AND YEAR(CURDATE())-YEAR(T1.birthday) >= 50 AND YEAR(CURDATE())-YEAR(T1.birthday) <= 54
             GROUP BY '50 - 54'
 
             UNION ALL
@@ -737,13 +739,13 @@ class ReportController extends Controller
                 ,SUM(case when T0.birards_mamografia > 0  then 1 else 0 end)  AS mam
                 ,SUM(case when T0.birards_ecografia  > 0  then 1 else 0 end)  AS eco
                 ,SUM(case when T0.birards_proyeccion > 0  then 1 else 0 end)  AS pro
-              FROM exams T0 
+              FROM exams T0
               LEFT JOIN patients T1 ON T0.patient_id = T1.id
             WHERE T0.date_exam >= '".$dateIni."' AND T0.date_exam <= '".$dateEnd."'
              ".$code_deis_request ."
                   ".$code_deis ."
                   ".$commune."
-              AND YEAR(CURDATE())-YEAR(T1.birthday) >= 55 AND YEAR(CURDATE())-YEAR(T1.birthday) <= 59 
+              AND YEAR(CURDATE())-YEAR(T1.birthday) >= 55 AND YEAR(CURDATE())-YEAR(T1.birthday) <= 59
             GROUP BY '55 - 59'
 
             UNION ALL
@@ -752,13 +754,13 @@ class ReportController extends Controller
                 ,SUM(case when T0.birards_mamografia > 0  then 1 else 0 end)  AS mam
                 ,SUM(case when T0.birards_ecografia  > 0  then 1 else 0 end)  AS eco
                 ,SUM(case when T0.birards_proyeccion > 0  then 1 else 0 end)  AS pro
-              FROM exams T0 
+              FROM exams T0
               LEFT JOIN patients T1 ON T0.patient_id = T1.id
             WHERE T0.date_exam >= '".$dateIni."' AND T0.date_exam <= '".$dateEnd."'
              ".$code_deis_request ."
                   ".$code_deis ."
                   ".$commune."
-              AND YEAR(CURDATE())-YEAR(T1.birthday) >= 60 AND YEAR(CURDATE())-YEAR(T1.birthday) <= 64 
+              AND YEAR(CURDATE())-YEAR(T1.birthday) >= 60 AND YEAR(CURDATE())-YEAR(T1.birthday) <= 64
             GROUP BY '60 - 64'
 
             UNION ALL
@@ -767,13 +769,13 @@ class ReportController extends Controller
                 ,SUM(case when T0.birards_mamografia > 0  then 1 else 0 end)  AS mam
                 ,SUM(case when T0.birards_ecografia  > 0  then 1 else 0 end)  AS eco
                 ,SUM(case when T0.birards_proyeccion > 0  then 1 else 0 end)  AS pro
-              FROM exams T0 
+              FROM exams T0
               LEFT JOIN patients T1 ON T0.patient_id = T1.id
             WHERE T0.date_exam >= '".$dateIni."' AND T0.date_exam <= '".$dateEnd."'
              ".$code_deis_request ."
                   ".$code_deis ."
                   ".$commune."
-              AND YEAR(CURDATE())-YEAR(T1.birthday) >= 65 AND YEAR(CURDATE())-YEAR(T1.birthday) <= 69 
+              AND YEAR(CURDATE())-YEAR(T1.birthday) >= 65 AND YEAR(CURDATE())-YEAR(T1.birthday) <= 69
             GROUP BY '65 - 69'
 
             UNION ALL
@@ -782,13 +784,13 @@ class ReportController extends Controller
                 ,SUM(case when T0.birards_mamografia > 0  then 1 else 0 end)  AS mam
                 ,SUM(case when T0.birards_ecografia  > 0  then 1 else 0 end)  AS eco
                 ,SUM(case when T0.birards_proyeccion > 0  then 1 else 0 end)  AS pro
-              FROM exams T0 
+              FROM exams T0
               LEFT JOIN patients T1 ON T0.patient_id = T1.id
             WHERE T0.date_exam >= '".$dateIni."' AND T0.date_exam <= '".$dateEnd."'
              ".$code_deis_request ."
                   ".$code_deis ."
                   ".$commune."
-              AND YEAR(CURDATE())-YEAR(T1.birthday) >= 70 AND YEAR(CURDATE())-YEAR(T1.birthday) <= 74 
+              AND YEAR(CURDATE())-YEAR(T1.birthday) >= 70 AND YEAR(CURDATE())-YEAR(T1.birthday) <= 74
             GROUP BY '70 - 74'
 
             UNION ALL
@@ -797,13 +799,13 @@ class ReportController extends Controller
                 ,SUM(case when T0.birards_mamografia > 0  then 1 else 0 end)  AS mam
                 ,SUM(case when T0.birards_ecografia  > 0  then 1 else 0 end)  AS eco
                 ,SUM(case when T0.birards_proyeccion > 0  then 1 else 0 end)  AS pro
-              FROM exams T0 
+              FROM exams T0
               LEFT JOIN patients T1 ON T0.patient_id = T1.id
             WHERE T0.date_exam >= '".$dateIni."' AND T0.date_exam <= '".$dateEnd."'
              ".$code_deis_request ."
                   ".$code_deis ."
                   ".$commune."
-              AND YEAR(CURDATE())-YEAR(T1.birthday) >= 75 AND YEAR(CURDATE())-YEAR(T1.birthday) <= 79 
+              AND YEAR(CURDATE())-YEAR(T1.birthday) >= 75 AND YEAR(CURDATE())-YEAR(T1.birthday) <= 79
             GROUP BY '75 - 79'
 
             UNION ALL
@@ -812,13 +814,13 @@ class ReportController extends Controller
                 ,SUM(case when T0.birards_mamografia > 0  then 1 else 0 end)  AS mam
                 ,SUM(case when T0.birards_ecografia  > 0  then 1 else 0 end)  AS eco
                 ,SUM(case when T0.birards_proyeccion > 0  then 1 else 0 end)  AS pro
-              FROM exams T0 
+              FROM exams T0
               LEFT JOIN patients T1 ON T0.patient_id = T1.id
             WHERE T0.date_exam >= '".$dateIni."' AND T0.date_exam <= '".$dateEnd."'
              ".$code_deis_request ."
                   ".$code_deis ."
                   ".$commune."
-              AND YEAR(CURDATE())-YEAR(T1.birthday) >= 80 
+              AND YEAR(CURDATE())-YEAR(T1.birthday) >= 80
             GROUP BY '80 - Más'
 
       ";
@@ -840,8 +842,8 @@ class ReportController extends Controller
 
     $dateIni  = ($dateIni == NULL) ? ($dateIni = date("Y-m-d")) : $dateIni;
     $dateEnd  = ($dateEnd == NULL) ? ($dateEnd = '') : $dateEnd;
-    $type     = ($type == 'output') ? 
-                    "DATE_FORMAT(T0.date_exam, '%d/%m/%Y') AS F_SALIDA, '16' AS C_SALIDA, T0.establecimiento_realiza_examen AS E_OTOR_AT, '04-01-010' AS PRESTA_MIN_SALIDA," 
+    $type     = ($type == 'output') ?
+                    "DATE_FORMAT(T0.date_exam, '%d/%m/%Y') AS F_SALIDA, '16' AS C_SALIDA, T0.establecimiento_realiza_examen AS E_OTOR_AT, '04-01-010' AS PRESTA_MIN_SALIDA,"
                     : " ' ' AS F_SALIDA, ' ' AS C_SALIDA, ' ' AS E_OTOR_AT, ' ' AS PRESTA_MIN_SALIDA,";
 
     if($commune == NULL) {
@@ -856,7 +858,7 @@ class ReportController extends Controller
         $commune = "AND T0.comuna = ".$commune;
     }
 
-    $sql=" SELECT 
+    $sql=" SELECT
                   '02' AS SERV_SALUD,
                   T1.run AS RUN,
                   UPPER(T1.dv) AS DV,
@@ -876,7 +878,7 @@ class ReportController extends Controller
                   ' ' AS PLANO,
                   ' ' AS EXTREMIDAD,
                   'MAMOGRAFIA BILATERAL (4 EXP.)' AS PRESTA_EST,
-                  DATE_FORMAT(T0.date_exam_order, '%d/%m/%Y') AS F_ENTRADA, 
+                  DATE_FORMAT(T0.date_exam_order, '%d/%m/%Y') AS F_ENTRADA,
                   T0.cesfam as ESTAB_ORIG,
                   T0.establecimiento_realiza_examen as ESTAB_DEST, ".$type."
                   '2' AS PRAIS,
@@ -887,12 +889,12 @@ class ReportController extends Controller
                   ' ' AS CIUDAD,
                   ' ' AS COND_RURALIDAD,
                   ' ' AS VIA_DIRECCION,
-                  -- REPLACE( REPLACE( REPLACE( REPLACE( REPLACE( UPPER(T1.address),'Á','A'),'É','E'),'Í','I'),'Ó','O'),'Ú','U') AS NOM_CALLE, 
+                  -- REPLACE( REPLACE( REPLACE( REPLACE( REPLACE( UPPER(T1.address),'Á','A'),'É','E'),'Í','I'),'Ó','O'),'Ú','U') AS NOM_CALLE,
                   ' ' AS NOM_CALLE,
                   ' ' AS NUM_DIRECCION,
                   ' ' AS RESTO_DIRECCION,
                   ' ' AS FONO_FIJO,
-                  -- T1.telephone AS FONO_MOVIL, 
+                  -- T1.telephone AS FONO_MOVIL,
                   ' ' AS FONO_MOVIL,
                   ' ' AS EMAIL,
                   ' ' AS F_CITACION,
@@ -905,9 +907,9 @@ class ReportController extends Controller
                   ".($request->type == 'output' ? ', T0.sigte_id AS SIGTE_ID' : '')."
               FROM exams T0
               LEFT JOIN patients T1 ON T0.patient_id = T1.id
-  
+
             WHERE T0.exam_type = 'mam' AND T0.date_exam_order >= '".$dateIni ."' AND T0.date_exam_order <= '".$dateEnd ."' ".$commune;
-    
+
     $result = DB::select($sql);
 
     return $result;
