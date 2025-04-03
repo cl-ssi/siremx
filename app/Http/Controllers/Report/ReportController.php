@@ -843,8 +843,8 @@ class ReportController extends Controller
     $dateIni  = ($dateIni == NULL) ? ($dateIni = date("Y-m-d")) : $dateIni;
     $dateEnd  = ($dateEnd == NULL) ? ($dateEnd = '') : $dateEnd;
     $type     = ($type == 'output') ?
-                    "DATE_FORMAT(T0.date_exam, '%d/%m/%Y') AS F_SALIDA, '16' AS C_SALIDA, T0.establecimiento_realiza_examen AS E_OTOR_AT, '04-01-010' AS PRESTA_MIN_SALIDA,"
-                    : " ' ' AS F_SALIDA, ' ' AS C_SALIDA, ' ' AS E_OTOR_AT, ' ' AS PRESTA_MIN_SALIDA,";
+                    "DATE_FORMAT(T0.date_exam, '%d-%m-%Y') AS F_SALIDA, '16' AS C_SALIDA, T0.establecimiento_realiza_examen AS E_OTOR_AT, '04-01-010' AS PRESTA_MIN_SALIDA,"
+                    : " '' AS F_SALIDA, '' AS C_SALIDA, '' AS E_OTOR_AT, '' AS PRESTA_MIN_SALIDA,";
 
     if($commune == NULL) {
           if(Auth::user()->commune_id){
@@ -865,45 +865,48 @@ class ReportController extends Controller
                   REPLACE( REPLACE( REPLACE( REPLACE( REPLACE( UPPER(T1.name),'Á','A'),'É','E'),'Í','I'),'Ó','O'),'Ú','U') AS NOMBRES,
                   REPLACE( REPLACE( REPLACE( REPLACE( REPLACE( UPPER(T1.fathers_family),'Á','A'),'É','E'),'Í','I'),'Ó','O'),'Ú','U') AS PRIMER_APELLIDO,
                   REPLACE( REPLACE( REPLACE( REPLACE( REPLACE( UPPER(T1.mothers_family),'Á','A'),'É','E'),'Í','I'),'Ó','O'),'Ú','U') AS SEGUNDO_APELLIDO,
-                  DATE_FORMAT(T1.birthday, '%d/%m/%Y') AS FECHA_NAC,
-                  CASE
-                    WHEN T1.gender = 'male' THEN 1
-                    WHEN T1.gender = 'female' THEN 2
-                    WHEN T1.gender = 'other' THEN 3
-                    WHEN T1.gender = 'unknown' THEN 9
-                  END AS SEXO,
+                  DATE_FORMAT(T1.birthday, '%d-%m-%Y') AS FECHA_NAC,
+                  '2' AS SEXO,
                   '1' AS PREVISION,
                   '3' AS TIPO_PREST,
                   '04-01-010' AS PRESTA_MIN,
-                  ' ' AS PLANO,
-                  ' ' AS EXTREMIDAD,
+                  '' AS PLANO,
+                  '' AS EXTREMIDAD,
                   'MAMOGRAFIA BILATERAL (4 EXP.)' AS PRESTA_EST,
-                  DATE_FORMAT(T0.date_exam_order, '%d/%m/%Y') AS F_ENTRADA,
+                  DATE_FORMAT(T0.date_exam_order, '%d-%m-%Y') AS F_ENTRADA,
                   T0.cesfam as ESTAB_ORIG,
                   T0.establecimiento_realiza_examen as ESTAB_DEST, ".$type."
                   '2' AS PRAIS,
                   '1' AS REGION,
                   T0.comuna AS COMUNA,
                   'PROGRAMA IMAGENES DIAGNOSTICAS' AS SOSPECHA_DIAG,
-                  ' ' AS CONFIR_DIAG,
-                  ' ' AS CIUDAD,
-                  ' ' AS COND_RURALIDAD,
-                  ' ' AS VIA_DIRECCION,
-                  -- REPLACE( REPLACE( REPLACE( REPLACE( REPLACE( UPPER(T1.address),'Á','A'),'É','E'),'Í','I'),'Ó','O'),'Ú','U') AS NOM_CALLE,
-                  ' ' AS NOM_CALLE,
-                  ' ' AS NUM_DIRECCION,
-                  ' ' AS RESTO_DIRECCION,
-                  ' ' AS FONO_FIJO,
-                  -- T1.telephone AS FONO_MOVIL,
-                  ' ' AS FONO_MOVIL,
-                  ' ' AS EMAIL,
-                  ' ' AS F_CITACION,
-                  ' ' AS RUN_PROF_SOL,
-                  ' ' AS DV_PROF_SOL,
-                  ' ' AS RUN_PROF_RESOL,
-                  ' ' AS DV_PROF_RESOL,
+                  '' AS CONFIR_DIAG,
+                  '' AS CIUDAD,
+                  CASE
+                    WHEN T0.comuna = 1101 THEN 1
+                    WHEN T0.comuna = 1107 THEN 1
+                    WHEN T0.comuna = 1108 THEN 1
+                    WHEN T0.comuna = 1405 THEN 1
+                    WHEN T0.comuna = 1407 THEN 1
+                    WHEN T0.comuna = 1402 THEN 2
+                    WHEN T0.comuna = 1403 THEN 2
+                    WHEN T0.comuna = 1404 THEN 2
+                    ELSE 0
+                  END AS COND_RURALIDAD,
+                  '' AS VIA_DIRECCION,
+                  REPLACE( REPLACE( REPLACE( REPLACE( REPLACE( UPPER(T1.address),'Á','A'),'É','E'),'Í','I'),'Ó','O'),'Ú','U') AS NOM_CALLE,
+                  '' AS NUM_DIRECCION,
+                  '' AS RESTO_DIRECCION,
+                  '' AS FONO_FIJO,
+                  T1.telephone AS FONO_MOVIL,
+                  '' AS EMAIL,
+                  '' AS F_CITACION,
+                  '' AS RUN_PROF_SOL,
+                  '' AS DV_PROF_SOL,
+                  '' AS RUN_PROF_RESOL,
+                  '' AS DV_PROF_RESOL,
                   T0.id AS ID_LOCAL,
-                  ' ' AS RESULTADO
+                  '' AS RESULTADO
                   ".($request->type == 'output' ? ', T0.sigte_id AS SIGTE_ID' : '')."
               FROM exams T0
               LEFT JOIN patients T1 ON T0.patient_id = T1.id
