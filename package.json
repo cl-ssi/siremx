@@ -20,7 +20,7 @@
         "resolve-url-loader": "^5.0.0",
         "sass": "^1.20.1",
         "sass-loader": "^8.0.0",
-        "vue": "^2.5.17",
+        "vue": "^3.0.0",
         "vue-loader": "^15.9.8",
         "vue-template-compiler": "^2.6.10"
     },
@@ -29,7 +29,7 @@
         "chartjs-plugin-datalabels": "^0.7.0",
         "element-ui": "^2.13.2",
         "sweetalert2": "^9.17.1",
-        "vue": "^2.6.11",
+        "vue": "^3.0.0",
         "vue-moment": "^4.1.0",
         "vue-multiselect": "^1.1.5",
         "vue-router": "^3.3.4",
