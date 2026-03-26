@@ -23,6 +23,7 @@ class LoginController extends Controller
         $resp     = Auth::attempt(['username' => $email, 'password' => $password, 'state' => 'A']);
 
         if ($resp) {
+            $request->session()->regenerate();
             return response()->json([
                 'authUser' => Auth::user(),
                 'code'     => 200
@@ -88,11 +89,11 @@ class LoginController extends Controller
     }
 
     /**
-    * Redirect Vue Login
-    */
+     * Redirect Vue Login
+     */
     public function redirectVueLogin($access_token)
     {
-        $url = config('app.url').'/siremx/logincu/'.$access_token;
+        $url = config('app.url') . '/siremx/logincu/' . $access_token;
         return redirect($url);
     }
 }

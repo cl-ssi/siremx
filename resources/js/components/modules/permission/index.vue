@@ -27,9 +27,10 @@
               <div class="card-header">
                 <h3 class="card-title">Búsqueda</h3>
                 <div class="card-tools">
-                    <button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip" title="Collapse">
-                          <i class="fas fa-minus"></i>
-                    </button>
+                  <button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip"
+                    title="Collapse">
+                    <i class="fas fa-minus"></i>
+                  </button>
                 </div>
               </div>
               <div class="card-body">
@@ -39,7 +40,8 @@
                       <div class="form-group">
                         <label class="col-md-3 col-form-label">Nombre</label>
                         <div class="col-md-9">
-                          <input type="text" class="form-control" v-model="fillBsqPermission.name" @keyup.enter="getlistPermissions">
+                          <input type="text" class="form-control" v-model="fillBsqPermission.name"
+                            @keyup.enter="getlistPermissions">
                         </div>
                       </div>
                     </div>
@@ -61,19 +63,23 @@
               </div>
               <div class="card-body table-responsive">
                 <template v-if="listPermissionsPaginated.length">
-                  <table class="table table-hover table-sm  table-striped table-header-fixed text-nowrap table-valign-middle projects">
+                  <table
+                    class="table table-hover table-sm  table-striped table-header-fixed text-nowrap table-valign-middle projects">
                     <thead>
-                      <th>Nombre</th>
-                      <th>Url</th>
-                      <th class="text-right"></th>
+                      <tr>
+                        <th>Nombre</th>
+                        <th>Url</th>
+                        <th class="text-right"></th>
+                      </tr>
                     </thead>
                     <tbody>
                       <tr v-for="(item, index) in listPermissionsPaginated" :key="index">
-                        <td v-text="item.name"></td>
-                        <td v-text="item.slug"></td>
+                        <td>{{ item.name }}</td>
+                        <td>{{ item.slug }}</td>
                         <td class="text-right">
-                           <router-link class="btn btn-xs btn-default" :to="{name: 'permission.edit', params: {id: item.id}}">
-                            <i class="fas fa-pencil-alt"></i> 
+                          <router-link class="btn btn-xs btn-default"
+                            :to="{ name: 'permission.edit', params: { id: item.id } }">
+                            <i class="fas fa-pencil-alt"></i>
                           </router-link>
                         </td>
                       </tr>
@@ -86,9 +92,9 @@
                       </li>
                       <li class="page-item" v-for="(page, index) in pagesList" :key="index"
                         :class="[page == pageNumber ? 'active' : '']">
-                        <a href="#" class="page-link" @click.prevent="selectPage(page)">{{ page+1 }}</a>
+                        <a href="#" class="page-link" @click.prevent="selectPage(page)">{{ page + 1 }}</a>
                       </li>
-                      <li class="page-item" v-if="pageNumber < pageCount -1">
+                      <li class="page-item" v-if="pageNumber < pageCount - 1">
                         <a href="#" class="page-link" @click.prevent="nextPage">Pos</a>
                       </li>
                     </ul>
@@ -96,7 +102,7 @@
                 </template>
                 <template v-else>
                   <div class="callout callout-info">
-                      <h5>No se encontraron resultados...</h5>
+                    <h5>No se encontraron resultados...</h5>
                   </div>
                 </template>
               </div>
@@ -109,87 +115,87 @@
 </template>
 
 <script>
-    export default {
-      data(){
-          return {
-            fillBsqPermission: {
-              name: '',
-              url: ''
-            },
-            listPermissions: [],
-            pageNumber: 0,
-            perPage: 10
-          }
+export default {
+  data() {
+    return {
+      fillBsqPermission: {
+        name: '',
+        url: ''
       },
-      computed: {
-        //  Obtener el número de páginas
-        pageCount() {
-          let a = this.listPermissions.length,
-              b = this.perPage;
-              return Math.ceil(a/b);
-        },
-        // Obtener registros paginados
-        listPermissionsPaginated() {
-          let inicio = this.pageNumber * this.perPage,
-              fin    = inicio + this.perPage;
-          return this.listPermissions.slice(inicio,fin)
-        },
-        pagesList() {
-          let a = this.listPermissions.length,
-              b = this.perPage;
-              let pageCount = Math.ceil(a/b);
-              let count = 0;
-              let pagesArray = [];
-
-              while (count < pageCount) {
-                pagesArray.push(count);
-                count++;
-              }
-              return pagesArray;
-        },
-      },
-      mounted() {
-        this.getlistPermissions();
-      },
-      methods: {
-        cleanForm(){
-          this.fillBsqPermission.name  = '';
-        },
-        cleanDataTableUsers(){
-          this.listPermissions = [];
-        },
-        getlistPermissions(){
-          var url = '/administracion/permission/getlistPermissions'
-          axios.get(url, {
-            params: {
-              'name' : this.fillBsqPermission.name,
-              'url'  : this.fillBsqPermission.url,
-            }
-          }).then(response => {
-            console.log(response.data);
-            this.initPaginated();
-            this.listPermissions = response.data;
-          }).catch(error => {
-              if(error.response.status == 401){
-                this.$router.push({name: 'login'})
-                location.reload();
-                localStorage.clear();
-                this.fullscreenLoading = false;
-              }
-          })
-        },
-        nextPage() {
-          this.pageNumber++;
-        },
-        prevPage() {
-          this.pageNumber--;
-        },
-        selectPage(page) {
-          this.pageNumber = page;
-        },
-        initPaginated() {
-          this.pageNumber = 0;
-        }
-      }
+      listPermissions: [],
+      pageNumber: 0,
+      perPage: 10
     }
+  },
+  computed: {
+    //  Obtener el número de páginas
+    pageCount() {
+      let a = this.listPermissions.length,
+        b = this.perPage;
+      return Math.ceil(a / b);
+    },
+    // Obtener registros paginados
+    listPermissionsPaginated() {
+      let inicio = this.pageNumber * this.perPage,
+        fin = inicio + this.perPage;
+      return this.listPermissions.slice(inicio, fin)
+    },
+    pagesList() {
+      let a = this.listPermissions.length,
+        b = this.perPage;
+      let pageCount = Math.ceil(a / b);
+      let count = 0;
+      let pagesArray = [];
+
+      while (count < pageCount) {
+        pagesArray.push(count);
+        count++;
+      }
+      return pagesArray;
+    },
+  },
+  mounted() {
+    this.getlistPermissions();
+  },
+  methods: {
+    cleanForm() {
+      this.fillBsqPermission.name = '';
+    },
+    cleanDataTableUsers() {
+      this.listPermissions = [];
+    },
+    getlistPermissions() {
+      var url = '/administracion/permission/getlistPermissions'
+      axios.get(url, {
+        params: {
+          'name': this.fillBsqPermission.name,
+          'url': this.fillBsqPermission.url,
+        }
+      }).then(response => {
+        console.log(response.data);
+        this.initPaginated();
+        this.listPermissions = response.data;
+      }).catch(error => {
+        if (error.response.status == 401) {
+          this.$router.push({ name: 'login' })
+          location.reload();
+          localStorage.clear();
+          this.fullscreenLoading = false;
+        }
+      })
+    },
+    nextPage() {
+      this.pageNumber++;
+    },
+    prevPage() {
+      this.pageNumber--;
+    },
+    selectPage(page) {
+      this.pageNumber = page;
+    },
+    initPaginated() {
+      this.pageNumber = 0;
+    }
+  }
+}
 </script>

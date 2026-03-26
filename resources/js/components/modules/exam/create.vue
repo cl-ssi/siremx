@@ -303,7 +303,8 @@
                     <button class="close" @click="abrirModal"><i class="fas fa-times"></i> </button>
                 </div>
                 <div class="modal-body">
-                    <div class="callout callout-danger" v-for="(item, index) in mensajeError" :key="index" v-text="item">
+                    <div class="callout callout-danger" v-for="(item, index) in mensajeError" :key="index">
+                      {{ item }}
                     </div>
                 </div>
                 <div class="modal-footer">

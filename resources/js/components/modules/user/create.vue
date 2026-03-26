@@ -144,8 +144,7 @@
                     <button class="close" @click="openModal"></button>
                 </div>
                 <div class="modal-body">
-                    <div class="callout callout-danger" v-for="(item, index) in mensajeError" :key="index" v-text="item">
-                    </div>
+                    <div class="callout callout-danger" v-for="(item, index) in mensajeError" :key="index" >{{item}}</div>
                 </div>
                 <div class="modal-footer">
                     <button class="btn btn-secondary" @click="openModal">Cerrar</button>

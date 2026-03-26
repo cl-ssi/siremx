@@ -168,17 +168,17 @@
                     </thead>
                     <tbody>
                       <tr v-for="(item, index) in listarUsuariosPaginated" :key="index">
-                        <td class="text-center" v-text="item.birards"></td>
-                        <td class="text-center" v-text="item.range1"></td>
-                        <td class="text-center" v-text="item.range2"></td>
-                        <td class="text-center" v-text="item.range3"></td>
-                        <td class="text-center" v-text="item.range4"></td>
-                        <td class="text-center" v-text="item.range5"></td>
-                        <td class="text-center" v-text="item.range6"></td>
-                        <td class="text-center" v-text="item.range7"></td>
-                        <td class="text-center" v-text="item.range8"></td>
-                        <td class="text-center" v-text="item.range9"></td>
-                        <td class="text-center" v-text="item.total"></td>
+                        <td class="text-center">{{ item.birards }}</td>
+                        <td class="text-center">{{ item.range1 }}</td>
+                        <td class="text-center">{{ item.range2 }}</td>
+                        <td class="text-center">{{ item.range3 }}</td>
+                        <td class="text-center">{{ item.range4 }}</td>
+                        <td class="text-center">{{ item.range5 }}</td>
+                        <td class="text-center">{{ item.range6 }}</td>
+                        <td class="text-center">{{ item.range7 }}</td>
+                        <td class="text-center">{{ item.range8 }}</td>
+                        <td class="text-center">{{ item.range9 }}</td>
+                        <td class="text-center">{{ item.total }}</td>
                       </tr>
                     </tbody>
                   </table>
@@ -206,7 +206,7 @@
               <div class="card-body table-responsive p-1">
                 <template v-if="listarUsuariosPaginated.length">
                  <table id="data-table-eco" class="table table-hover table-sm  table-striped table-bordered table-header-fixed text-nowrap table-valign-middle">
-                    <thead >
+                    <thead>
                         <tr>
                             <th colspan="11" class="text-center bordered align-middle table-default">BIRARDS POR RANGO DE EDAD ECO-MAMARIA</th>
                         </tr>
@@ -226,17 +226,17 @@
                     </thead>
                     <tbody>
                       <tr v-for="(item, index) in listBirardsEcoAgeMX" :key="index">
-                        <td class="text-center" v-text="item.birards"></td>
-                        <td class="text-center" v-text="item.range1"></td>
-                        <td class="text-center" v-text="item.range2"></td>
-                        <td class="text-center" v-text="item.range3"></td>
-                        <td class="text-center" v-text="item.range4"></td>
-                        <td class="text-center" v-text="item.range5"></td>
-                        <td class="text-center" v-text="item.range6"></td>
-                        <td class="text-center" v-text="item.range7"></td>
-                        <td class="text-center" v-text="item.range8"></td>
-                        <td class="text-center" v-text="item.range9"></td>
-                        <td class="text-center" v-text="item.total"></td>
+                        <td class="text-center" >{{item.birards}}</td>
+                        <td class="text-center" >{{item.range1}}</td>
+                        <td class="text-center" >{{item.range2}}</td>
+                        <td class="text-center" >{{item.range3}}</td>
+                        <td class="text-center" >{{item.range4}}</td>
+                        <td class="text-center" >{{item.range5}}</td>
+                        <td class="text-center" >{{item.range6}}</td>
+                        <td class="text-center" >{{item.range7}}</td>
+                        <td class="text-center" >{{item.range8}}</td>
+                        <td class="text-center" >{{item.range9}}</td>
+                        <td class="text-center" >{{item.total}}</td>
                       </tr>
                     </tbody>
                   </table>
@@ -261,8 +261,7 @@
                     <button class="close" @click="abrirModal"></button>
                 </div>
                 <div class="modal-body">
-                    <div class="callout callout-danger" v-for="(item, index) in mensajeError" :key="index" v-text="item">
-                    </div>
+                    <div class="callout callout-danger" v-for="(item, index) in mensajeError" :key="index" >{{item}}</div>
                 </div>
                 <div class="modal-footer">
                     <button class="btn btn-secondary" @click="abrirModal">Cerrar</button>

@@ -27,9 +27,10 @@
               <div class="card-header">
                 <h3 class="card-title">Criterios de Búsqueda</h3>
                 <div class="card-tools">
-                    <button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip" title="Collapse">
-                          <i class="fas fa-minus"></i>
-                    </button>
+                  <button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip"
+                    title="Collapse">
+                    <i class="fas fa-minus"></i>
+                  </button>
                 </div>
               </div>
               <div class="card-body">
@@ -39,7 +40,8 @@
                       <div class="form-group">
                         <label class="col-md-3 col-form-label">Rut</label>
                         <div class="col-md-9">
-                          <input type="text" class="form-control" v-model="fillBsqUsuario.nRun" @keyup.enter="gwetListPatients">
+                          <input type="text" class="form-control" v-model="fillBsqUsuario.nRun"
+                            @keyup.enter="gwetListPatients">
                         </div>
                       </div>
                     </div>
@@ -47,7 +49,8 @@
                       <div class="form-group">
                         <label class="col-md-3 col-form-label">Nombre</label>
                         <div class="col-md-9">
-                          <input type="text" class="form-control" v-model="fillBsqUsuario.cName" @keyup.enter="gwetListPatients">
+                          <input type="text" class="form-control" v-model="fillBsqUsuario.cName"
+                            @keyup.enter="gwetListPatients">
                         </div>
                       </div>
                     </div>
@@ -57,7 +60,8 @@
                       <div class="form-group">
                         <label class="col-md-3 col-form-label">Apellido Paterno</label>
                         <div class="col-md-9">
-                          <input type="text" class="form-control" v-model="fillBsqUsuario.cFathers_family" @keyup.enter="gwetListPatients">
+                          <input type="text" class="form-control" v-model="fillBsqUsuario.cFathers_family"
+                            @keyup.enter="gwetListPatients">
                         </div>
                       </div>
                     </div>
@@ -79,30 +83,34 @@
               </div>
               <div class="card-body table-responsive">
                 <template v-if="listarUsuariosPaginated.length">
-                  <table class="table table-hover table-sm  table-striped table-header-fixed text-nowrap table-valign-middle projects">
+                  <table
+                    class="table table-hover table-sm  table-striped table-header-fixed text-nowrap table-valign-middle projects">
                     <thead>
-                      <th>Rut</th>
-                      <th>Nombres</th>
-                      <th>F. Nacimiento</th>
-                      <th>Edad</th>
-                      <th>Dirección</th>
-                      <th>Telefóno</th>
-                      <th></th>
+                      <tr>
+                        <th>Rut</th>
+                        <th>Nombres</th>
+                        <th>F. Nacimiento</th>
+                        <th>Edad</th>
+                        <th>Dirección</th>
+                        <th>Telefóno</th>
+                        <th></th>
+                      </tr>
                     </thead>
                     <tbody>
                       <tr v-for="(item, index) in listarUsuariosPaginated" :key="index">
-                        <td v-text="item.run+'-'+item.dv"></td>
-                        <td v-text="item.name+' '+item.fathers_family+' '+item.mothers_family"></td>
-                        <td v-text="item.birthday"></td>
-                        <td v-text="item.age"></td>
-                        <td v-text="item.address"></td>
-                        <td v-text="item.telephone"></td>
+                        <td>{{ item.run + '-' + item.dv }}</td>
+                        <td>{{ item.name + ' ' + item.fathers_family + ' ' + item.mothers_family }}</td>
+                        <td>{{ item.birthday }}</td>
+                        <td>{{ item.age }}</td>
+                        <td>{{ item.address }}</td>
+                        <td>{{ item.telephone }}</td>
                         <td>
                           <!--<template v-if="listRolePermissionsByUser.includes('user.edit')">-->
-                              <router-link class="btn btb-flat btn-xs btn-default" :to="{name: 'patient.edit', params: {id: item.id}}">
-                                <i class="fas fa-pencil-alt"></i> 
-                              </router-link>
-                           <!-- </template>-->
+                          <router-link class="btn btb-flat btn-xs btn-default"
+                            :to="{ name: 'patient.edit', params: { id: item.id } }">
+                            <i class="fas fa-pencil-alt"></i>
+                          </router-link>
+                          <!-- </template>-->
                         </td>
                       </tr>
                     </tbody>
@@ -114,9 +122,9 @@
                       </li>
                       <li class="page-item" v-for="(page, index) in pagesList" :key="index"
                         :class="[page == pageNumber ? 'active' : '']">
-                        <a href="#" class="page-link" @click.prevent="selectPage(page)">{{ page+1 }}</a>
+                        <a href="#" class="page-link" @click.prevent="selectPage(page)">{{ page + 1 }}</a>
                       </li>
-                      <li class="page-item" v-if="pageNumber < pageCount -1">
+                      <li class="page-item" v-if="pageNumber < pageCount - 1">
                         <a href="#" class="page-link" @click.prevent="nextPage">Sig</a>
                       </li>
                     </ul>
@@ -124,7 +132,7 @@
                 </template>
                 <template v-else>
                   <div class="callout callout-info">
-                      <h5>No se encontraron resultados...</h5>
+                    <h5>No se encontraron resultados...</h5>
                   </div>
                 </template>
               </div>
@@ -137,89 +145,89 @@
 </template>
 
 <script>
-    export default {
-      data(){
-          return {
-            fillBsqUsuario: {
-              nRun: '',
-              cName: '',
-              cFathers_family: ''
-            },
-            listUsuarios: [],
-            listEstados: [
-              {value: 'A', label: 'Activo'},
-              {value: 'I', label: 'Inactivo'}
-            ],
-            pageNumber: 0,
-            perPage: 50
-          }
+export default {
+  data() {
+    return {
+      fillBsqUsuario: {
+        nRun: '',
+        cName: '',
+        cFathers_family: ''
       },
-      computed: {
-        //  Obtener el número de páginas
-        pageCount() {
-          let a = this.listUsuarios.length,
-              b = this.perPage;
-              return Math.ceil(a/b);
-        },
-        // Obtener registros paginados
-        listarUsuariosPaginated() {
-          let inicio = this.pageNumber * this.perPage,
-              fin    = inicio + this.perPage;
-          return this.listUsuarios.slice(inicio,fin)
-        },
-        pagesList() {
-          let a = this.listUsuarios.length,
-              b = this.perPage;
-              let pageCount = Math.ceil(a/b);
-              let count = 0;
-              let pagesArray = [];
-
-              while (count < pageCount) {
-                pagesArray.push(count);
-                count++;
-              }
-              return pagesArray;
-        },
-      },
-      methods: {
-        cleanForm(){
-          this.fillBsqUsuario.nRun  = '';
-          this.fillBsqUsuario.cName = '';
-          this.fillBsqUsuario.cFathers_family  = '';
-        },
-        gwetListPatients(){
-          var url = '/administracion/patient/getListarPatients'
-          axios.get(url, {
-            params: {
-              'nRun' : this.fillBsqUsuario.nRun,
-              'cName' : this.fillBsqUsuario.cName,
-              'cFathers_family': this.fillBsqUsuario.cFathers_family,
-            }
-          }).then(response => {
-            console.log(response.data);
-            this.inicializarPaginacion();
-            this.listUsuarios = response.data;
-          }).catch(error => {
-              if(error.response.status == 401){
-                this.$router.push({name: 'login'})
-                location.reload();
-                localStorage.clear();
-                this.fullscreenLoading = false;
-              }
-          })
-        },
-        nextPage() {
-          this.pageNumber++;
-        },
-        prevPage() {
-          this.pageNumber--;
-        },
-        selectPage(page) {
-          this.pageNumber = page;
-        },
-        inicializarPaginacion() {
-          this.pageNumber = 0;
-        }
-      }
+      listUsuarios: [],
+      listEstados: [
+        { value: 'A', label: 'Activo' },
+        { value: 'I', label: 'Inactivo' }
+      ],
+      pageNumber: 0,
+      perPage: 50
     }
+  },
+  computed: {
+    //  Obtener el número de páginas
+    pageCount() {
+      let a = this.listUsuarios.length,
+        b = this.perPage;
+      return Math.ceil(a / b);
+    },
+    // Obtener registros paginados
+    listarUsuariosPaginated() {
+      let inicio = this.pageNumber * this.perPage,
+        fin = inicio + this.perPage;
+      return this.listUsuarios.slice(inicio, fin)
+    },
+    pagesList() {
+      let a = this.listUsuarios.length,
+        b = this.perPage;
+      let pageCount = Math.ceil(a / b);
+      let count = 0;
+      let pagesArray = [];
+
+      while (count < pageCount) {
+        pagesArray.push(count);
+        count++;
+      }
+      return pagesArray;
+    },
+  },
+  methods: {
+    cleanForm() {
+      this.fillBsqUsuario.nRun = '';
+      this.fillBsqUsuario.cName = '';
+      this.fillBsqUsuario.cFathers_family = '';
+    },
+    gwetListPatients() {
+      var url = '/administracion/patient/getListarPatients'
+      axios.get(url, {
+        params: {
+          'nRun': this.fillBsqUsuario.nRun,
+          'cName': this.fillBsqUsuario.cName,
+          'cFathers_family': this.fillBsqUsuario.cFathers_family,
+        }
+      }).then(response => {
+        console.log(response.data);
+        this.inicializarPaginacion();
+        this.listUsuarios = response.data;
+      }).catch(error => {
+        if (error.response.status == 401) {
+          this.$router.push({ name: 'login' })
+          location.reload();
+          localStorage.clear();
+          this.fullscreenLoading = false;
+        }
+      })
+    },
+    nextPage() {
+      this.pageNumber++;
+    },
+    prevPage() {
+      this.pageNumber--;
+    },
+    selectPage(page) {
+      this.pageNumber = page;
+    },
+    inicializarPaginacion() {
+      this.pageNumber = 0;
+    }
+  }
+}
 </script>

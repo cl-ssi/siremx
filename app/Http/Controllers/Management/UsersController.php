@@ -16,23 +16,23 @@ use Hash;
 
 class UsersController extends Controller
 {
-    public function getListarUsuarios(Request $request)
-    {
-       if(!$request->ajax()) return redirect('/');
-        
-       $idUser  = $request->idUser;
-       $cNombre  = $request->cNombre;
-       $cUsuario = $request->cUsuario;
-       $cCorreo  = $request->cCorreo;
-       $cEstado  = $request->cEstado;
+   public function getListarUsuarios(Request $request)
+   {
+      if (!$request->ajax()) return redirect('/');
 
-       $idUser   = ($idUser == NULL) ? ($idUser = 0) : $idUser;
-       $cNombre  = ($cNombre == NULL) ? ($cNombre = '') : $cNombre;
-       $cUsuario = ($cUsuario == NULL) ? ($cUsuario = '') : $cUsuario;
-       $cCorreo  = ($cCorreo == NULL) ? ($cCorreo = '') : $cCorreo;
-       $cEstado  = ($cEstado == NULL) ? ($cEstado = '') : $cEstado;
+      $idUser  = $request->idUser;
+      $cNombre  = $request->cNombre;
+      $cUsuario = $request->cUsuario;
+      $cCorreo  = $request->cCorreo;
+      $cEstado  = $request->cEstado;
 
-       $sql="
+      $idUser   = ($idUser == NULL) ? ($idUser = 0) : $idUser;
+      $cNombre  = ($cNombre == NULL) ? ($cNombre = '') : $cNombre;
+      $cUsuario = ($cUsuario == NULL) ? ($cUsuario = '') : $cUsuario;
+      $cCorreo  = ($cCorreo == NULL) ? ($cCorreo = '') : $cCorreo;
+      $cEstado  = ($cEstado == NULL) ? ($cEstado = '') : $cEstado;
+
+      $sql = "
             SELECT usuario.id,
             CONCAT(usuario.firstname,' ',usuario.secondname,' ',usuario.lastname) AS fullname,
             usuario.firstname,
@@ -56,271 +56,269 @@ class UsersController extends Controller
          LEFT JOIN communes CO  ON usuario.commune_id = CO.id
          LEFT JOIN establishments ES  ON usuario.establishment_id = ES.id
          WHERE 1=1
-            AND CONCAT(usuario.firstname,' ',usuario.secondname,' ',usuario.lastname) LIKE ('%".$cNombre."%')
-            AND (usuario.username) LIKE ('%".$cUsuario."%')
-            AND (usuario.email) LIKE ('%".$cCorreo."%')
-            AND (usuario.state = '".$cEstado."' OR '".$cEstado."' = '')
-            AND (usuario.id = '".$idUser."' OR '".$idUser."' = 0)
+            AND CONCAT(usuario.firstname,' ',usuario.secondname,' ',usuario.lastname) LIKE ('%" . $cNombre . "%')
+            AND (usuario.username) LIKE ('%" . $cUsuario . "%')
+            AND (usuario.email) LIKE ('%" . $cCorreo . "%')
+            AND (usuario.state = '" . $cEstado . "' OR '" . $cEstado . "' = '')
+            AND (usuario.id = '" . $idUser . "' OR '" . $idUser . "' = 0)
          ORDER BY usuario.id DESC";
-      
-       $rpta = DB::select($sql);
+
+      $rpta = DB::select($sql);
 
       return $rpta;
-    }
+   }
 
-    public function setRegistrarUsuario(Request $request)
-    {
-       if(!$request->ajax()) return redirect('/');
-        
-       $run            = $request->run;
-       $dv             = $request->dv;
-       $cNombre        = $request->cNombre;
-       $cSegundoNombre = $request->cSegundoNombre;
-       $cApellido      = $request->cApellido;
-       $cUsuario       = $request->cUsuario;
-       $cCorreo        = $request->cCorreo;
-       $cContrasena    = Hash::make($request->cContrasena);
-       $oFototgrafia   = $request->oFotografia;
+   public function setRegistrarUsuario(Request $request)
+   {
+      if (!$request->ajax()) return redirect('/');
 
-       $run            = ($run == NULL) ? ($run = '') : $run;
-       $dv             = ($dv == NULL) ? ($dv = '') : $dv;
-       $cNombre        = ($cNombre == NULL) ? ($cNombre = '') : $cNombre;
-       $cSegundoNombre = ($cSegundoNombre == NULL) ? ($cSegundoNombre = '') : $cSegundoNombre;
-       $cApellido      = ($cApellido == NULL) ? ($cApellido = '') : $cApellido;
-       $cUsuario       = ($cUsuario == NULL) ? ($cUsuario = '') : $cUsuario;
-       $cCorreo        = ($cCorreo == NULL) ? ($cCorreo = '') : $cCorreo;
-       $cContrasena    = ($cContrasena == NULL) ? ($cContrasena = '') : $cContrasena;
-       $oFototgrafia   = ($oFototgrafia == NULL) ? ($oFototgrafia = NULL) : $oFototgrafia;
+      $run            = $request->run;
+      $dv             = $request->dv;
+      $cNombre        = $request->cNombre;
+      $cSegundoNombre = $request->cSegundoNombre;
+      $cApellido      = $request->cApellido;
+      $cUsuario       = $request->cUsuario;
+      $cCorreo        = $request->cCorreo;
+      $cContrasena    = Hash::make($request->cContrasena);
+      $oFototgrafia   = $request->oFotografia;
 
-       $user = new User;
-       $user->run = $run;
-       $user->dv = $dv;
-       $user->firstname = $cNombre;
-       $user->secondname = $cSegundoNombre;
-       $user->lastname = $cApellido;
-       $user->username = $cUsuario;
-       $user->email = $cCorreo;
-       $user->password = $cContrasena;
-       $user->file_id = $oFototgrafia;
-       $user->state = 'A';
-       $user->created_by = 1;
-       $user->updated_by = 1;
+      $run            = ($run == NULL) ? ($run = '') : $run;
+      $dv             = ($dv == NULL) ? ($dv = '') : $dv;
+      $cNombre        = ($cNombre == NULL) ? ($cNombre = '') : $cNombre;
+      $cSegundoNombre = ($cSegundoNombre == NULL) ? ($cSegundoNombre = '') : $cSegundoNombre;
+      $cApellido      = ($cApellido == NULL) ? ($cApellido = '') : $cApellido;
+      $cUsuario       = ($cUsuario == NULL) ? ($cUsuario = '') : $cUsuario;
+      $cCorreo        = ($cCorreo == NULL) ? ($cCorreo = '') : $cCorreo;
+      $cContrasena    = ($cContrasena == NULL) ? ($cContrasena = '') : $cContrasena;
+      $oFototgrafia   = ($oFototgrafia == NULL) ? ($oFototgrafia = NULL) : $oFototgrafia;
 
-       $user->save();
+      $user = new User;
+      $user->run = $run;
+      $user->dv = $dv;
+      $user->firstname = $cNombre;
+      $user->secondname = $cSegundoNombre;
+      $user->lastname = $cApellido;
+      $user->username = $cUsuario;
+      $user->email = $cCorreo;
+      $user->password = $cContrasena;
+      $user->file_id = $oFototgrafia;
+      $user->state = 'A';
+      $user->created_by = 1;
+      $user->updated_by = 1;
 
-       return $user->id;
-    }
+      $user->save();
 
-    public function setEditUser(Request $request)
-    {
-       if(!$request->ajax()) return redirect('/');
+      return $user->id;
+   }
 
-       $idUser         = $request->idUser;
-       $run            = $request->run;
-       $dv             = $request->dv;
-       $cNombre        = $request->cNombre;
-       $cSegundoNombre = $request->cSegundoNombre;
-       $cApellido      = $request->cApellido;
-       $cUsuario       = $request->cUsuario;
-       $commune        = $request->commune;
-       $establishment  = $request->establishment;
-       $cCorreo        = $request->cCorreo;
-       $cContrasena    = $request->cContrasena;
-       if($cContrasena != NULL){
-        $cContrasena    = Hash::make($request->cContrasena);
-       }
-       $oFototgrafia   = $request->oFotografia;
-       $user = User::find($idUser);
+   public function setEditUser(Request $request)
+   {
+      if (!$request->ajax()) return redirect('/');
 
-       $cNombre        = ($cNombre == NULL) ? ($cNombre = '') : $cNombre;
-       $run            = ($run == NULL) ? ($run = '') : $run;
-       $dv             = ($dv == NULL) ? ($dv = '') : $dv;
-       $cSegundoNombre = ($cSegundoNombre == NULL) ? ($cSegundoNombre = '') : $cSegundoNombre;
-       $cApellido      = ($cApellido == NULL) ? ($cApellido = '') : $cApellido;
-       $cUsuario       = ($cUsuario == NULL) ? ($cUsuario = '') : $cUsuario;
-       $commune        = ($commune == NULL) ? ($commune = NULL) : $commune;
-       $establishment  = ($establishment == NULL) ? ($establishment = NULL) : $establishment;
-       $cCorreo        = ($cCorreo == NULL) ? ($cCorreo = '') : $cCorreo;
-       $cContrasena    = ($cContrasena == NULL) ? ($cContrasena = $user->password) : $cContrasena;
-       $oFototgrafia   = ($oFototgrafia == NULL) ? ($oFototgrafia = $user->file_id ) : $oFototgrafia;
+      $idUser         = $request->idUser;
+      $run            = $request->run;
+      $dv             = $request->dv;
+      $cNombre        = $request->cNombre;
+      $cSegundoNombre = $request->cSegundoNombre;
+      $cApellido      = $request->cApellido;
+      $cUsuario       = $request->cUsuario;
+      $commune        = $request->commune;
+      $establishment  = $request->establishment;
+      $cCorreo        = $request->cCorreo;
+      $cContrasena    = $request->cContrasena;
+      if ($cContrasena != NULL) {
+         $cContrasena    = Hash::make($request->cContrasena);
+      }
+      $oFototgrafia   = $request->oFotografia;
+      $user = User::find($idUser);
 
-  
-       $user->firstname         = $cNombre;
-       $user->run               = $run;
-       $user->dv                = $dv;
-       $user->secondname        = $cSegundoNombre;
-       $user->lastname          = $cApellido;
-       $user->username          = $cUsuario;
-       $user->commune_id        = $commune;
-       $user->establishment_id  = $establishment;
-       $user->email             = $cCorreo;
-       $user->password          = $cContrasena;
-       $user->file_id           = $oFototgrafia;
-       $user->updated_by        = 1;
-       $user->updated_at        = date("Y-m-d");
-       $user->save();
- 
-       return $user;
-    }
+      $cNombre        = ($cNombre == NULL) ? ($cNombre = '') : $cNombre;
+      $run            = ($run == NULL) ? ($run = '') : $run;
+      $dv             = ($dv == NULL) ? ($dv = '') : $dv;
+      $cSegundoNombre = ($cSegundoNombre == NULL) ? ($cSegundoNombre = '') : $cSegundoNombre;
+      $cApellido      = ($cApellido == NULL) ? ($cApellido = '') : $cApellido;
+      $cUsuario       = ($cUsuario == NULL) ? ($cUsuario = '') : $cUsuario;
+      $commune        = ($commune == NULL) ? ($commune = NULL) : $commune;
+      $establishment  = ($establishment == NULL) ? ($establishment = NULL) : $establishment;
+      $cCorreo        = ($cCorreo == NULL) ? ($cCorreo = '') : $cCorreo;
+      $cContrasena    = ($cContrasena == NULL) ? ($cContrasena = $user->password) : $cContrasena;
+      $oFototgrafia   = ($oFototgrafia == NULL) ? ($oFototgrafia = $user->file_id) : $oFototgrafia;
 
-    public function setChangeUserState(Request $request)
-    {
-       if(!$request->ajax()) return redirect('/');
 
-       $idUser   = $request->idUser; 
-       $state    = $request->state;
+      $user->firstname         = $cNombre;
+      $user->run               = $run;
+      $user->dv                = $dv;
+      $user->secondname        = $cSegundoNombre;
+      $user->lastname          = $cApellido;
+      $user->username          = $cUsuario;
+      $user->commune_id        = $commune;
+      $user->establishment_id  = $establishment;
+      $user->email             = $cCorreo;
+      $user->password          = $cContrasena;
+      $user->file_id           = $oFototgrafia;
+      $user->updated_by        = 1;
+      $user->updated_at        = date("Y-m-d");
+      $user->save();
 
-       $idUser = ($idUser == NULL) ? ($idUser = 0) : $idUser;
-       $state  = ($state == NULL) ? ($state = 0) : $state;
+      return $user;
+   }
 
-       $user = User::find($idUser);
-       $user->state   = $state;
-       $user->updated_by  = 1;
-       $user->updated_at  = date("Y-m-d");
-       $user->save();
+   public function setChangeUserState(Request $request)
+   {
+      if (!$request->ajax()) return redirect('/');
 
-       //return $user;
-    }
+      $idUser   = $request->idUser;
+      $state    = $request->state;
 
-    public function setEditRoleByUser(Request $request)
-    {
-       if(!$request->ajax()) return redirect('/');
+      $idUser = ($idUser == NULL) ? ($idUser = 0) : $idUser;
+      $state  = ($state == NULL) ? ($state = 0) : $state;
 
-       $idUser   = $request->idUser; 
-       $idRole   = $request->idRole;
+      $user = User::find($idUser);
+      $user->state   = $state;
+      $user->updated_by  = 1;
+      $user->updated_at  = date("Y-m-d");
+      $user->save();
 
-       $idUser  = ($idUser == NULL) ? ($idUser = '') : $idUser;
-       $idRole  = ($idRole == NULL) ? ($idRole = '') : $idRole;
+      //return $user;
+   }
 
-       $countUserRole = UserRole::Where('user_id','=',$idUser)->count();
+   public function setEditRoleByUser(Request $request)
+   {
+      if (!$request->ajax()) return redirect('/');
 
-       if($countUserRole > 0) {
-          $userRole = UserRole::Where('user_id','=',$idUser)->first();
-          $userRole->role_id = $idRole;
-          $userRole->save();
-       }
-       else {
-          $userRole = new UserRole();
-          $userRole->user_id = $idUser;
-          $userRole->role_id = $idRole;
-          $userRole->save();
-       }
+      $idUser   = $request->idUser;
+      $idRole   = $request->idRole;
+
+      $idUser  = ($idUser == NULL) ? ($idUser = '') : $idUser;
+      $idRole  = ($idRole == NULL) ? ($idRole = '') : $idRole;
+
+      $countUserRole = UserRole::Where('user_id', '=', $idUser)->count();
+
+      if ($countUserRole > 0) {
+         $userRole = UserRole::Where('user_id', '=', $idUser)->first();
+         $userRole->role_id = $idRole;
+         $userRole->save();
+      } else {
+         $userRole = new UserRole();
+         $userRole->user_id = $idUser;
+         $userRole->role_id = $idRole;
+         $userRole->save();
+      }
       return $userRole;
-    }
+   }
 
-    public function getRolByUser(Request $request)
-    {
-      if(!$request->ajax()) return redirect('/');
+   public function getRolByUser(Request $request)
+   {
+      if (!$request->ajax()) return redirect('/');
 
-      $idUser   = $request->idUser; 
+      $idUser   = $request->idUser;
 
       $idUser  = ($idUser == NULL) ? ($idUser = 0) : $idUser;
 
-      $sql="SELECT UR.role_id,
+      $sql = "SELECT UR.role_id,
                    RO.name
             FROM users_roles UR
             INNER JOIN roles RO ON UR.role_id = RO.id
-            WHERE UR.user_id = ".$idUser;
+            WHERE UR.user_id = " . $idUser;
 
       $roleId = DB::select($sql);
 
       return $roleId;
-    }
+   }
 
-    public function getListPermissionByRoleAssigned(Request $request)
-    {
-      if(!$request->ajax()) return redirect('/');
+   public function getListPermissionByRoleAssigned(Request $request)
+   {
+      if (!$request->ajax()) return redirect('/');
 
-       $idUser   = $request->idUser; 
+      $idUser   = $request->idUser;
 
-       $idUser  = ($idUser == NULL) ? ($idUser = 0) : $idUser;
+      $idUser  = ($idUser == NULL) ? ($idUser = 0) : $idUser;
 
-       $sql="SELECT P.id,
+      $sql = "SELECT P.id,
                     P.name,
                     P.slug
             FROM users_roles UR
             INNER JOIN roles_permissions RP ON UR.role_id = RP.role_id
             INNER JOIN permissions P ON RP.permission_id = P.id
-            WHERE UR.user_id = ".$idUser;
+            WHERE UR.user_id = " . $idUser;
 
       $rpta = DB::select($sql);
 
       return $rpta;
-    }
+   }
 
-    public function getListPermissionsByUser(Request $request)
-    {
-      if(!$request->ajax()) return redirect('/');
+   public function getListPermissionsByUser(Request $request)
+   {
+      if (!$request->ajax()) return redirect('/');
 
-       $idUser   = $request->idUser; 
+      $idUser   = $request->idUser;
 
-       $idUser  = ($idUser == NULL) ? ($idUser = 0) : $idUser;
+      $idUser  = ($idUser == NULL) ? ($idUser = 0) : $idUser;
 
-       $sql="SELECT 
+      $sql = "SELECT 
                   P.id
                  ,P.slug
                  ,P.name
                  ,CASE IFNULL(UP.user_id,'') WHEN '' THEN 0 ELSE 1 END checked
             FROM permissions P
             LEFT OUTER JOIN users_permissions UP ON P.id = UP.permission_id
-                                                AND UP.user_id = ".$idUser;
+                                                AND UP.user_id = " . $idUser;
 
       $rpta = DB::select($sql);
 
       return $rpta;
-    }
+   }
 
-    public function setStoreRolePermissionsByUser(Request $request)
-    {
-      if(!$request->ajax()) return redirect('/');
+   public function setStoreRolePermissionsByUser(Request $request)
+   {
+      if (!$request->ajax()) return redirect('/');
 
-       $idUser   = $request->idUser; 
+      $idUser   = $request->idUser;
 
-       $idUser  = ($idUser == NULL) ? ($idUser = 0) : $idUser;
+      $idUser  = ($idUser == NULL) ? ($idUser = 0) : $idUser;
 
-         $PermissionsListOld = UserPermission::where('user_id', $request->input('idUser'));
+      $PermissionsListOld = UserPermission::where('user_id', $request->input('idUser'));
 
-         $PermissionsListOld->delete();
+      $PermissionsListOld->delete();
 
-         $idUser = $request->input('idUser');
+      $idUser = $request->input('idUser');
 
-         $listPermissions     = $request->listPermissionsFilter;
-         $listPermissionsSize = sizeof($listPermissions);
-         if($listPermissionsSize > 0) {
-            foreach($listPermissions as $key => $value){
-               if($value['checked'] == true) {
+      $listPermissions     = $request->listPermissionsFilter;
+      $listPermissionsSize = sizeof($listPermissions);
+      if ($listPermissionsSize > 0) {
+         foreach ($listPermissions as $key => $value) {
+            if ($value['checked'] == true) {
 
-                  $permissionsRole = new UserPermission;
-                  $permissionsRole->user_id = $idUser;
-                  $permissionsRole->permission_id = $value['id'];
-                  $permissionsRole->save();
-
-               }
+               $permissionsRole = new UserPermission;
+               $permissionsRole->user_id = $idUser;
+               $permissionsRole->permission_id = $value['id'];
+               $permissionsRole->save();
             }
          }
-       
-       return $permissionsRole;
-    }
+      }
 
-    public function getListRolePermissionsByUser(Request $request)
-    {
-      if(!$request->ajax()) return redirect('/');
+      return $permissionsRole;
+   }
 
-       $idUser   = $request->idUser; 
+   public function getListRolePermissionsByUser(Request $request)
+   {
+      if (! $request->ajax() && ! $request->expectsJson()) {
+         return redirect('/');
+      }
 
-       $idUser  = ($idUser == NULL) ? ($idUser = 0) : $idUser;
+      $idUser = $request->idUser ?: Auth::id();
 
-       if(!$idUser) {
-          $idUser = Auth::id();
-       }
+      if (!$idUser) {
+         $idUser = Auth::id();
+      }
 
-       $sql="SELECT 
+      $sql = "SELECT 
                       P.id
                      ,P.slug
                      ,P.name
                FROM permissions P
               INNER JOIN users_permissions UP ON P.id = UP.permission_id
-                                                   AND UP.user_id = ".$idUser."
+                                                   AND UP.user_id = " . $idUser . "
             UNION
             SELECT  P.id
                    ,P.slug
@@ -328,10 +326,10 @@ class UsersController extends Controller
              FROM users_roles UR
             INNER JOIN roles_permissions RP ON UR.role_id = RP.role_id
             INNER JOIN permissions P ON RP.permission_id = P.id
-            WHERE UR.user_id = ".$idUser;
+            WHERE UR.user_id = " . $idUser;
 
       $rpta = DB::select($sql);
 
       return $rpta;
-    }
+   }
 }

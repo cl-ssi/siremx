@@ -129,7 +129,7 @@
                             <tbody class="small">
                               <tr v-for="(item, index) in listBirads.slice(0,7)" :key="index">
                                 <td><strong>BIRADS {{item.birads}}</strong></td>
-                                <td v-text="item.exam_quantity"></td>
+                                <td>{{ item.exam_quantity }}</td>
                               </tr>
                             </tbody>
                           </table>

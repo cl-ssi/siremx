@@ -24,9 +24,10 @@
               <div class="card-header">
                 <h3 class="card-title">Búsqueda</h3>
                 <div class="card-tools">
-                    <button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip" title="Collapse">
-                          <i class="fas fa-minus"></i>
-                    </button>
+                  <button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip"
+                    title="Collapse">
+                    <i class="fas fa-minus"></i>
+                  </button>
                 </div>
               </div>
               <div class="card-body">
@@ -36,7 +37,8 @@
                       <div class="form-group">
                         <label class="col-md-3 col-form-label">Título</label>
                         <div class="col-md-9">
-                          <input type="text" class="form-control" v-model="fillBsqPermission.name" @keyup.enter="getlistLoads">
+                          <input type="text" class="form-control" v-model="fillBsqPermission.name"
+                            @keyup.enter="getlistLoads">
                         </div>
                       </div>
                     </div>
@@ -58,25 +60,29 @@
               </div>
               <div class="card-body table-responsive">
                 <template v-if="listPermissionsPaginated.length">
-                  <table class="table table-hover table-sm  table-striped table-header-fixed text-nowrap table-valign-middle projects">
+                  <table
+                    class="table table-hover table-sm  table-striped table-header-fixed text-nowrap table-valign-middle projects">
                     <thead>
-                      <th>ID</th>
-                      <th>Título</th>
-                      <th>Descripción</th>
-                      <th>Fecha carga</th>
-                      <th class="text-right"></th>
+                      <tr>
+                        <th>ID</th>
+                        <th>Título</th>
+                        <th>Descripción</th>
+                        <th>Fecha carga</th>
+                        <th class="text-right"></th>
+                      </tr>
                     </thead>
                     <tbody>
                       <tr v-for="(item, index) in listPermissionsPaginated" :key="index">
-                        <td v-text="item.id"></td>
-                        <td v-text="item.title"></td>
-                        <td v-text="item.description"></td>
-                        <td >{{ item.updated_at | moment("DD-MM-YYYY h:mm") }}</td>
+                        <td>{{ item.id }}</td>
+                        <td>{{ item.title }}</td>
+                        <td>{{ item.description }}</td>
+                        <td>{{ $moment(item.updated_at).format("DD-MM-YYYY h:mm") }}</td>
                         <td class="text-right">
                           <template v-if="listRolePermissionsByUser.includes('admin.delete')">
-                              <button class="btn btb-flat btn-xs bg-gradient-secondary"  @click.prevent="setDelete(item.id)">
-                                    <i class="fas fa-trash text-default"></i> Eliminar
-                              </button>
+                            <button class="btn btb-flat btn-xs bg-gradient-secondary"
+                              @click.prevent="setDelete(item.id)">
+                              <i class="fas fa-trash text-default"></i> Eliminar
+                            </button>
                           </template>
                         </td>
                       </tr>
@@ -89,9 +95,9 @@
                       </li>
                       <li class="page-item" v-for="(page, index) in pagesList" :key="index"
                         :class="[page == pageNumber ? 'active' : '']">
-                        <a href="#" class="page-link bg-info" @click.prevent="selectPage(page)">{{ page+1 }}</a>
+                        <a href="#" class="page-link bg-info" @click.prevent="selectPage(page)">{{ page + 1 }}</a>
                       </li>
-                      <li class="page-item" v-if="pageNumber < pageCount -1">
+                      <li class="page-item" v-if="pageNumber < pageCount - 1">
                         <a href="#" class="page-link bg-info" @click.prevent="nextPage">Sig</a>
                       </li>
                     </ul>
@@ -99,7 +105,7 @@
                 </template>
                 <template v-else>
                   <div class="callout callout-info">
-                      <h5>No se encontraron resultados...</h5>
+                    <h5>No se encontraron resultados...</h5>
                   </div>
                 </template>
               </div>
@@ -112,120 +118,120 @@
 </template>
 
 <script>
-    export default {
-      data(){
-          return {
-            fillBsqPermission: {
-              name: '',
-              url: ''
-            },
-            listPermissions: [],
-            listRolePermissionsByUser: JSON.parse(localStorage.getItem('listRolePermissionsByUser')),
-            pageNumber: 0,
-            perPage: 10
-          }
+export default {
+  data() {
+    return {
+      fillBsqPermission: {
+        name: '',
+        url: ''
       },
-      computed: {
-        //  Obtener el número de páginas
-        pageCount() {
-          let a = this.listPermissions.length,
-              b = this.perPage;
-              return Math.ceil(a/b);
-        },
-        // Obtener registros paginados
-        listPermissionsPaginated() {
-          let inicio = this.pageNumber * this.perPage,
-              fin    = inicio + this.perPage;
-          return this.listPermissions.slice(inicio,fin)
-        },
-        pagesList() {
-          let a = this.listPermissions.length,
-              b = this.perPage;
-              let pageCount = Math.ceil(a/b);
-              let count = 0;
-              let pagesArray = [];
-
-              while (count < pageCount) {
-                pagesArray.push(count);
-                count++;
-              }
-              return pagesArray;
-        },
-      },
-      mounted() {
-        this.getlistLoads();
-      },
-      methods: {
-        cleanForm(){
-          this.fillBsqPermission.name  = '';
-        },
-        getlistLoads(){
-          var url = '/load/getListLoads'
-          axios.get(url, {
-            params: {
-              'title' : this.fillBsqPermission.name,
-              'url'  : this.fillBsqPermission.url,
-            }
-          }).then(response => {
-            console.log(response.data);
-            this.initPaginated();
-            this.listPermissions = response.data;
-          }).catch(error => {
-              if(error.response.status == 401){
-                this.$router.push({name: 'login'})
-                location.reload();
-                localStorage.clear();
-                this.fullscreenLoading = false;
-              }
-          })
-        },
-        setDelete(id){
-          console.log(id)
-          Swal.fire({
-            title: '¿Está Seguro de eliminar los registros cargados masivamente?',
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#17a2b8',
-            cancelButtonColor: '#dc3545',
-            confirmButtonText: 'Sí, eliminar'
-          }).then((result) => {
-              if (result.value) {
-                var  url = '/load/setDeleteLoad'
-                axios.post(url, {
-                  'idLoad' : id,
-
-                }).then(response => {
-                     Swal.fire({
-                      icon: 'success',
-                      title: 'Se elimino la carga',
-                      showConfirmButton: false,
-                      timer: 1500
-                    })
-                    this.getlistLoads();
-                }).catch(error => {
-                    if(error.response.status == 401){
-                      this.$router.push({name: 'login'})
-                      location.reload();
-                      localStorage.clear();
-                      this.fullscreenLoading = false;
-                    }
-                })
-              
-            }
-          })// end
-        },
-        nextPage() {
-          this.pageNumber++;
-        },
-        prevPage() {
-          this.pageNumber--;
-        },
-        selectPage(page) {
-          this.pageNumber = page;
-        },
-        initPaginated() {
-          this.pageNumber = 0;
-        }
-      }
+      listPermissions: [],
+      listRolePermissionsByUser: JSON.parse(localStorage.getItem('listRolePermissionsByUser')),
+      pageNumber: 0,
+      perPage: 10
     }
+  },
+  computed: {
+    //  Obtener el número de páginas
+    pageCount() {
+      let a = this.listPermissions.length,
+        b = this.perPage;
+      return Math.ceil(a / b);
+    },
+    // Obtener registros paginados
+    listPermissionsPaginated() {
+      let inicio = this.pageNumber * this.perPage,
+        fin = inicio + this.perPage;
+      return this.listPermissions.slice(inicio, fin)
+    },
+    pagesList() {
+      let a = this.listPermissions.length,
+        b = this.perPage;
+      let pageCount = Math.ceil(a / b);
+      let count = 0;
+      let pagesArray = [];
+
+      while (count < pageCount) {
+        pagesArray.push(count);
+        count++;
+      }
+      return pagesArray;
+    },
+  },
+  mounted() {
+    this.getlistLoads();
+  },
+  methods: {
+    cleanForm() {
+      this.fillBsqPermission.name = '';
+    },
+    getlistLoads() {
+      var url = '/load/getListLoads'
+      axios.get(url, {
+        params: {
+          'title': this.fillBsqPermission.name,
+          'url': this.fillBsqPermission.url,
+        }
+      }).then(response => {
+        console.log(response.data);
+        this.initPaginated();
+        this.listPermissions = response.data;
+      }).catch(error => {
+        if (error.response.status == 401) {
+          this.$router.push({ name: 'login' })
+          location.reload();
+          localStorage.clear();
+          this.fullscreenLoading = false;
+        }
+      })
+    },
+    setDelete(id) {
+      console.log(id)
+      Swal.fire({
+        title: '¿Está Seguro de eliminar los registros cargados masivamente?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#17a2b8',
+        cancelButtonColor: '#dc3545',
+        confirmButtonText: 'Sí, eliminar'
+      }).then((result) => {
+        if (result.value) {
+          var url = '/load/setDeleteLoad'
+          axios.post(url, {
+            'idLoad': id,
+
+          }).then(response => {
+            Swal.fire({
+              icon: 'success',
+              title: 'Se elimino la carga',
+              showConfirmButton: false,
+              timer: 1500
+            })
+            this.getlistLoads();
+          }).catch(error => {
+            if (error.response.status == 401) {
+              this.$router.push({ name: 'login' })
+              location.reload();
+              localStorage.clear();
+              this.fullscreenLoading = false;
+            }
+          })
+
+        }
+      })// end
+    },
+    nextPage() {
+      this.pageNumber++;
+    },
+    prevPage() {
+      this.pageNumber--;
+    },
+    selectPage(page) {
+      this.pageNumber = page;
+    },
+    initPaginated() {
+      this.pageNumber = 0;
+    }
+  }
+}
 </script>

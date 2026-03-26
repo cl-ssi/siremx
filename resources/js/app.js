@@ -1,35 +1,24 @@
-/**
- * First we will load all of this project's JavaScript dependencies which
- * includes Vue and other libraries. It is a great starting point when 
- * building robust, powerful web applications using Vue and Laravel
- */
-
-require('./bootstrap');
-
-window.Vue = require('vue').default;
-
-import ElementUI from 'element-ui';
-import 'element-ui/lib/theme-chalk/index.css';
-import locale from 'element-ui/lib/locale/lang/es'
-
-
-//Vue.config.performance = true;
-
-Vue.use(ElementUI, { locale })
-Vue.use(require('vue-moment'));
-
+import './bootstrap';
+import { createApp } from 'vue';
+import axios from 'axios';
+import moment from 'moment';
+import ElementPlus from 'element-plus';
+import 'element-plus/dist/index.css';
+import es from 'element-plus/es/locale/lang/es';
+import mitt from 'mitt';
 import Swal from 'sweetalert2';
-window.Swal = Swal;
+import router from './routes';
+import Auth from './components/Auth.vue';
 
-export const EventBus = new Vue();
+export const EventBus = mitt();
 window.EventBus = EventBus;
+window.Swal = Swal;
+window.axios = axios;
 
-Vue.component('App', require('./components/App.vue').default);
-Vue.component('Auth', require('./components/Auth.vue').default);
+const app = createApp(Auth);
 
-import router from './routes'
-
-const app = new Vue({
-    el: '#app',
-    router
-});
+app.config.globalProperties.$moment = moment;
+app.use(ElementPlus, { locale: es });
+app.use(router);
+app.component('Auth', Auth);
+app.mount('#app');

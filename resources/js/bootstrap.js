@@ -1,4 +1,17 @@
 window._ = require('lodash');
+const jQuery = require('jquery');
+window.$ = jQuery;
+window.jQuery = jQuery;
+global.jQuery = jQuery;
+window.axios = require('axios');
+window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+window.axios.defaults.headers.common['Accept'] = 'application/json';
+window.axios.defaults.withCredentials = true;
+const token = document.head.querySelector('meta[name="csrf-token"]');
+if (token) {
+    window.axios.defaults.headers.common['X-CSRF-TOKEN'] = token.content;
+}
+window.axios.defaults.baseURL = process.env.MIX_VUE_APP_BE_URL;
 
 /**
  * We'll load jQuery and the Bootstrap jQuery plugin which provides support
@@ -11,7 +24,7 @@ try {
     window.$ = window.jQuery = require('jquery');
 
     require('bootstrap');
-} catch (e) {}
+} catch (e) { }
 
 /**
  * We'll load the axios HTTP library which allows us to easily issue requests
@@ -21,13 +34,13 @@ try {
 
 window.axios = require('axios');
 
-window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest'; 
+window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 window.axios.defaults.baseURL = process.env.MIX_VUE_APP_BE_URL;
 
 /**
  *  Echo exposes an expressive API for subscribing to channels and listening
  * for events that are broadcast by Laravel. Echo and event broadcasting
- * allows your team to easily build robust real-time web applications. 
+ * allows your team to easily build robust real-time web applications.
  */
 
 // import Echo from 'laravel-echo';
@@ -40,4 +53,3 @@ window.axios.defaults.baseURL = process.env.MIX_VUE_APP_BE_URL;
 //     cluster: process.env.MIX_PUSHER_APP_CLUSTER,
 //     forceTLS: true
 // });
- 

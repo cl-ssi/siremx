@@ -23,8 +23,8 @@
                     <div class="text-center">
                     </div>
 
-                    <h3 class="profile-username text-center" 
-                    v-text="fillShowPatient.name+' '+fillShowPatient.fathers_family+' '+fillShowPatient.mothers_family">
+                    <h3 class="profile-username text-center">
+                      {{ fillShowPatient.name+' '+fillShowPatient.fathers_family+' '+fillShowPatient.mothers_family }}
                     </h3> 
 
                     <p class="text-muted text-center">Run: {{fillShowPatient.run}}</p>
@@ -54,20 +54,20 @@
                     <strong><i class="fas fa-book mr-1"></i> Datos Personales</strong>
 
                     <p class="text-muted" 
-                    v-text="fillShowPatient.name+' '+fillShowPatient.fathers_family+' '+fillShowPatient.mothers_family"></p>
+                   >{{ fillShowPatient.name+' '+fillShowPatient.fathers_family+' '+fillShowPatient.mothers_family }}</p>
 
-                    <p class="text-muted" v-text="fillShowPatient.run"></p>
+                    <p class="text-muted">{{ fillShowPatient.run }}</p>
                     <hr>
 
                     <strong><i class="fas fa-map-marker-alt mr-1"></i> Dirección</strong>
-                    <p class="text-muted" v-text="fillShowPatient.address"></p>
+                    <p class="text-muted">{{ fillShowPatient.address }}</p>
 
                     <hr>
 
                     <strong><i class="fas fa-phone mr-1"></i> Contacto</strong>
 
                     <p class="text-muted">
-                    <span class="tag tag-danger" v-text="fillShowPatient.telephone"></span>
+                    <span class="tag tag-danger">{{ fillShowPatient.telephone }}</span>
                     </p>
 
                     <hr>
@@ -99,15 +99,15 @@
                         <!-- The timeline -->
                         <div class="timeline timeline-inverse"  v-for="(item, index) in sortArrays(fillShowPatient.exams)" :key="index">
                           <div class="time-label">
-                              <span class="bg-info" v-text="item.date_exam_reception">
-                              
+                              <span class="bg-info">
+                                {{ item.date_exam_reception }}
                               </span>
                           </div>
                           <div>
                               <i class="fas fa-check bg-primary"></i>
 
                               <div class="timeline-item">
-                                  <span class="time"  v-text="item.date_exam_reception"><i class="far fa-clock"></i> </span>
+                                  <span class="time" ><i class="far fa-clock"></i> {{ item.date_exam_reception }} </span>
 
                                   <h3 class="timeline-header"><a href="#" class="text-dark">Entrega de Exámen a Paciente</a> </h3>
 
@@ -120,7 +120,7 @@
                               <i class="fas fa-user bg-info"></i>
 
                               <div class="timeline-item">
-                                  <span class="time" v-text="item.date_exam"><i class="far fa-clock"></i> </span>
+                                  <span class="time"><i class="far fa-clock"></i>{{ item.date_exam }}</span>
 
                                   <h3 class="timeline-header"><a href="#" class="text-dark">Recepción de Exámen</a> </h3>
 
@@ -133,7 +133,7 @@
                               <i class="fas fa-arrow-alt-circle-right bg-dark"></i>
 
                               <div class="timeline-item">
-                                  <span class="time" v-text="item.date_exam_order"><i class="far fa-clock"></i> </span>
+                                  <span class="time"><i class="far fa-clock"></i> {{ item.date_exam_order }} </span>
 
                                   <h3 class="timeline-header"><a href="#" class="text-dark">Orden de Exámen</a> </h3>
 
@@ -144,7 +144,7 @@
                           </div>
 
                           <div class="time-label">
-                              <span class="bg-warning" v-text="item.date_exam_order"> </span>
+                              <span class="bg-warning"> {{ item.date_exam_order }} </span>
                           </div>
 
                           

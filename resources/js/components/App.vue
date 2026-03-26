@@ -39,7 +39,7 @@
 
             this.listRolePermissionsByUser = JSON.parse(localStorage.getItem('listRolePermissionsByUser'));
 
-            EventBus.$on('notifyrolePermissionsByUser',data => {
+            EventBus.on('notifyrolePermissionsByUser',data => {
                 this.listRolePermissionsByUser = data;
             })
         },

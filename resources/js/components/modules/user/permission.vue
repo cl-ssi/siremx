@@ -38,13 +38,15 @@
                         <template v-if="listPermissionByRoleAssigned.length">
                             <table class="table table-hover table-sm table-header-fixed text-nowrap table-valign-middle projects">
                             <thead>
+                              <tr>
                                 <th>Nombre</th>
                                 <th>Url Amigable</th>
+                              </tr>
                             </thead>
                             <tbody>
                                 <tr v-for="(item, index) in listPermissionByRoleAssigned" :key="index">
-                                <td v-text="item.name"></td>
-                                <td v-text="item.slug"></td>
+                                <td >{{item.name}}</td>
+                                <td >{{item.slug}}</td>
                                 </tr>
                             </tbody>
                             </table>
@@ -75,17 +77,19 @@
                         <template v-if="listPermissionsFilter.length">
                             <table class="table table-hover table-sm table-header-fixed text-nowrap table-valign-middle projects">
                             <thead>
+                              <tr>
                                 <th>Acción</th>
                                 <th>Nombre</th>
                                 <th>Url Amigable</th>
+                              </tr>
                             </thead>
                             <tbody>
                                 <tr v-for="(item, index) in listPermissionsFilter" :key="index" @click.prevent="checkRow(index)">
                                 <td >
                                     <el-checkbox v-model="item.checked"></el-checkbox>
                                 </td>
-                                <td v-text="item.name"></td>
-                                <td v-text="item.slug"></td>
+                                <td >{{item.name}}</td>
+                                <td >{{item.slug}}</td>
                                 </tr>
                             </tbody>
                             </table>
@@ -118,8 +122,7 @@
                     <button class="close" @click="abrirModal"></button>
                 </div>
                 <div class="modal-body">
-                    <div class="callout callout-danger" v-for="(item, index) in mensajeError" :key="index" v-text="item">
-                    </div>
+                    <div class="callout callout-danger" v-for="(item, index) in mensajeError" :key="index" >{{item}}</div>
                 </div>
                 <div class="modal-footer">
                     <button class="btn btn-secondary" @click="abrirModal">Cerrar</button>
@@ -298,7 +301,7 @@
                 me.listRolePermissionsByUserFilter.push(x.slug)
             })
             localStorage.setItem('listRolePermissionsByUser', JSON.stringify(me.listRolePermissionsByUserFilter));
-            EventBus.$emit('notifyrolePermissionsByUser', me.listRolePermissionsByUserFilter);
+            EventBus.emit('notifyrolePermissionsByUser', me.listRolePermissionsByUserFilter);
             this.fullscreenLoading = false;
              Swal.fire({
                       icon: 'success',

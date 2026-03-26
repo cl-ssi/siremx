@@ -1,14 +1,10 @@
 <!DOCTYPE html>
 <html>
-  @include('sections.head')
-  <body class="hold-transition sidebar-mini text-sm">
-    <div class="wrapper" id="app">
-    @if(Auth::check())
-      <App ruta="{{route('basepath')}}" :user="{{Auth::user()}}"></App>
-    @else
-      <Auth ruta="{{route('basepath')}}"></Auth>
-    @endif
-    </div>
-    @include('sections.script')
-  </body>
+@include('sections.head')
+
+<body class="hold-transition sidebar-mini text-sm">
+  <div class="wrapper" id="app"></div>
+  @include('sections.script')
+</body>
+
 </html>

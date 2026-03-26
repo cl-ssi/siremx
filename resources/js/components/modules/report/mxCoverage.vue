@@ -157,10 +157,10 @@
                 </thead>
                 <tbody>
                   <tr v-for="(item, index) in listBirardsMamAgeMX" :key="index">
-                    <td class="text-center" v-text="item.age"></td>
-                    <td class="text-center" v-text="item.mam"></td>
-                    <td class="text-center" v-text="item.eco"></td>
-                    <td class="text-center" v-text="item.pro"></td>
+                    <td class="text-center" >{{item.age}}</td>
+                    <td class="text-center" >{{item.mam}}</td>
+                    <td class="text-center" >{{item.eco}}</td>
+                    <td class="text-center" >{{item.pro}}</td>
                     <td class="text-center" >{{ Number(item.mam) + Number(item.eco) + Number(item.pro)}}</td>
                   </tr>
                 </tbody>
