@@ -253,7 +253,7 @@ export default {
     getListarUsuarios() {
       this.authUser_id = this.authUser.id;
       var url = '/exam/getListExams'
-      axios.get(url, {
+      this.$axios.get(url, {
         params: {
           'nRun': this.fillBsqUsuario.nRun,
           'cName': this.fillBsqUsuario.cName,
@@ -274,7 +274,7 @@ export default {
     },
     setDelete(id) {
       //console.log(id)
-      Swal.fire({
+      $swal.fire({
         title: '¿Está Seguro de eliminar el registro?',
         icon: 'warning',
         showCancelButton: true,
@@ -285,11 +285,11 @@ export default {
         if (result.value) {
           // AQUI IRA LA CONFIRMACIÓN DEL BOTON Y PETICIÓN DEL SERVIDOR
           var url = '/exam/setDeleteExam'
-          axios.post(url, {
+          this.$axios.post(url, {
             'idExam': id,
 
           }).then(response => {
-            Swal.fire({
+            $swal.fire({
               icon: 'success',
               title: 'Se elimino el registro',
               showConfirmButton: false,

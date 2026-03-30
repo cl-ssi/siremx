@@ -177,7 +177,7 @@
         },
         getListPermissionByRoleAssigned() {
           var route = '/administracion/user/getListPermissionByRoleAssigned'
-          axios.get(route, {
+          this.$axios.get(route, {
               params: {
                   'idUser' : this.fillPermission.idUser,
               }
@@ -194,7 +194,7 @@
         },
         getRolByUser(){
           var url = '/administracion/user/getRolByUser'
-          axios.get(url,{
+          this.$axios.get(url,{
             params: {
               'idUser': this.fillPermission.idUser
             }
@@ -213,7 +213,7 @@
         },
         getListPermissionsByUser() {
           var route = '/administracion/user/getListPermissionsByUser'
-          axios.get(route,{
+          this.$axios.get(route,{
             params: {
               'idUser': this.fillPermission.idUser
             }
@@ -258,14 +258,14 @@
         },
         setStoreRolePermissionsByUser(){
           var  url = '/administracion/user/setStoreRolePermissionsByUser'
-          axios.post(url, {
+          this.$axios.post(url, {
             'idUser'                 : this.fillPermission.idUser,
             'listPermissionsFilter'  : this.listPermissionsFilter
 
           }).then(response => {
             this.getListRolePermissionsByUser();
             this.fullscreenLoading = false;
-             Swal.fire({
+             $swal.fire({
                       icon: 'success',
                       title: 'Se otorgaron los permisos del usuario correctamente',
                       showConfirmButton: false,
@@ -282,7 +282,7 @@
         },
         getListRolePermissionsByUser() {
           var route = '/administracion/user/getListRolePermissionsByUser'
-          axios.get(route).then( response => {
+          this.$axios.get(route).then( response => {
               this.listRolePermissionsByUser = response.data;
               this.filterListRolePermissionsByUser();
           }).catch(error => {
@@ -301,9 +301,9 @@
                 me.listRolePermissionsByUserFilter.push(x.slug)
             })
             localStorage.setItem('listRolePermissionsByUser', JSON.stringify(me.listRolePermissionsByUserFilter));
-            EventBus.emit('notifyrolePermissionsByUser', me.listRolePermissionsByUserFilter);
+            $bus.emit('notifyrolePermissionsByUser', me.listRolePermissionsByUserFilter);
             this.fullscreenLoading = false;
-             Swal.fire({
+             $swal.fire({
                       icon: 'success',
                       title: 'Se otorgaron los permisos del usuario correctamente',
                       showConfirmButton: false,

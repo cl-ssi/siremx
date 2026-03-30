@@ -420,7 +420,7 @@
         },
         getListEstablishments() {
           var route = '/administracion/establishments/getListEstablishments'
-          axios.get(route).then( response => {
+          this.$axios.get(route).then( response => {
             this.listEstablishments = response.data;
           }).catch(error => {
               if(error.response.status == 401){
@@ -433,7 +433,7 @@
         },
         getListCommunes() {
           var route = '/administracion/communes/getListCommunes'
-          axios.get(route).then( response => {
+          this.$axios.get(route).then( response => {
             this.listCommunes = response.data;
           }).catch(error => {
               if(error.response.status == 401){
@@ -447,7 +447,7 @@
         getListDerivations(code_deis) {
           
           var route = '/administracion/derivations/getListDerivationsSelect'
-          axios.get(route,{
+          this.$axios.get(route,{
             params: {
               'establishment_code_deis' : code_deis
             }
@@ -465,7 +465,7 @@
         },
         getPatientById() {
           var url = '/exam/getExamById'
-          axios.get(url, {
+          this.$axios.get(url, {
             params: {
               'idExam' : this.fillEditExam.idExam,
             }
@@ -548,11 +548,11 @@
           this.fullscreenLoading = true;
 
           var  url = '/exam/setEditExam'
-          axios.post(url,this.form, config).then(response => {
+          this.$axios.post(url,this.form, config).then(response => {
             this.fillEditExam.path = response.path;
             console.log(response);
             this.fullscreenLoading = false;
-             Swal.fire({
+             $swal.fire({
                 icon: 'success',
                 title: 'Guardado Correctamente',
                 showConfirmButton: false,

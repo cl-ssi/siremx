@@ -208,7 +208,7 @@
         },
         setStorePatient(){
           var  url = '/administracion/patient/setStorePatient'
-          axios.post(url, {
+          this.$axios.post(url, {
             'run'            : this.fillCreatePatient.run,
             'dv'             : this.fillCreatePatient.dv,
             'name'           : this.fillCreatePatient.name,

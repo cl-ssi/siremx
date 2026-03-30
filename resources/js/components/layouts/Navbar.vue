@@ -128,7 +128,7 @@
 
 <script>
     export default {
-      props:['ruta'],
+      props:['ruta', 'user'],
         mounted() {
             console.log('Component Navbar.')
         }

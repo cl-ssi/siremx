@@ -127,7 +127,7 @@
                         <template v-if="listBirads.length">
                           <table class="table table-hover ">
                             <tbody class="small">
-                              <tr v-for="(item, index) in listBirads.slice(0,7)" :key="index">
+                              <tr v-for="(item, index) in firstBirards" :key="index">
                                 <td><strong>BIRADS {{item.birads}}</strong></td>
                                 <td>{{ item.exam_quantity }}</td>
                               </tr>
@@ -246,6 +246,10 @@
 <script>
     import Chart from 'chart.js';
     import ChartDataLabels from 'chartjs-plugin-datalabels';
+    let chartBar = null;
+    let chartLine = null;
+    let chartRadar = null;
+    let chartRadarSource = null;
     export default {
       data() {
         return {
@@ -296,7 +300,9 @@
         }
       },
       mounted(){
-        this.getGraphBar();
+        this.$nextTick(() => {
+          this.getGraphBar();
+        });
         this.getExamYear();
         this.getHistCommuneYear();
         this.getHistEstablishmentYear();
@@ -304,6 +310,11 @@
         this.getIndicators();
         this.getIndicator5069();
         this.getIndicatorBirads();
+      },
+      computed:{
+        firstBirards() {
+          return this.listBirads.slice(0, 7);
+        }
       },
       methods:{
         getRespReport(){
@@ -318,7 +329,7 @@
         },
         getIndicators() {
           var url = '/dashboard/getIndicators'
-          axios.get(url,{ 
+          this.$axios.get(url,{ 
             params: {
               'year' : (!this.year) ? '' : this.year,
             }
@@ -332,7 +343,10 @@
         },
         getIndicatorsFilter() {
           let me = this;
-          this. listExamYear.all.map(function(x,y){
+          this.listExamYear.name = [];
+          this.listExamYear.month_name = [];
+          this.listExamYear.quantity = [];
+          this.listExamYear.all.map(function(x,y){
             me.listExamYear.name.push(x.month);
             me.listExamYear.month_name.push(x.month_name);
             me.listExamYear.quantity.push(x.exam_quantity);
@@ -341,7 +355,7 @@
         // INDICADOR QUE PERMITE OBTENER LA CANTIDAD DE EXAMENES ENTRE 50 Y 60 AÑOS DE EDAD
         getIndicator5069() {
           var url = '/dashboard/getIndicator5069'
-          axios.get(url,{ 
+          this.$axios.get(url,{ 
             params: {
               'year' : (!this.year) ? '' : this.year,
             }
@@ -355,7 +369,7 @@
         // Obtiene los indicadores de exámenes por birads
         getIndicatorBirads() {
           var url = '/dashboard/getIndicatorBirads'
-          axios.get(url,{ 
+          this.$axios.get(url,{ 
             params: {
               'year' : (!this.year) ? '' : this.year,
             }
@@ -370,7 +384,10 @@
         },
         getIndicatorBiradsFilter() {
           let me = this;
-          this. listExamYear.all.map(function(x,y){
+          this.listExamYear.name = []
+          this.listExamYear.month_name = []
+          this.listExamYear.quantity = []
+          this.listExamYear.all.map(function(x,y){
             me.listExamYear.name.push(x.month);
             me.listExamYear.month_name.push(x.month_name);
             me.listExamYear.quantity.push(x.exam_quantity);
@@ -383,7 +400,7 @@
           this.listExamYear.quantity = [];
 
           var url = '/dashboard/getExamYear'
-          axios.get(url,{ 
+          this.$axios.get(url,{ 
             params: {
               'year' : (!this.year) ? '' : this.year,
             }
@@ -400,7 +417,7 @@
           })
         },
         getExamYearFilter() {
-          let me = this;
+          const me = this;
           this.listExamYear.all.map(function(x,y){
             me.listExamYear.name.push(x.month);
             me.listExamYear.month_name.push(x.month_name);
@@ -409,13 +426,9 @@
           this.getGraphLine();
         },        
         getHistCommuneYear() {
-
           this.listHistCommuneYear.all = [];
-          this.listHistCommuneYear.name_label = [];
-          this.listHistCommuneYear.quantity = [];
-
           var url = '/dashboard/getHistYear'
-          axios.get(url,{ 
+          this.$axios.get(url,{ 
             params: {
               'year' : (!this.year) ? '' : this.year,
             }
@@ -426,6 +439,8 @@
         },
         getHistCommuneYearFilter() {
           let me = this;
+          this.listHistCommuneYear.name_label = [];
+          this.listHistCommuneYear.quantity = [];
           this.listHistCommuneYear.all.map(function(x,y){
             me.listHistCommuneYear.name_label.push(x.name_label);
             me.listHistCommuneYear.quantity.push(x.exam_quantity);
@@ -433,13 +448,9 @@
           this.getGraphBar();
         },
         getHistEstablishmentYear() {
-
           this.listHistEstablishmentYear.all = [];
-          this.listHistEstablishmentYear.name_label = [];
-          this.listHistEstablishmentYear.quantity = [];
-
           var url = '/dashboard/getHistEstablishmentYear'
-          axios.get(url,{ 
+          this.$axios.get(url,{ 
             params: {
               'year' : (!this.year) ? '' : this.year,
             }
@@ -450,6 +461,8 @@
         },
         getHistEstablishmentYearFilter() {
           let me = this;
+          this.listHistEstablishmentYear.name_label = [];
+          this.listHistEstablishmentYear.quantity = [];          
           this.listHistEstablishmentYear.all.map(function(x,y){
             me.listHistEstablishmentYear.name_label.push(x.name_label);
             me.listHistEstablishmentYear.quantity.push(x.exam_quantity);
@@ -457,16 +470,9 @@
           this.getGraphRadar();
         },
         getHistEstablishmentYearProfessional() {
-
           this.listHistEstablishmentYearProfessional.all = [];
-          this.listHistEstablishmentYearProfessional.name_label = [];
-          this.listHistEstablishmentYearProfessional.quantity = [];
-          this.listHistEstablishmentYearProfessional.quantity_med = [];
-          this.listHistEstablishmentYearProfessional.quantity_mat = [];
-          this.listHistEstablishmentYearProfessional.quantity_other = [];
-
           var url = '/dashboard/getHistEstablishmentYearProfessional'
-          axios.get(url,{ 
+          this.$axios.get(url,{ 
             params: {
               'year' : (!this.year) ? '' : this.year,
             }
@@ -477,6 +483,11 @@
         },
         getHistEstablishmentYearProfessionalFilter() {
           let me = this;
+          this.listHistEstablishmentYearProfessional.name_label = [];
+          this.listHistEstablishmentYearProfessional.quantity = [];
+          this.listHistEstablishmentYearProfessional.quantity_med = [];
+          this.listHistEstablishmentYearProfessional.quantity_mat = [];
+          this.listHistEstablishmentYearProfessional.quantity_other = [];          
           this.listHistEstablishmentYearProfessional.all.map(function(x,y){
             me.listHistEstablishmentYearProfessional.name_label.push(x.name_label);
             me.listHistEstablishmentYearProfessional.quantity.push(x.exam_quantity);
@@ -487,11 +498,15 @@
           this.getGraphRadarSource();
         },
         getGraphBar() {
-          let me = this;
-          var ctx = document.getElementById("myChart").getContext('2d');
-          var dataValues = me.listHistCommuneYear.quantity;
-          var dataLabels = me.listHistCommuneYear.name_label;
-          var myChart = new Chart(ctx, {
+          if (chartBar) {
+            chartBar.destroy();
+          }
+          const canvas = document.getElementById("myChart");
+          if (!canvas) return;
+          const ctx = canvas.getContext('2d');
+          const dataValues = this.listHistCommuneYear.quantity;
+          const dataLabels = this.listHistCommuneYear.name_label;
+          chartBar = new Chart(ctx, {
             type: 'bar',
             data: {
               labels: dataLabels,
@@ -526,11 +541,15 @@
           });
         },
         getGraphRadar() {
-          let me = this;
-          var ctx = document.getElementById("establishmentRadar");
-          var dataValues = me.listHistEstablishmentYear.quantity;
-          var dataLabels = me.listHistEstablishmentYear.name_label;
-          var myChart = new Chart(ctx, {
+          if (chartRadar) {
+            chartRadar.destroy();
+          }
+          const canvas = document.getElementById("establishmentRadar");
+          if (!canvas) return;
+          const ctx = canvas.getContext('2d');
+          const dataValues = this.listHistEstablishmentYear.quantity;
+          const dataLabels = this.listHistEstablishmentYear.name_label;
+          chartRadar = new Chart(ctx, {
             type: 'bar',
             data: {
               labels: dataLabels,
@@ -543,15 +562,18 @@
           });
         },
         getGraphRadarSource() {
-          let me = this;
-          var dataValues       = me.listHistEstablishmentYearProfessional.quantity;
-          var dataValues_med   = me.listHistEstablishmentYearProfessional.quantity_med;
-          var dataValues_mat   = me.listHistEstablishmentYearProfessional.quantity_mat;
-          var dataValues_other = me.listHistEstablishmentYearProfessional.quantity_other;
-          var dataLabels = me.listHistEstablishmentYearProfessional.name_label;
-
-          var ctx = document.getElementById("establishmentRadarSource");
-          var myChart = new Chart(ctx, {
+          if (chartRadarSource) {
+            chartRadarSource.destroy();
+          }          
+          const canvas = document.getElementById("establishmentRadarSource");
+          if (!canvas) return;
+          const ctx = canvas.getContext('2d');
+          const dataValues = this.listHistEstablishmentYearProfessional.quantity;
+          const dataValues_med = this.listHistEstablishmentYearProfessional.quantity_med;
+          const dataValues_mat = this.listHistEstablishmentYearProfessional.quantity_mat;
+          const dataValues_other = this.listHistEstablishmentYearProfessional.quantity_other;
+          const dataLabels = this.listHistEstablishmentYearProfessional.name_label;
+          chartRadarSource = new Chart(ctx, {
             type: 'bar',
             data: {
               labels: dataLabels,
@@ -599,20 +621,24 @@
         },
         
         getGraphLine() {
-          let me = this;
-          var ctx = document.getElementById('myChart2').getContext('2d');
-          var chart = new Chart(ctx, {
+          if (chartLine) {
+            chartLine.destroy();
+          }
+          const canvas = document.getElementById('myChart2');
+          if (!canvas) return;          
+          const ctx = canvas.getContext('2d');
+          chartLine = new Chart(ctx, {
               // The type of chart we want to create
               type: 'line',
 
               // The data for our dataset
               data: {
-                  labels: me.listExamYear.month_name,
+                  labels: this.listExamYear.month_name,
                   datasets: [{
                       label: "Cantidad",
                       backgroundColor: 'rgb(99, 99, 132)',
                       borderColor: 'rgb(99, 99, 132)',
-                      data: me.listExamYear.quantity,
+                      data: this.listExamYear.quantity,
                   }]
               },
 

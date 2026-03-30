@@ -234,7 +234,7 @@
         getUserById() {
           this.fullscreenLoading = true;  
           var url = '/administracion/usuario/getListarUsuarios'
-          axios.get(url, {
+          this.$axios.get(url, {
             params: {
               'idUser' : this.fillEditUser.idUser,
             }
@@ -294,7 +294,7 @@
             this.form.append('file', this.fillEditUser.oFotografia)
             const config = { headers: {'Content-Type': 'multipart/form-data'}}
             var url = '/archivo/setRegistrarArchivo'
-            axios.post(url, this.form, config).then(response =>{
+            this.$axios.post(url, this.form, config).then(response =>{
               console.log(response.data)
               var nIdFile = response.data;
               this.setSaveUser(nIdFile);
@@ -309,7 +309,7 @@
         },
         setSaveUser(nIdFile){
           var  url = '/administracion/usuario/setEditUser'
-          axios.post(url, {
+          this.$axios.post(url, {
             'run'            : this.fillEditUser.run,
             'dv'             : this.fillEditUser.dv,
             'idUser'         : this.fillEditUser.idUser,
@@ -336,7 +336,7 @@
         },
         getListRoles(){
           var url = '/administracion/role/getListRoles'
-          axios.get(url).then(response => {
+          this.$axios.get(url).then(response => {
             this.listRoles = response.data;
             this.getRolByUser();
           }).catch(error => {
@@ -350,7 +350,7 @@
         },
         getListEstablishments() {
           var route = '/administracion/establishments/getListEstablishments'
-          axios.get(route).then( response => {
+          this.$axios.get(route).then( response => {
             this.listEstablishments = response.data;
           }).catch(error => {
               if(error.response.status == 401){
@@ -363,7 +363,7 @@
         },
         getListCommunes() {
           var route = '/administracion/communes/getListCommunes'
-          axios.get(route).then( response => {
+          this.$axios.get(route).then( response => {
             this.listCommunes = response.data;
           }).catch(error => {
               if(error.response.status == 401){
@@ -376,7 +376,7 @@
         },
         getRolByUser(){
           var url = '/administracion/user/getRolByUser'
-          axios.get(url,{
+          this.$axios.get(url,{
             params: {
               'idUser': this.fillEditUser.idUser
             }
@@ -395,13 +395,13 @@
         },
         setEditRoleByUser() {
           var  url = '/administracion/user/setEditRoleByUser'
-          axios.post(url, {
+          this.$axios.post(url, {
             'idUser' : this.fillEditUser.idUser,
             'idRole' : this.fillEditUser.idRole,
 
           }).then(response => {
             this.fullscreenLoading = false;
-            Swal.fire({
+            $swal.fire({
                 icon: 'success',
                 title: 'Actualizado',
                 showConfirmButton: false,

@@ -98,7 +98,7 @@ export default {
             }
             this.fullscreenLoading = true;
             var url = '/authenticate/login'
-            axios.post(url, {
+            this.$axios.post(url, {
                 'email': this.fillLogin.email,
                 'pass': this.fillLogin.pass,
             }).then(response => {
@@ -118,7 +118,7 @@ export default {
         },
         getListRolePermissionsByUser(authUser) {
             var route = '/administracion/user/getListRolePermissionsByUser'
-            axios.get(route, {
+            this.$axios.get(route, {
                 params: {
                     'idUser': authUser.id
                 }

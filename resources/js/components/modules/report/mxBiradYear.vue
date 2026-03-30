@@ -344,7 +344,7 @@ export default {
     },
     getListEstablishments() {
       var route = '/administracion/establishments/getListEstablishments'
-      axios.get(route).then(response => {
+      this.$axios.get(route).then(response => {
         this.listEstablishments = response.data;
       }).catch(error => {
         if (error.response.status == 401) {
@@ -357,7 +357,7 @@ export default {
     },
     getListCommunes() {
       var route = '/administracion/communes/getListCommunes'
-      axios.get(route).then(response => {
+      this.$axios.get(route).then(response => {
         this.listCommunes = response.data;
       }).catch(error => {
         if (error.response.status == 401) {
@@ -377,7 +377,7 @@ export default {
       this.fullscreenLoading = true;
 
       var url = '/report/exams/getMXBiradYears'
-      axios.get(url, {
+      this.$axios.get(url, {
         params: {
           'year': this.fillBsqReport.year,
           'listBirards': this.fillBsqReport.selectBIRADS,
@@ -407,7 +407,7 @@ export default {
       }
 
       var url = '/report/exam/export'
-      axios.get(url, config).then(response => {
+      this.$axios.get(url, config).then(response => {
         console.log(response.data);
         var oMyBlob = new Blob([response.data], { type: 'application/vnd.ms-excel' }); // the blob
         var url = document.createElement('a')

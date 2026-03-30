@@ -322,7 +322,7 @@ export default {
     },
     getListCommunes() {
       var route = '/administracion/communes/getListCommunes'
-      axios.get(route).then(response => {
+      this.$axios.get(route).then(response => {
         this.listCommunes = response.data;
       }).catch(error => {
         if (error.response.status == 401) {
@@ -342,7 +342,7 @@ export default {
       this.fullscreenLoading = true;
 
       var url = '/report/exams/getMXSigte'
-      axios.get(url, {
+      this.$axios.get(url, {
         params: {
           'dateIni': (!this.fillBsqReport.date_ini) ? '' : this.fillBsqReport.date_ini,
           'dateEnd': (!this.fillBsqReport.date_end) ? '' : this.fillBsqReport.date_end,
@@ -443,7 +443,7 @@ export default {
         return;
       }
 
-      Swal.fire({
+      $swal.fire({
         title: '¿Está Seguro de desea cargar el archivo?',
         icon: 'warning',
         showCancelButton: true,
@@ -464,9 +464,9 @@ export default {
             // AQUI IRA LA CONFIRMACIÓN DEL BOTON Y PETICIÓN DEL SERVIDOR
             var url = '/exam/setLoadSigteID'
 
-            axios.post(url, post).then(response => {
+            this.$axios.post(url, post).then(response => {
               // console.log(response.data);
-              Swal.fire({
+              $swal.fire({
                 icon: 'success',
                 title: 'Acción Finalizada',
                 showConfirmButton: false,
@@ -474,7 +474,7 @@ export default {
               })
             }).catch(error => {
               if (error.response.status == 400) {
-                Swal.fire(
+                $swal.fire(
                   'Oops!',
                   error.response.data.error,
                   'error'

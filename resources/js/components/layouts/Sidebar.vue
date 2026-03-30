@@ -16,7 +16,7 @@
               <img :src="ruta + '/img/avatar.png'" class="img-circle elevation-2" alt="User Image">
             </div>
             <div class="info">
-              <a href="#" class="d-block">{{user.fullname}}</a>
+              <a href="#" class="d-block">{{user?.fullname || ''}}</a>
             </div>
           </div>
 

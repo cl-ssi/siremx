@@ -276,7 +276,7 @@
             return;
           }
 
-          Swal.fire({
+          $swal.fire({
             title: '¿Está Seguro de desea cargar el archivo?',
             icon: 'warning',
             showCancelButton: true,
@@ -295,8 +295,8 @@
                 // AQUI IRA LA CONFIRMACIÓN DEL BOTON Y PETICIÓN DEL SERVIDOR
                 var  url = '/exam/setLoadExams'
 
-                axios.post(url,post).then(response => {
-                     Swal.fire({
+                this.$axios.post(url,post).then(response => {
+                     $swal.fire({
                       icon: 'success',
                       title: 'Acción Finalizada',
                       showConfirmButton: false,
@@ -304,7 +304,7 @@
                     })
                 }).catch(error => {
                     if(error.response.status == 400){
-                      Swal.fire(
+                      $swal.fire(
                           'Oops!',
                           error.response.data.error,
                           'error'

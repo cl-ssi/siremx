@@ -167,7 +167,7 @@ export default {
     },
     getlistLoads() {
       var url = '/load/getListLoads'
-      axios.get(url, {
+      this.$axios.get(url, {
         params: {
           'title': this.fillBsqPermission.name,
           'url': this.fillBsqPermission.url,
@@ -187,7 +187,7 @@ export default {
     },
     setDelete(id) {
       console.log(id)
-      Swal.fire({
+      $swal.fire({
         title: '¿Está Seguro de eliminar los registros cargados masivamente?',
         icon: 'warning',
         showCancelButton: true,
@@ -197,11 +197,11 @@ export default {
       }).then((result) => {
         if (result.value) {
           var url = '/load/setDeleteLoad'
-          axios.post(url, {
+          this.$axios.post(url, {
             'idLoad': id,
 
           }).then(response => {
-            Swal.fire({
+            $swal.fire({
               icon: 'success',
               title: 'Se elimino la carga',
               showConfirmButton: false,

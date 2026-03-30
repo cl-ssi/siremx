@@ -25,7 +25,7 @@
               
                 this.fullscreenLoading = true;
                 var  url = '/authenticate/logincu/'+this.$route.params.token;
-                axios.get(url).then(response => {
+                this.$axios.get(url).then(response => {
                     if(response.data.code == 401){
                         this.loginFailed();
                     }
@@ -37,7 +37,7 @@
             },
             getListRolePermissionsByUser(authUser) {
                 var route = '/administracion/user/getListRolePermissionsByUser'
-                axios.get(route,{
+                this.$axios.get(route,{
                     params: {
                     'idUser': authUser.id
                     }

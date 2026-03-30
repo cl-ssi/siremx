@@ -2,15 +2,17 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ClaveUnicaController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\Auth\LoginController;
 
 /** https://siremx.saludtarapaca.gob.cl/authenticate/login */
-Route::post('/authenticate/login','Auth\LoginController@login');
+Route::post('/authenticate/login', [LoginController::class, 'login']);
 /** https://siremx.saludtarapaca.gob.cl/authenticate/logincu/{token} */
-Route::get('/authenticate/logincu/{access_token}','Auth\LoginController@logincu');
+Route::get('/authenticate/logincu/{access_token}', [LoginController::class, 'logincu']);
 /** Ruta que redirecciona a logear utilizando vue */
-Route::get('/claveunica/login/{access_token}','Auth\LoginController@redirectVueLogin');
+Route::get('/claveunica/login/{access_token}', [LoginController::class, 'redirectVueLogin']);
 
-Route::get('/authenticate/logout','Auth\LoginController@logout')->name('logout');
+Route::get('/authenticate/logout', [LoginController::class, 'logout'])->name('logout');
 
 // Route::get('/claveunica/login','ClaveUnicaController@login');
 Route::get('/claveunica', [ClaveUnicaController::class,'autenticar'])->name('claveunica.login');
@@ -83,19 +85,21 @@ Route::group(['middleware' => ['auth']], function () {
   Route::get('/report/exams/getMXBiradYears','Report\ReportController@getMXBiradYears');
   Route::get('/report/exams/getMXSigte','Report\ReportController@getMXSigte'); 
 
-  Route::get('/dashboard/getExamYear','DashboardController@getExamYear');
-  Route::get('/dashboard/getHistYear','DashboardController@getHistYear');
-  Route::get('/dashboard/getHistEstablishmentYear','DashboardController@getHistEstablishmentYear');
-  Route::get('/dashboard/getIndicators','DashboardController@getIndicators');
-  Route::get('/dashboard/getIndicator5069','DashboardController@getIndicator5069');
-  Route::get('/dashboard/getIndicatorBirads','DashboardController@getIndicatorBirads');
-  Route::get('/dashboard/getExamBiradsYear','DashboardController@getExamBiradsYear');
-  Route::get('/dashboard/getHistEstablishmentYearProfessional','DashboardController@getHistEstablishmentYearProfessional');
+
+
+  Route::get('/dashboard/getExamYear', [DashboardController::class, 'getExamYear']);
+  Route::get('/dashboard/getHistYear',[DashboardController::class, 'getHistYear']);
+  Route::get('/dashboard/getHistEstablishmentYear', [DashboardController::class, 'getHistEstablishmentYear']);
+  Route::get('/dashboard/getIndicators',[DashboardController::class, 'getIndicators']);
+  Route::get('/dashboard/getIndicator5069',[DashboardController::class, 'getIndicator5069']);
+  Route::get('/dashboard/getIndicatorBirads',[DashboardController::class, 'getIndicatorBirads']);
+  Route::get('/dashboard/getExamBiradsYear',[DashboardController::class, 'getExamBiradsYear']);
+  Route::get('/dashboard/getHistEstablishmentYearProfessional',[DashboardController::class, 'getHistEstablishmentYearProfessional']);
 
   // DASHBOARD AUDITORIA
 
-  Route::get('/dashboard/getExamYearEstablishment','DashboardController@getExamYearEstablishment');
-  Route::get('/dashboard/getLastExamEstablishment','DashboardController@getLastExamEstablishment');
+  Route::get('/dashboard/getExamYearEstablishment', [DashboardController::class, 'getExamYearEstablishment']);
+  Route::get('/dashboard/getLastExamEstablishment', [DashboardController::class, 'getLastExamEstablishment']);
 
 }); // END MIDDLEWARE
 

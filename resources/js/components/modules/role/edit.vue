@@ -183,7 +183,7 @@ export default {
     getListRoles() {
       var url = '/administracion/role/getListRoles'
       console.log("id " + this.fillEditRole.idRole);
-      axios.get(url, {
+      this.$axios.get(url, {
         params: {
           'idRole': this.fillEditRole.idRole,
         }
@@ -203,7 +203,7 @@ export default {
     },
     getListPermissionsByRole() {
       var route = '/administracion/role/getListPermissionsByRole'
-      axios.get(route, {
+      this.$axios.get(route, {
         params: {
           'idRole': this.fillEditRole.idRole,
         }
@@ -248,7 +248,7 @@ export default {
     },
     setStoreRole() {
       var url = '/administracion/role/setEditRolePermissions'
-      axios.post(url, {
+      this.$axios.post(url, {
         'idRole': this.fillEditRole.idRole,
         'name': this.fillEditRole.name,
         'slug': this.fillEditRole.slug,
@@ -292,7 +292,7 @@ export default {
     },
     getListRolePermissionsByUser() {
       var route = '/administracion/user/getListRolePermissionsByUser'
-      axios.get(route).then(response => {
+      this.$axios.get(route).then(response => {
         this.listRolePermissionsByUser = response.data;
         this.filterListRolePermissionsByUser();
       }).catch(error => {
@@ -311,9 +311,9 @@ export default {
         me.listRolePermissionsByUserFilter.push(x.slug)
       })
       localStorage.setItem('listRolePermissionsByUser', JSON.stringify(me.listRolePermissionsByUserFilter));
-      EventBus.emit('notifyrolePermissionsByUser', me.listRolePermissionsByUserFilter);
+      $bus.emit('notifyrolePermissionsByUser', me.listRolePermissionsByUserFilter);
       this.fullscreenLoading = false;
-      Swal.fire({
+      $swal.fire({
         icon: 'success',
         title: 'Actualizado',
         showConfirmButton: false,

@@ -239,7 +239,7 @@ export default {
     },
     getListEstablishments() {
       var route = '/administracion/establishments/getListEstablishments'
-      axios.get(route).then(response => {
+      this.$axios.get(route).then(response => {
         this.listEstablishments = response.data;
       }).catch(error => {
         if (error.response.status == 401) {
@@ -252,7 +252,7 @@ export default {
     },
     getListCommunes() {
       var route = '/administracion/communes/getListCommunes'
-      axios.get(route).then(response => {
+      this.$axios.get(route).then(response => {
         this.listCommunes = response.data;
       }).catch(error => {
         if (error.response.status == 401) {
@@ -273,7 +273,7 @@ export default {
       });
 
       var url = '/report/exams/getPatientHistory'
-      axios.get(url, {
+      this.$axios.get(url, {
         params: {
           'run': this.fillBsqReport.run,
           'codeDeisRequest': (!this.fillBsqReport.establishmentRequest) ? '' : this.fillBsqReport.establishmentRequest,

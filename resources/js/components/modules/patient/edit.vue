@@ -182,7 +182,7 @@
         getPatientById() {
           this.fullscreenLoading = true;  
           var url = '/administracion/patient/getPatientById'
-          axios.get(url, {
+          this.$axios.get(url, {
             params: {
               'idPatient' : this.fillEditPatient.idPatient,
             }
@@ -218,7 +218,7 @@
             this.fullscreenLoading = true;
 
           var  url = '/administracion/patient/setEditPatient'
-          axios.post(url, {
+          this.$axios.post(url, {
             'idPatient'      : this.fillEditPatient.idPatient,
             'run'            : this.fillEditPatient.run,
             'dv'             : this.fillEditPatient.dv,
@@ -232,7 +232,7 @@
 
           }).then(response => {
             this.fullscreenLoading = false;
-             Swal.fire({
+             $swal.fire({
                 icon: 'success',
                 title: 'Actualizado',
                 showConfirmButton: false,

@@ -217,7 +217,7 @@
         getListPatients(){
           var url = '/administracion/patient/showPatient'
           console.log("id "+this.fillShowPatient.idPatient);
-          axios.get(url, {
+          this.$axios.get(url, {
             params: {
               'idPatient' : this.fillShowPatient.idPatient,
             }

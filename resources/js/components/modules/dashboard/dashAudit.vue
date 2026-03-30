@@ -232,7 +232,7 @@ export default {
   methods: {
     getIndicators() {
       var url = '/dashboard/getIndicators'
-      axios.get(url).then(response => {
+      this.$axios.get(url).then(response => {
         this.listIndicators.total_exam = response.data[0].quantity;
         this.listIndicators.total_mam = response.data[1].quantity;
         this.listIndicators.total_eco = response.data[2].quantity;
@@ -251,7 +251,7 @@ export default {
     // Obtiene los indicadores de exámenes por birads
     getIndicatorBirads() {
       var url = '/dashboard/getIndicatorBirads'
-      axios.get(url).then(response => {
+      this.$axios.get(url).then(response => {
         console.log(response.data[0]);
         this.listBirads = response.data;
         this.listIndicatorBirads.birads_3 = response.data[3].exam_quantity;
@@ -264,7 +264,7 @@ export default {
     // Obtiene los indicadores de exámenes por birads
     getLastExamEstablishment() {
       var url = '/dashboard/getLastExamEstablishment'
-      axios.get(url).then(response => {
+      this.$axios.get(url).then(response => {
         console.log(response.data[0]);
         this.listLastExam = response.data;
       })
@@ -279,7 +279,7 @@ export default {
     },
     getExamYear() {
       var url = '/dashboard/getExamYearEstablishment'
-      axios.get(url).then(response => {
+      this.$axios.get(url).then(response => {
         this.listExamYear.all = response.data;
         this.getExamYearFilter();
       }).catch(error => {
@@ -303,7 +303,7 @@ export default {
 
     getHistCommuneYear() {
       var url = '/dashboard/getHistYear'
-      axios.get(url).then(response => {
+      this.$axios.get(url).then(response => {
         this.listHistCommuneYear.all = response.data;
         this.getHistCommuneYearFilter();
       })
@@ -318,7 +318,7 @@ export default {
     },
     getHistEstablishmentYear() {
       var url = '/dashboard/getHistEstablishmentYear'
-      axios.get(url).then(response => {
+      this.$axios.get(url).then(response => {
         this.listHistEstablishmentYear.all = response.data;
         this.getHistEstablishmentYearFilter();
       })

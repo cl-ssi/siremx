@@ -354,7 +354,7 @@ import * as XLSX from 'xlsx'
         },
         getListEstablishments() {
           var route = '/administracion/establishments/getListEstablishments'
-          axios.get(route).then( response => {
+          this.$axios.get(route).then( response => {
             this.listEstablishments = response.data;
           }).catch(error => {
               if(error.response.status == 401){
@@ -367,7 +367,7 @@ import * as XLSX from 'xlsx'
         },
         getListCommunes() {
           var route = '/administracion/communes/getListCommunes'
-          axios.get(route).then( response => {
+          this.$axios.get(route).then( response => {
             this.listCommunes = response.data;
           }).catch(error => {
               if(error.response.status == 401){
@@ -386,7 +386,7 @@ import * as XLSX from 'xlsx'
           }*/
 
           var url = '/report/exams/getBirardsAgeMX'
-          axios.get(url, {
+          this.$axios.get(url, {
             params: {
               'dateIni' : (!this.fillBsqReport.date_ini) ? '' : this.fillBsqReport.date_ini,
               'dateEnd' : (!this.fillBsqReport.date_end) ? '' : this.fillBsqReport.date_end,
@@ -401,7 +401,7 @@ import * as XLSX from 'xlsx'
           })
 
           var url = '/report/exams/getBirardsEcoAgeMX'
-          axios.get(url, {
+          this.$axios.get(url, {
             params: {
               'dateIni' : (!this.fillBsqReport.date_ini) ? '' : this.fillBsqReport.date_ini,
               'dateEnd' : (!this.fillBsqReport.date_end) ? '' : this.fillBsqReport.date_end,
@@ -430,7 +430,7 @@ import * as XLSX from 'xlsx'
             }
             
             var url = '/report/exam/export'
-            axios.get(url, config).then(response => {
+            this.$axios.get(url, config).then(response => {
                 //console.log(response.data);
                 var oMyBlob = new Blob([response.data], {type : 'application/vnd.ms-excel'}); // the blob
                 var url = document.createElement('a')

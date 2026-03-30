@@ -443,7 +443,7 @@
         },
         getListEstablishments() {
           var route = '/administracion/establishments/getListEstablishments'
-          axios.get(route).then( response => {
+          this.$axios.get(route).then( response => {
             this.listEstablishments = response.data;
           }).catch(error => {
               if(error.response.status == 401){
@@ -463,7 +463,7 @@
           var run = this.fillCreateExam.run.split('-');
           console.log(run);
           var url = '/administracion/patient/getPatient'
-          axios.get(url, {
+          this.$axios.get(url, {
             params: {
               'run' : run[0],
               'dv'  : run[1]
@@ -498,7 +498,7 @@
         getListPatientsApi(){
           var run = this.fillCreateExam.run;
           var url = '/administracion/patient/getListPatientsApi'
-          const res =  axios.get(url, {
+          const res =  this.$axios.get(url, {
             params: {
               'run' : run
             }
@@ -506,7 +506,7 @@
               var data = JSON.stringify(response.data);
               if(response.data.run)
             {
-              Swal.fire({
+              $swal.fire({
               title: '¿El paciente se ha encontrado en sistema monitor, desea cargarlo?',
               icon: 'warning',
               showCancelButton: true,
@@ -539,7 +539,7 @@
             }
             else {
               console.log("error no se encontro registro");
-              Swal.fire({
+              $swal.fire({
                 icon: 'warning',
                 title: 'El paciente no se encuentra en los registros del sistema monitor',
                 showConfirmButton: false,
@@ -554,7 +554,7 @@
         setStorePatient(){
           var run = this.fillCreateExam.run.split('-');
           var url = '/administracion/patient/setStorePatient'
-          axios.post(url, {
+          this.$axios.post(url, {
             'run'            : run[0],
             'dv'             : run[1],
             'name'           : this.fillCreateExam.name,
@@ -566,7 +566,7 @@
           }).then(response => {
             console.log(response);
             this.fillCreateExam.idPatient = response.data.id;
-            Swal.fire({
+            $swal.fire({
                 icon: 'success',
                 title: 'Registro Paciente exitosamente',
                 showConfirmButton: false,
@@ -579,7 +579,7 @@
         getListCommunes() {
           
           var route = '/administracion/communes/getListCommunes'
-          axios.get(route).then( response => {
+          this.$axios.get(route).then( response => {
             console.log(response.data)
             this.listCommunes = response.data;
           }).catch(error => {
@@ -595,7 +595,7 @@
         getListDerivations(code_deis) {
           
           var route = '/administracion/derivations/getListDerivationsSelect'
-          axios.get(route,{
+          this.$axios.get(route,{
             params: {
               'establishment_code_deis' : code_deis
             }
@@ -619,7 +619,7 @@
             }
             
             
-            Swal.fire({
+            $swal.fire({
             title: '¿Desea cargar el registro?',
             icon: 'warning',
             showCancelButton: true,
@@ -636,7 +636,7 @@
         setStoreExam(){
           this.fullscreenLoading = true;
           var  url = '/exam/setStoreExam'
-          axios.post(url, {
+          this.$axios.post(url, {
             'idPatient'      : this.fillCreateExam.idPatient,
             'run'            : this.fillCreateExam.run,
             'dv'             : this.fillCreateExam.dv,
@@ -728,7 +728,7 @@
         },
         responseFailed() {
           this.getListPatientsApi();
-         /* Swal.fire({
+         /* $swal.fire({
               title: '¿El paciente no se encuentra en los registros de Siremx, desea buscarlo en sitema monitor?',
               icon: 'warning',
               showCancelButton: true,

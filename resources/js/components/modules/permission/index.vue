@@ -166,7 +166,7 @@ export default {
     },
     getlistPermissions() {
       var url = '/administracion/permission/getlistPermissions'
-      axios.get(url, {
+      this.$axios.get(url, {
         params: {
           'name': this.fillBsqPermission.name,
           'url': this.fillBsqPermission.url,

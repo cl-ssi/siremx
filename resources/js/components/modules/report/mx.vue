@@ -395,7 +395,7 @@ export default {
     },
     getListEstablishments() {
       var route = '/administracion/establishments/getListEstablishments'
-      axios.get(route).then(response => {
+      this.$axios.get(route).then(response => {
         this.listEstablishments = response.data;
       }).catch(error => {
         if (error.response.status == 401) {
@@ -408,7 +408,7 @@ export default {
     },
     getListCommunes() {
       var route = '/administracion/communes/getListCommunes'
-      axios.get(route).then(response => {
+      this.$axios.get(route).then(response => {
         this.listCommunes = response.data;
       }).catch(error => {
         if (error.response.status == 401) {
@@ -429,7 +429,7 @@ export default {
       });
 
       var url = '/report/exams/getMX'
-      axios.get(url, {
+      this.$axios.get(url, {
         params: {
           'dateIni': (!this.fillBsqReport.date_ini) ? '' : this.fillBsqReport.date_ini,
           'dateEnd': (!this.fillBsqReport.date_end) ? '' : this.fillBsqReport.date_end,
@@ -450,7 +450,7 @@ export default {
       this.listBirardsMamAgeMX = this.listBirardsEcoAgeMX = [];
       if (this.fillBsqReport.selectExamType == '' || this.fillBsqReport.selectExamType.includes('mam')) {
         var url = '/report/exams/getBirardsAgeMX'
-        axios.get(url, {
+        this.$axios.get(url, {
           params: {
             'dateIni': (!this.fillBsqReport.date_ini) ? '' : this.fillBsqReport.date_ini,
             'dateEnd': (!this.fillBsqReport.date_end) ? '' : this.fillBsqReport.date_end,
@@ -466,7 +466,7 @@ export default {
 
       if (this.fillBsqReport.selectExamType == '' || this.fillBsqReport.selectExamType.includes('eco')) {
         var url = '/report/exams/getBirardsEcoAgeMX'
-        axios.get(url, {
+        this.$axios.get(url, {
           params: {
             'dateIni': (!this.fillBsqReport.date_ini) ? '' : this.fillBsqReport.date_ini,
             'dateEnd': (!this.fillBsqReport.date_end) ? '' : this.fillBsqReport.date_end,
@@ -494,7 +494,7 @@ export default {
       }
 
       var url = '/report/exam/export'
-      axios.get(url, config).then(response => {
+      this.$axios.get(url, config).then(response => {
         console.log(response.data);
         var oMyBlob = new Blob([response.data], { type: 'application/vnd.ms-excel' }); // the blob
         var url = document.createElement('a')

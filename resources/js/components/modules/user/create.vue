@@ -229,7 +229,7 @@
             this.form.append('file', this.fillCrearUsuario.oFotografia)
             const config = { headers: {'Content-Type': 'multipart/form-data'}}
             var url = '/archivo/setRegistrarArchivo'
-            axios.post(url, this.form, config).then(response =>{
+            this.$axios.post(url, this.form, config).then(response =>{
               console.log(response)
               var nIdFile = response.data;
               this.setStoreUser(nIdFile);
@@ -244,7 +244,7 @@
         },
         setStoreUser(nIdFile){
           var  url = '/administracion/usuario/setRegistrarUsuario'
-          axios.post(url, {
+          this.$axios.post(url, {
             'run'            : this.fillCrearUsuario.run,
             'dv'             : this.fillCrearUsuario.dv,
             'cNombre'        : this.fillCrearUsuario.cNombre,
@@ -269,7 +269,7 @@
         },
         setEditRoleByUser(nIdUsuario) {
           var  url = '/administracion/user/setEditRoleByUser'
-          axios.post(url, {
+          this.$axios.post(url, {
             'idUser' : nIdUsuario,
             'idRole' : this.fillCrearUsuario.idRole,
 
@@ -287,7 +287,7 @@
         },
         getListRoles(){
           var url = '/administracion/role/getListRoles'
-          axios.get(url).then(response => {
+          this.$axios.get(url).then(response => {
             this.listRoles = response.data;
           }).catch(error => {
               if(error.response.status == 401){

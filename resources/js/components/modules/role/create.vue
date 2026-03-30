@@ -178,7 +178,7 @@ export default {
     },
     getListPermissionsByRole() {
       var route = '/administracion/role/getListPermissionsByRole'
-      axios.get(route).then(response => {
+      this.$axios.get(route).then(response => {
         this.listPermissions = response.data;
         this.filterPermissionsByRole();
       }).catch(error => {
@@ -219,7 +219,7 @@ export default {
     },
     setStoreRole() {
       var url = '/administracion/role/setStoreRolePermissions'
-      axios.post(url, {
+      this.$axios.post(url, {
         'name': this.fillCreateRole.name,
         'slug': this.fillCreateRole.slug,
         'listPermissionsFilter': this.listPermissionsFilter

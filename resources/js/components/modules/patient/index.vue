@@ -197,7 +197,7 @@ export default {
     },
     gwetListPatients() {
       var url = '/administracion/patient/getListarPatients'
-      axios.get(url, {
+      this.$axios.get(url, {
         params: {
           'nRun': this.fillBsqUsuario.nRun,
           'cName': this.fillBsqUsuario.cName,

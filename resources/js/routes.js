@@ -1,249 +1,148 @@
 import { createRouter, createWebHistory } from 'vue-router';
 
+// Layouts
+import AppLayout from './components/App.vue';
+import AuthLayout from './components/Auth.vue';
+import MainLayout from './components/MainLayout.vue';
+
+// Lazy load (mejor performance)
+const Login = () => import('./components/modules/authenticate/login.vue');
+const Logout = () => import('./components/modules/authenticate/logout.vue');
+const LoginCU = () => import('./components/modules/authenticate/logincu.vue');
+
+const Dashboard = () => import('./components/modules/dashboard/index.vue');
+const DashAudit = () => import('./components/modules/dashboard/dashAudit.vue');
+
+const UserIndex = () => import('./components/modules/user/index.vue');
+const UserCreate = () => import('./components/modules/user/create.vue');
+const UserEdit = () => import('./components/modules/user/edit.vue');
+const UserPermission = () => import('./components/modules/user/permission.vue');
+
+const RoleIndex = () => import('./components/modules/role/index.vue');
+const RoleCreate = () => import('./components/modules/role/create.vue');
+const RoleEdit = () => import('./components/modules/role/edit.vue');
+
+const PermissionIndex = () => import('./components/modules/permission/index.vue');
+const PermissionCreate = () => import('./components/modules/permission/create.vue');
+const PermissionEdit = () => import('./components/modules/permission/edit.vue');
+
+const PatientIndex = () => import('./components/modules/patient/index.vue');
+const PatientCreate = () => import('./components/modules/patient/create.vue');
+const PatientEdit = () => import('./components/modules/patient/edit.vue');
+
+const ExamIndex = () => import('./components/modules/exam/index.vue');
+const ExamCreate = () => import('./components/modules/exam/create.vue');
+const ExamEdit = () => import('./components/modules/exam/edit.vue');
+const ExamView = () => import('./components/modules/exam/view.vue');
+const ExamLoad = () => import('./components/modules/exam/load.vue');
+const ExamLoadHistory = () => import('./components/modules/exam/loadHistory.vue');
+
+const ReportIndex = () => import('./components/modules/report/index.vue');
+const ReportMX = () => import('./components/modules/report/mx.vue');
+const ReportSigte = () => import('./components/modules/report/mxSigte.vue');
+const ReportBirardsAge = () => import('./components/modules/report/birardsAge.vue');
+const PatientHistoryClinical = () => import('./components/modules/report/patientHistoryClinical.vue');
+const PatientHistory = () => import('./components/modules/report/patientHistory.vue');
+const ReportMXBirards = () => import('./components/modules/report/mxBirards.vue');
+const ReportMXBiradYears = () => import('./components/modules/report/mxBiradYear.vue');
+const ReportMXCoverage = () => import('./components/modules/report/mxCoverage.vue');
+
+const NotFound = () => import('./components/layouts/404.vue');
+
+// 🔐 Guard
 function verifyAccess(to, from, next) {
     let authUser = JSON.parse(localStorage.getItem("authUser"));
+
     if (authUser) {
         let listRolePermissionsByUser = JSON.parse(
             localStorage.getItem("listRolePermissionsByUser")
         ) || [];
+
         if (listRolePermissionsByUser.includes(to.name)) {
             next();
         } else {
-            let listRolePermissionsByUserFilter = listRolePermissionsByUser.filter(
-                x => x && x.includes("index") // ← filter en vez de map + push
-            );
-            if (to.name == "dashboard.index") {
-                next({ name: listRolePermissionsByUserFilter[0] });
+            let fallback = listRolePermissionsByUser.find(x => x && x.includes("index"));
+            if (to.name === "dashboard.index" && fallback) {
+                next({ name: fallback });
             } else {
-                next(from.path);
+                next(from.fullPath || '/');
             }
         }
     } else {
-        next("/login");
+        next('/auth/login');
     }
 }
 
+const routes = [
+    // 🔐 AUTH
+    {
+        path: '/auth',
+        component: AuthLayout,
+        children: [
+            { path: 'login', name: 'login', component: Login },
+            { path: 'logout', name: 'logout', component: Logout },
+            { path: 'logincu/:token', name: 'logincu', component: LoginCU, props: true }
+        ]
+    },
+
+    // 🧩 APP (PROTEGIDO)
+    {
+        path: '/',
+        component: MainLayout,
+        beforeEnter: verifyAccess,
+        children: [
+            { path: '', name: 'dashboard.index', component: Dashboard },
+            { path: 'dashboard', component: Dashboard },
+
+            { path: 'dashboardAudit', name: 'dashboardAudit.index', component: DashAudit },
+
+            { path: 'user', name: 'user.index', component: UserIndex },
+            { path: 'user/create', name: 'user.create', component: UserCreate },
+            { path: 'user/edit/:id', name: 'user.edit', component: UserEdit, props: true },
+            { path: 'user/permission/:id', name: 'user.permission', component: UserPermission, props: true },
+
+            { path: 'role', name: 'role.index', component: RoleIndex },
+            { path: 'role/create', name: 'role.create', component: RoleCreate },
+            { path: 'role/edit/:id', name: 'role.edit', component: RoleEdit, props: true },
+
+            { path: 'permission', name: 'permission.index', component: PermissionIndex },
+            { path: 'permission/create', name: 'permission.create', component: PermissionCreate },
+            { path: 'permission/edit/:id', name: 'permission.edit', component: PermissionEdit, props: true },
+
+            { path: 'patient', name: 'patient.index', component: PatientIndex },
+            { path: 'patient/create', name: 'patient.create', component: PatientCreate },
+            { path: 'patient/edit/:id', name: 'patient.edit', component: PatientEdit, props: true },
+
+            { path: 'exam', name: 'exam.index', component: ExamIndex },
+            { path: 'examCreate', name: 'exam.create', component: ExamCreate },
+            { path: 'exam/edit/:id', name: 'exam.edit', component: ExamEdit, props: true },
+            { path: 'exam/view/:id', name: 'exam.view', component: ExamView, props: true },
+            { path: 'examLoad', name: 'exam.load', component: ExamLoad },
+            { path: 'examLoadHistory', name: 'examLoadHistory.load', component: ExamLoadHistory },
+
+            { path: 'report', name: 'report.index', component: ReportIndex },
+            { path: 'reportMX', name: 'reportMX.index', component: ReportMX },
+            { path: 'reportSigte', name: 'reportSigte.index', component: ReportSigte },
+            { path: 'reportBirardsAge', name: 'reportBirardsAge.index', component: ReportBirardsAge },
+            { path: 'patientHistoryClinical', name: 'patientHistoryClinical.index', component: PatientHistoryClinical },
+            { path: 'patientHistory', name: 'patientHistory.index', component: PatientHistory },
+            { path: 'reportMXBirards', name: 'reportMXBirards.index', component: ReportMXBirards },
+            { path: 'reportMXBiradYears', name: 'reportMXBiradYears.index', component: ReportMXBiradYears },
+            { path: 'reportMXcoverage', name: 'reportMXcoverage.index', component: ReportMXCoverage },
+        ]
+    },
+
+    // ❌ 404
+    {
+        path: '/:pathMatch(.*)*',
+        component: NotFound
+    }
+];
+
 const router = createRouter({
     history: createWebHistory('/siremx/'),
-    linkActiveClass: "active",
-    routes: [
-        {
-            path: "/login",
-            name: "login",
-            component: require("./components/modules/authenticate/login").default
-        },
-        {
-            path: "/logout",
-            name: "logout",
-            component: require("./components/modules/authenticate/logout").default
-        },
-        {
-            path: "/logincu/:token",
-            name: "logincu",
-            component: require("./components/modules/authenticate/logincu").default
-        },
-        {
-            path: "/",                               // ← una sola ruta "/"
-            name: "dashboard.index",
-            component: require("./components/modules/dashboard/index").default,
-            beforeEnter: verifyAccess               // verifyAccess redirige a /login si no hay auth
-        },
-        {
-            path: "/dashboardAudit",
-            name: "dashboardAudit.index",
-            component: require("./components/modules/dashboard/dashAudit").default,
-            beforeEnter: verifyAccess
-        },
-        {
-            path: "/user",
-            name: "user.index",
-            component: require("./components/modules/user/index").default,
-            beforeEnter: verifyAccess
-        },
-        {
-            path: "/user/create",
-            name: "user.create",
-            component: require("./components/modules/user/create").default,
-            beforeEnter: verifyAccess
-        },
-        {
-            path: "/user/edit/:id",
-            name: "user.edit",
-            component: require("./components/modules/user/edit").default,
-            beforeEnter: verifyAccess,
-            props: true
-        },
-        {
-            path: "/user/permission/:id",
-            name: "user.permission",
-            component: require("./components/modules/user/permission").default,
-            beforeEnter: verifyAccess,
-            props: true
-        },
-        {
-            path: "/role",
-            name: "role.index",
-            component: require("./components/modules/role/index").default,
-            beforeEnter: verifyAccess
-        },
-        {
-            path: "/role/create",
-            name: "role.create",
-            component: require("./components/modules/role/create").default,
-            beforeEnter: verifyAccess
-        },
-        {
-            path: "/role/edit/:id",
-            name: "role.edit",
-            component: require("./components/modules/role/edit").default,
-            beforeEnter: verifyAccess,
-            props: true
-        },
-        {
-            path: "/permission",
-            name: "permission.index",
-            component: require("./components/modules/permission/index").default,
-            beforeEnter: verifyAccess
-        },
-        {
-            path: "/permission/create",
-            name: "permission.create",
-            component: require("./components/modules/permission/create").default,
-            beforeEnter: verifyAccess
-        },
-        {
-            path: "/permission/edit/:id",
-            name: "permission.edit",
-            component: require("./components/modules/permission/edit").default,
-            beforeEnter: verifyAccess,
-            props: true
-        },
-        {
-            path: "/dashboard",
-            component: require("./components/modules/dashboard/index").default,
-            beforeEnter: verifyAccess
-        },
-        {
-            path: "/patient",
-            name: "patient.index",
-            component: require("./components/modules/patient/index").default,
-            beforeEnter: verifyAccess
-        },
-        {
-            path: "/patient/edit/:id",
-            name: "patient.edit",
-            component: require("./components/modules/patient/edit").default,
-            beforeEnter: verifyAccess,
-            props: true
-        },
-        {
-            path: "/patient/create",
-            name: "patient.create",
-            component: require("./components/modules/patient/create").default,
-            beforeEnter: verifyAccess
-        },
-        {
-            path: "/exam",
-            name: "exam.index",
-            component: require("./components/modules/exam/index").default,
-            beforeEnter: verifyAccess
-        },
-        {
-            path: "/exam/edit/:id",
-            name: "exam.edit",
-            component: require("./components/modules/exam/edit").default,
-            beforeEnter: verifyAccess,
-            props: true
-        },
-        {
-            path: "/examCreate",
-            name: "exam.create",
-            component: require("./components/modules/exam/create").default,
-            beforeEnter: verifyAccess
-        },
-        {
-            path: "/exam/view/:id",
-            name: "exam.view",
-            component: require("./components/modules/exam/view").default,
-            beforeEnter: verifyAccess,
-            props: true
-        },
-        {
-            path: "/examLoad",
-            name: "exam.load",
-            component: require("./components/modules/exam/load").default,
-            beforeEnter: verifyAccess
-        },
-        {
-            path: "/examLoadHistory",
-            name: "examLoadHistory.load",
-            component: require("./components/modules/exam/loadHistory").default,
-            beforeEnter: verifyAccess
-        },
-        {
-            path: "/report",
-            name: "report.index",
-            component: require("./components/modules/report/index").default,
-            beforeEnter: verifyAccess
-        },
-        {
-            path: "/reportMX",
-            name: "reportMX.index",
-            component: require("./components/modules/report/mx").default,
-            beforeEnter: verifyAccess
-        },
-        {
-            path: "/reportSigte",
-            name: "reportSigte.index",
-            component: require("./components/modules/report/mxSigte").default,
-            beforeEnter: verifyAccess
-        },
-        {
-            path: "/reportBirardsAge",
-            name: "reportBirardsAge.index",
-            component: require("./components/modules/report/birardsAge").default,
-            beforeEnter: verifyAccess
-        },
-        {
-            path: "/patientHistoryClinical",
-            name: "patientHistoryClinical.index",
-            component: require("./components/modules/report/patientHistoryClinical").default,
-            beforeEnter: verifyAccess
-        },
-        {
-            path: "/patientHistory",
-            name: "patientHistory.index",
-            component: require("./components/modules/report/patientHistory").default,
-            beforeEnter: verifyAccess
-        },
-        {
-            path: "/reportMXBirards",
-            name: "reportMXBirards.index",
-            component: require("./components/modules/report/mxBirards").default,
-            beforeEnter: verifyAccess
-        },
-        {
-            path: "/reportMXBiradYears",
-            name: "reportMXBiradYears.index",
-            component: require("./components/modules/report/mxBiradYear").default,
-            beforeEnter: verifyAccess
-        },
-        {
-            path: "/reportMXcoverage",
-            name: "reportMXcoverage.index",
-            component: require("./components/modules/report/mxCoverage").default,
-            beforeEnter: verifyAccess
-        },
-        {
-            path: "/:pathMatch(.*)*",
-            component: require("./components/layouts/404").default
-        }
-    ]
-});
-
-router.beforeEach((to, from, next) => {
-    console.log('Navegando a:', to.path);
-    next();
+    linkActiveClass: 'active',
+    routes
 });
 
 export default router;

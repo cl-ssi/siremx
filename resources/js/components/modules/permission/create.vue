@@ -140,7 +140,7 @@
         },
         setStorePermission(){
           var  url = '/administracion/permission/setStorePermission'
-          axios.post(url, {
+          this.$axios.post(url, {
             'name'                   : this.fillCreatePermission.name,
             'slug'                   : this.fillCreatePermission.slug
 

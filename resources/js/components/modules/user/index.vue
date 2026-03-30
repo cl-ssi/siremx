@@ -263,7 +263,7 @@ export default {
     },
     getListarUsuarios() {
       var url = '/administracion/usuario/getListarUsuarios'
-      axios.get(url, {
+      this.$axios.get(url, {
         params: {
           'cNombre': this.fillBsqUsuario.cNombre,
           'cUsuario': this.fillBsqUsuario.cUsuario,
@@ -296,7 +296,7 @@ export default {
       this.pageNumber = 0;
     },
     setChangeUserState(op, id) {
-      Swal.fire({
+      $swal.fire({
         title: '¿Está Seguro de ' + ((op == 1) ? 'desactivar' : 'activar') + ' el usuario?',
         icon: 'warning',
         showCancelButton: true,
@@ -307,12 +307,12 @@ export default {
         if (result.value) {
           // AQUI IRA LA CONFIRMACIÓN DEL BOTON Y PETICIÓN DEL SERVIDOR
           var url = '/administracion/user/setChangeUserState'
-          axios.post(url, {
+          this.$axios.post(url, {
             'idUser': id,
             'state': ((op == 1) ? 'I' : 'A'),
 
           }).then(response => {
-            Swal.fire({
+            $swal.fire({
               icon: 'success',
               title: 'Se ' + ((op == 1) ? 'desactivo' : 'activo') + 'el usuario',
               showConfirmButton: false,

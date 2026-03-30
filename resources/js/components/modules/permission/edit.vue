@@ -131,7 +131,7 @@
         },
         getlistPermissions(){
           var url = '/administracion/permission/getlistPermissions'
-          axios.get(url, {
+          this.$axios.get(url, {
             params: {
               'idPermission' : this.fillEditPermission.idPermission
             }
@@ -157,14 +157,14 @@
             this.fullscreenLoading = true;
 
           var  url = '/administracion/permission/setEditPermission'
-          axios.post(url, {
+          this.$axios.post(url, {
             'idPermission'  : this.fillEditPermission.idPermission,
             'name'          : this.fillEditPermission.name,
             'slug'          : this.fillEditPermission.slug,
 
           }).then(response => {
             this.fullscreenLoading = false;
-             Swal.fire({
+             $swal.fire({
                 icon: 'success',
                 title: 'Actualizado',
                 showConfirmButton: false,

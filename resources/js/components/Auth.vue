@@ -2,14 +2,16 @@
     <div class="login-page bg-sismam ">
         <router-view v-slot="{ Component }">
             <transition name="slide-fade" mode="out-in">
-                <component :is="Component" />
+                <component :is="Component" v-if="Component"/>
             </transition>
         </router-view>
     </div>
 </template>
 
 <script>
-export default {}
+export default {
+    name: 'AuthLayout'
+}
 </script>
 
 <style>

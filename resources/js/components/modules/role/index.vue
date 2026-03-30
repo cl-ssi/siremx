@@ -161,7 +161,7 @@ export default {
     },
     getListRoles() {
       var url = '/administracion/role/getListRoles'
-      axios.get(url, {
+      this.$axios.get(url, {
         params: {
           'name': this.fillBsqRole.name,
         }
