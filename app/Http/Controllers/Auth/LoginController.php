@@ -93,7 +93,7 @@ class LoginController extends Controller
      */
     public function redirectVueLogin($access_token)
     {
-        $url = config('app.url') . '/siremx/logincu/' . $access_token;
+        $url = config('app.url') . '/siremx/auth/logincu/' . $access_token;
         return redirect($url);
     }
 }
