@@ -83,7 +83,7 @@
                             v-model="fillEditPatient.birthday"
                             type="date"
                             placeholder="Fecha"
-                            value-format="yyyy-MM-dd"
+                            value-format="YYYY-MM-DD"
                             default-value="1990-01-02">
                           </el-date-picker>
                           <small class="form-text text-muted"></small>

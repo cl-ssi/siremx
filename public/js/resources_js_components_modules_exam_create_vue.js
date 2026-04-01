@@ -856,8 +856,8 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     }),
     type: "date",
     placeholder: "Fecha",
-    format: "dd/MM/yyyy",
-    "value-format": "yyyy-MM-dd"
+    format: "DD/MM/YYYY",
+    "value-format": "YYYY-MM-DD"
   }, null, 8 /* PROPS */, ["modelValue"])])])]), _cache[48] || (_cache[48] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("hr", null, null, -1 /* CACHED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_43, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_44, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_45, [_cache[42] || (_cache[42] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", null, "Establecimiento donde toma Examen", -1 /* CACHED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_el_select, {
     onChange: $options.onChange,
     modelValue: $data.fillCreateExam.establishmentExam,
@@ -894,8 +894,8 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     }),
     type: "date",
     placeholder: "Fecha",
-    format: "dd/MM/yyyy",
-    "value-format": "yyyy-MM-dd"
+    format: "DD/MM/YYYY",
+    "value-format": "YYYY-MM-DD"
   }, null, 8 /* PROPS */, ["modelValue"])])])]), _cache[49] || (_cache[49] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("hr", null, null, -1 /* CACHED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_50, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_51, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_52, [_cache[45] || (_cache[45] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", null, "Establecimiento quien deriva Examen (opcional)", -1 /* CACHED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_el_select, {
     modelValue: $data.fillCreateExam.establishmentExamDerivation,
     "onUpdate:modelValue": _cache[18] || (_cache[18] = function ($event) {

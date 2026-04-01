@@ -332,8 +332,8 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     }),
     type: "date",
     placeholder: "Fecha",
-    "value-format": "yyyy-MM-dd",
-    format: "dd/MM/yyyy"
+    "value-format": "YYYY-MM-DD",
+    format: "DD/MM/YYYY"
   }, null, 8 /* PROPS */, ["modelValue"]), _cache[7] || (_cache[7] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("small", {
     "class": "form-text text-muted"
   }, " * Considera fecha de toma de exámen", -1 /* CACHED */))])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_9, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_10, [_cache[10] || (_cache[10] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
@@ -345,8 +345,8 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     }),
     type: "date",
     placeholder: "Fecha",
-    "value-format": "yyyy-MM-dd",
-    format: "dd/MM/yyyy"
+    "value-format": "YYYY-MM-DD",
+    format: "DD/MM/YYYY"
   }, null, 8 /* PROPS */, ["modelValue"]), _cache[9] || (_cache[9] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("small", {
     "class": "form-text text-muted"
   }, " * Considera fecha de toma de exámen", -1 /* CACHED */))])])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_12, [$data.listRolePermissionsByUser.includes('commune.filter') ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_13, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_14, [_cache[11] || (_cache[11] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {

@@ -34,8 +34,8 @@
                             v-model="fillBsqReport.date_ini"
                             type="date"
                             placeholder="Fecha"
-                            value-format="yyyy-MM-dd"
-                            format="dd/MM/yyyy">
+                            value-format="YYYY-MM-DD"
+                            format="DD/MM/YYYY">
                           </el-date-picker>
                           <small class="form-text text-muted"> * Considera fecha de toma de exámen</small>
                         </div>
@@ -49,8 +49,8 @@
                             v-model="fillBsqReport.date_end"
                             type="date"
                             placeholder="Fecha"
-                            value-format="yyyy-MM-dd"
-                            format="dd/MM/yyyy">
+                            value-format="YYYY-MM-DD"
+                            format="DD/MM/YYYY">
                           </el-date-picker>
                           <small class="form-text text-muted"> * Considera fecha de toma de exámen</small>
                         </div>

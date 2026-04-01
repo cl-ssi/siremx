@@ -108,8 +108,8 @@
                             v-model="fillEditExam.date_exam_order"
                             type="date"
                             placeholder="Fecha"
-                            format="dd/MM/yyyy"
-                            value-format="yyyy-MM-dd">
+                            format="DD/MM/YYYY"
+                            value-format="YYYY-MM-DD">
                         </el-date-picker>
                       </div>
                     </div>
@@ -145,8 +145,8 @@
                             v-model="fillEditExam.date_exam"
                             type="date"
                             placeholder="Fecha"
-                            format="dd/MM/yyyy"
-                            value-format="yyyy-MM-dd">
+                            format="DD/MM/YYYY"
+                            value-format="YYYY-MM-DD">
                         </el-date-picker>
                       </div>
                     </div>
@@ -225,7 +225,7 @@
                             v-model="fillEditExam.date_exam_reception"
                             type="date"
                             placeholder="Fecha"
-                            value-format="yyyy-MM-dd">
+                            value-format="YYYY-MM-DD">
                         </el-date-picker>
                       </div>
                     </div>

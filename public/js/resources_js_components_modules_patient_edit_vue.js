@@ -346,7 +346,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     }),
     type: "date",
     placeholder: "Fecha",
-    "value-format": "yyyy-MM-dd",
+    "value-format": "YYYY-MM-DD",
     "default-value": "1990-01-02"
   }, null, 8 /* PROPS */, ["modelValue"]), _cache[29] || (_cache[29] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("small", {
     "class": "form-text text-muted"
