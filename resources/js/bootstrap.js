@@ -6,20 +6,39 @@ window._ = _;
 window.$ = $;
 window.jQuery = $;
 
-// Axios config
-axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
-axios.defaults.headers.common['Accept'] = 'application/json';
-axios.defaults.withCredentials = true;
+// Crear instancia configurada ANTES de exportar
+const axiosInstance = axios.create({
+    baseURL: import.meta.env.VITE_API_URL || '/',
+    withCredentials: true, // CRÍTICO: enviar cookies de sesión
+    headers: {
+        'X-Requested-With': 'XMLHttpRequest',
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+    }
+});
 
-// CSRF token (Laravel)
-const token = document.head.querySelector('meta[name="csrf-token"]');
+// CSRF token se configura dinámicamente en cada request
+axiosInstance.interceptors.request.use(config => {
+    const token = document.head.querySelector('meta[name="csrf-token"]');
+    if (token) {
+        config.headers['X-CSRF-TOKEN'] = token.content;
+    }
+    return config;
+});
 
-if (token) {
-    axios.defaults.headers.common['X-CSRF-TOKEN'] = token.content;
-}
+// Interceptor para manejar errores de sesión
+axiosInstance.interceptors.response.use(
+    response => response,
+    error => {
+        if (error.response?.status === 401 || error.response?.status === 419) {
+            // Sesión expirada o inválida
+            window.location.href = '/auth/login';
+        }
+        return Promise.reject(error);
+    }
+);
 
-// ✅ IMPORTANTE: usar Vite env
-axios.defaults.baseURL = import.meta.env.VITE_API_URL;
 
-// Global
-window.axios = axios;
+window.axios = axiosInstance;
+
+export default axiosInstance;

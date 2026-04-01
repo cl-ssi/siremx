@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Cache;
 use App\User;
+use Illuminate\Support\Facades\Log;
 
 class ClaveUnicaController extends Controller
 {
@@ -42,34 +44,90 @@ class ClaveUnicaController extends Controller
         $code   = $request->input('code');
         $state  = $request->input('state'); 
 
-        $url_base       = "https://accounts.claveunica.gob.cl/openid/token/";
-        $client_id      = env("CLAVEUNICA_CLIENT_ID");
-        $client_secret  = env("CLAVEUNICA_SECRET_ID");
-        $redirect_uri   = urlencode(env('APP_URL')."/claveunica/callback");
+        $token_response = $this->getAccessToken($code, $state);
 
-        $scope = 'openid+run+name';
+        if (!$token_response || !isset($token_response->access_token)) {
+            return redirect('/auth/login?error=cu_auth_failed');
+        }
+        $access_token = $token_response->access_token;
 
-        $response = Http::asForm()->post($url_base, [
-            'client_id'     => $client_id,
-            'client_secret' => $client_secret,
-            'redirect_uri'  => $redirect_uri,
-            'grant_type'    => 'authorization_code',
-            'code'          => $code,
-            'state'         => $state,
-        ]);
-
-        
-        $access_token = json_decode($response)->access_token ?? null;
-
-        /** Si no existe el access token */
-        if(is_null($access_token))
-        {
-            return redirect()->route('claveunica.login');
+        // Obtener datos del usuario desde Clave Única
+        $user_info = $this->getUserInfo($access_token);
+        Log::error($user_info);
+        if (!$user_info || !isset($user_info->run)) {
+            return redirect('/auth/login?error=cu_no_user_data');
         }
 
-        /* Paso 3, obtener los datos del usuario en base al $access_token */
-        return redirect('/siremx/auth/logincu/'.$access_token);
+        // Buscar usuario en tu BD por RUN
+        $user = User::where('run', $this->formatRun($user_info->run))->first();
+
+        if (!$user) {
+            return redirect('/auth/login?error=user_not_found');
+        }
+
+        // Verificar si el usuario está activo
+        if (!$user->active) {
+            return redirect('/auth/login?error=user_inactive');
+        }
+
+        // CREAR SESIÓN TEMPORAL con el token de acceso interno
+        $internal_token = bin2hex(random_bytes(32));
+
+        Cache::put('cu_login_' . $internal_token, [
+            'user_id' => $user->id,
+            'user_info' => $user_info,
+            'expires_at' => now()->addMinutes(5)
+        ], 300);        
+
+
+        // Redirigir a Vue con el token interno (no el de Clave Única)
+        return redirect('/auth/logincu/' . $internal_token);
     }
+
+
+    private function getAccessToken($code, $state)
+    {
+        $url_base = "https://accounts.claveunica.gob.cl/openid/token/";
+        $client_id = env("CLAVEUNICA_CLIENT_ID");
+        $client_secret = env("CLAVEUNICA_SECRET_ID");
+        $redirect_uri = urlencode(env('APP_URL') . "/claveunica/callback");
+
+        $response = Http::asForm()->post($url_base, [
+            'client_id' => $client_id,
+            'client_secret' => $client_secret,
+            'redirect_uri' => $redirect_uri,
+            'grant_type' => 'authorization_code',
+            'code' => $code,
+            'state' => $state,
+        ]);
+
+        if ($response->failed()) {
+            Log::error('Clave Única token error: ' . $response->body());
+            return null;
+        }
+
+        return json_decode($response->body());
+    }
+
+    private function getUserInfo($access_token)
+    {
+        $response = Http::withHeaders([
+            'Authorization' => 'Bearer ' . $access_token
+        ])->get('https://accounts.claveunica.gob.cl/openid/userinfo/');
+
+        if ($response->failed()) {
+            Log::error('Clave Única userinfo error: ' . $response->body());
+            return null;
+        }
+
+        return json_decode($response->body());
+    }
+
+    private function formatRun($run)
+    {
+        // Formatear RUN según tu BD (con o sin puntos, con guión)
+        return $run; // Ajusta según tu formato
+    }    
 
     public function logout() {
         /* Nos iremos al cerrar sesión en clave única y luego volvermos a nuestro sistema */

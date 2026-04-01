@@ -17,5 +17,18 @@ class Authenticate extends Middleware
         if (! $request->expectsJson()) {
             return route('basepath');
         }
+
+        // Para peticiones AJAX/API, no redirigir, dejar que el middleware
+        // lance AuthenticationException que se convierte en 401 JSON
+        return null;        
     }
+
+    protected function unauthenticated($request, array $guards)
+    {
+        if ($request->expectsJson()) {
+            abort(response()->json(['code' => 401, 'message' => 'Unauthenticated'], 401));
+        }
+        
+        parent::unauthenticated($request, $guards);
+    }    
 }
