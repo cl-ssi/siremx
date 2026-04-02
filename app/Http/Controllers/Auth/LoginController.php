@@ -6,94 +6,95 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Log;
 use App\User;
 
 class LoginController extends Controller
 {
-
     protected $maxAttempts = 3;
     protected $decayMinutes = 2;
 
     public function login(Request $request)
     {
-
-        $email    = $request->email;
+        $email = $request->email;
         $password = $request->pass;
-        $resp     = Auth::attempt(['username' => $email, 'password' => $password, 'state' => 'A']);
+        
+        $resp = Auth::attempt([
+            'username' => $email, 
+            'password' => $password, 
+            'state' => 'A'
+        ]);
 
         if ($resp) {
             $request->session()->regenerate();
             return response()->json([
                 'authUser' => Auth::user(),
-                'code'     => 200
-            ]);
-        } else {
-            return response()->json([
-                'code'     => 401
+                'code' => 200
             ]);
         }
+        
+        return response()->json(['code' => 401], 401);
     }
-
 
     public function logout(Request $request)
     {
         Auth::logout();
-        request()->session()->invalidate();
-        request()->session()->regenerateToken();
-        // return redirect()->route('claveunica.logout');
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
 
-        return response()->json([
-            'code'     => 204
-        ]);
+        return response()->json(['code' => 204]);
     }
 
     public function logincu($access_token = null)
     {
-        if ($access_token) {
-            /* Paso 3, obtener los datos del usuario en base al $access_token */
+        Log::info('logincu llamado', ['token' => substr($access_token ?? '', 0, 20)]);
+
+        if (!$access_token) {
+            return response()->json(['code' => 401, 'message' => 'No token'], 401);
+        }
+
+        try {
             $url_base = "https://accounts.claveunica.gob.cl/openid/userinfo/";
-            $response = Http::withToken($access_token)->post($url_base);
-            $user_cu = json_decode($response);
-
-            $u = User::where('run', $user_cu->RolUnico->numero)->first();
-
-            if ($u) {
-                Auth::login($u, true);
-                $resp = auth()->id();
-                if ($resp) {
-                    return response()->json([
-                        'authUser' => Auth::user(),
-                        'code'     => 200
-
-                    ]);
-                } else {
-                    return response()->json([
-                        'code'     => 401
-                    ]);
-                }
-            } else {
-                /** Cerrar sesión clave única */
-                /* Url para cerrar sesión en clave única */
-                $url_logout     = "https://accounts.claveunica.gob.cl/api/v1/accounts/app/logout?redirect=";
-                /* Url para luego cerrar sesión en nuestro sisetema */
-                $url_redirect   = env('APP_URL') . "/claveunica/logout";
-                $url            = $url_logout . urlencode($url_redirect);
-                session()->flash('danger', 'Esta cuenta no coincide con nuestros registros');
-                return redirect($url);
-                // return response()->json([
-                //     'code'     => 401
-                // ]);
+            $response = Http::withToken($access_token)->get($url_base);
+            
+            if ($response->failed()) {
+                Log::error('CU userinfo failed', ['status' => $response->status()]);
+                return response()->json(['code' => 401, 'message' => 'Error al validar con Clave Única'], 401);
             }
+
+            $user_cu = $response->json();
+            $run = $user_cu['RolUnico']['numero'] ?? null;
+
+            if (!$run) {
+                Log::error('CU sin RUN', $user_cu);
+                return response()->json(['code' => 401, 'message' => 'Datos incompletos de Clave Única'], 401);
+            }
+
+            $u = User::where('run', $run)->first();
+
+            if (!$u) {
+                Log::warning('Usuario no encontrado', ['run' => $run]);
+                return response()->json(['code' => 401, 'message' => 'Usuario no registrado en el sistema'], 401);
+            }
+
+            Auth::login($u, true);
+            request()->session()->regenerate();
+
+            Log::info('Login CU exitoso', ['user_id' => $u->id]);
+
+            return response()->json([
+                'authUser' => Auth::user(),
+                'code' => 200
+            ]);
+
+        } catch (\Exception $e) {
+            Log::error('Excepción en logincu', ['error' => $e->getMessage()]);
+            return response()->json(['code' => 500, 'message' => 'Error interno'], 500);
         }
     }
 
-    /**
-     * Redirect Vue Login
-     */
     public function redirectVueLogin($access_token)
     {
-        $url = config('app.url') . '/siremx/auth/logincu/' . $access_token;
-        return redirect($url);
+        return redirect('/auth/logincu/' . $access_token);
     }
 }

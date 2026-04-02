@@ -15,20 +15,13 @@ return [
     |
     */
 
-    'paths' => ['api/*', 'authenticate/*', 'sanctum/csrf-cookie', 'claveunica/*'],
-
+    'paths' => ['*'],
     'allowed_methods' => ['*'],
-
     'allowed_origins' => ['https://siremx.saludtarapaca.gob.cl'],
-
     'allowed_origins_patterns' => [],
-
     'allowed_headers' => ['*'],
-
     'exposed_headers' => [],
-
     'max_age' => 0,
-
     'supports_credentials' => true,
 
 ];

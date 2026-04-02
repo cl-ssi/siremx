@@ -6,11 +6,11 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Auth\LoginController;
 
 /** https://siremx.saludtarapaca.gob.cl/authenticate/login */
-Route::post('/authenticate/login', [LoginController::class, 'login']);
+Route::post('/authenticate/login', [LoginController::class, 'login'])->name('authenticate.login');
 /** https://siremx.saludtarapaca.gob.cl/authenticate/logincu/{token} */
-Route::get('/authenticate/logincu/{access_token}', [LoginController::class, 'logincu']);
+Route::get('/authenticate/logincu/{access_token}', [LoginController::class, 'logincu'])->name('authenticate.logincu');
 /** Ruta que redirecciona a logear utilizando vue */
-Route::get('/claveunica/login/{access_token}', [LoginController::class, 'redirectVueLogin']);
+Route::get('/claveunica/login/{access_token}', [LoginController::class, 'redirectVueLogin'])->name('claveunica.login.redirect');
 
 Route::get('/authenticate/logout', [LoginController::class, 'logout'])->name('logout');
 
