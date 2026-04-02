@@ -18,10 +18,10 @@ class LoginController extends Controller
     {
         $email = $request->email;
         $password = $request->pass;
-        
+
         $resp = Auth::attempt([
-            'username' => $email, 
-            'password' => $password, 
+            'username' => $email,
+            'password' => $password,
             'state' => 'A'
         ]);
 
@@ -32,7 +32,7 @@ class LoginController extends Controller
                 'code' => 200
             ]);
         }
-        
+
         return response()->json(['code' => 401], 401);
     }
 
@@ -56,7 +56,8 @@ class LoginController extends Controller
         try {
             $url_base = "https://accounts.claveunica.gob.cl/openid/userinfo/";
             $response = Http::withToken($access_token)->get($url_base);
-            
+            Log::info('CU Response', ['body' => $response->body(), 'status' => $response->status()]);
+
             if ($response->failed()) {
                 Log::error('CU userinfo failed', ['status' => $response->status()]);
                 return response()->json(['code' => 401, 'message' => 'Error al validar con Clave Única'], 401);
@@ -70,12 +71,27 @@ class LoginController extends Controller
                 return response()->json(['code' => 401, 'message' => 'Datos incompletos de Clave Única'], 401);
             }
 
+            $run = $user_cu['RolUnico']['numero'] ?? null;
+            // Intentar buscar sin formato y con formato
             $u = User::where('run', $run)->first();
+            // $u = User::where('run', $run)->first();
 
+
+            if (!$u) {
+                return response()->json([
+                    'code' => 401,
+                    'message' => 'Usuario no existe en BD',
+                    'run_buscado' => $run,
+                    'run_formateado' => intval($run) // Por si viene con formato diferente
+                ], 401);
+            }
+
+            /*
             if (!$u) {
                 Log::warning('Usuario no encontrado', ['run' => $run]);
                 return response()->json(['code' => 401, 'message' => 'Usuario no registrado en el sistema'], 401);
             }
+            */
 
             Auth::login($u, true);
             request()->session()->regenerate();
@@ -86,7 +102,6 @@ class LoginController extends Controller
                 'authUser' => Auth::user(),
                 'code' => 200
             ]);
-
         } catch (\Exception $e) {
             Log::error('Excepción en logincu', ['error' => $e->getMessage()]);
             return response()->json(['code' => 500, 'message' => 'Error interno'], 500);
