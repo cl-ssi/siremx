@@ -1,41 +1,31 @@
 <template>
-    <div></div>
+    <div>Cerrando sesión...</div>
 </template>
 
 <script>
-    export default {
-        data() {
-            return {
-                listRolePermissionsByUser: [],
-                listRolePermissionsByUserFilter: [],
-                fullscreenLoading: false,
-                error: 0,
-                messageError: []
+export default {
+    name: 'Logout',
+    
+    mounted() {
+        this.logout();
+    },
+    
+    methods: {
+        async logout() {
+            try {
+                // Llamar al backend para destruir sesión
+                await this.$axios.get('/authenticate/logout');
+            } catch (e) {
+                console.error('Error en logout API:', e);
+            } finally {
+                // Limpiar storage
+                localStorage.clear();
+                sessionStorage.clear();
+                
+                // Forzar recarga completa a login (evita problemas de chunk)
+                window.location.href = '/auth/login';
             }
-        },
-        mounted(){
-            this.logout();
-        },
-        methods: {
-            logout() {
-                this.fullscreenLoading = true;
-
-                // var url = '/claveunica/logout'
-                // this.$axios.post(url).then(response => {
-                //     alert(response.data)
-                //     console.log('Logout desde clave unica se ha completado satisfactoriamente')
-                // })
-
-                var url = '/authenticate/logout'
-                this.$axios.get(url).then(response => {
-                    if(response.data.code == 204){
-                        localStorage.clear();
-                        this.fullscreenLoading = true;
-                        this.$router.push({name: 'login'})
-                        location.reload();
-                    }
-                })
-            }
-        },
+        }
     }
+}
 </script>

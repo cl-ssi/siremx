@@ -76,7 +76,6 @@ class LoginController extends Controller
             $u = User::where('run', $run)->first();
             // $u = User::where('run', $run)->first();
 
-
             if (!$u) {
                 return response()->json([
                     'code' => 401,

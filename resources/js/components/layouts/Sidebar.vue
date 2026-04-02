@@ -24,7 +24,7 @@
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
               <li class="nav-item has-treeview">
 
-                  <router-link class="nav-link" :to="'/logout'" v-loading.fullscreen.lock="fullscreenLoading">
+                  <router-link class="nav-link" :to="'auth/logout'" v-loading.fullscreen.lock="fullscreenLoading">
                     <i class="nav-icon fas fa-sign-out-alt"></i>
                     <p>Cerrar Sesión</p>
                   </router-link>
