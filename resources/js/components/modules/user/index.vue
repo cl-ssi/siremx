@@ -296,7 +296,7 @@ export default {
       this.pageNumber = 0;
     },
     setChangeUserState(op, id) {
-      $swal.fire({
+      this.$swal.fire({
         title: '¿Está Seguro de ' + ((op == 1) ? 'desactivar' : 'activar') + ' el usuario?',
         icon: 'warning',
         showCancelButton: true,
@@ -312,7 +312,7 @@ export default {
             'state': ((op == 1) ? 'I' : 'A'),
 
           }).then(response => {
-            $swal.fire({
+            this.$swal.fire({
               icon: 'success',
               title: 'Se ' + ((op == 1) ? 'desactivo' : 'activo') + 'el usuario',
               showConfirmButton: false,

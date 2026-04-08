@@ -506,7 +506,7 @@
               var data = JSON.stringify(response.data);
               if(response.data.run)
             {
-              $swal.fire({
+              this.$swal.fire({
               title: '¿El paciente se ha encontrado en sistema monitor, desea cargarlo?',
               icon: 'warning',
               showCancelButton: true,
@@ -539,7 +539,7 @@
             }
             else {
               console.log("error no se encontro registro");
-              $swal.fire({
+              this.$swal.fire({
                 icon: 'warning',
                 title: 'El paciente no se encuentra en los registros del sistema monitor',
                 showConfirmButton: false,
@@ -566,7 +566,7 @@
           }).then(response => {
             console.log(response);
             this.fillCreateExam.idPatient = response.data.id;
-            $swal.fire({
+            this.$swal.fire({
                 icon: 'success',
                 title: 'Registro Paciente exitosamente',
                 showConfirmButton: false,
@@ -619,7 +619,7 @@
             }
             
             
-            $swal.fire({
+            this.$swal.fire({
             title: '¿Desea cargar el registro?',
             icon: 'warning',
             showCancelButton: true,
@@ -728,7 +728,7 @@
         },
         responseFailed() {
           this.getListPatientsApi();
-         /* $swal.fire({
+         /* this.$swal.fire({
               title: '¿El paciente no se encuentra en los registros de Siremx, desea buscarlo en sitema monitor?',
               icon: 'warning',
               showCancelButton: true,

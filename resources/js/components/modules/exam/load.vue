@@ -276,7 +276,7 @@
             return;
           }
 
-          $swal.fire({
+          this.$swal.fire({
             title: '¿Está Seguro de desea cargar el archivo?',
             icon: 'warning',
             showCancelButton: true,
@@ -296,7 +296,7 @@
                 var  url = '/exam/setLoadExams'
 
                 this.$axios.post(url,post).then(response => {
-                     $swal.fire({
+                     this.$swal.fire({
                       icon: 'success',
                       title: 'Acción Finalizada',
                       showConfirmButton: false,
@@ -304,7 +304,7 @@
                     })
                 }).catch(error => {
                     if(error.response.status == 400){
-                      $swal.fire(
+                      this.$swal.fire(
                           'Oops!',
                           error.response.data.error,
                           'error'

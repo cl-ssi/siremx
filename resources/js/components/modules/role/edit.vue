@@ -313,7 +313,7 @@ export default {
       localStorage.setItem('listRolePermissionsByUser', JSON.stringify(me.listRolePermissionsByUserFilter));
       $bus.emit('notifyrolePermissionsByUser', me.listRolePermissionsByUserFilter);
       this.fullscreenLoading = false;
-      $swal.fire({
+      this.$swal.fire({
         icon: 'success',
         title: 'Actualizado',
         showConfirmButton: false,

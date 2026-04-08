@@ -443,7 +443,7 @@ export default {
         return;
       }
 
-      $swal.fire({
+      this.$swal.fire({
         title: '¿Está Seguro de desea cargar el archivo?',
         icon: 'warning',
         showCancelButton: true,
@@ -466,7 +466,7 @@ export default {
 
             this.$axios.post(url, post).then(response => {
               // console.log(response.data);
-              $swal.fire({
+              this.$swal.fire({
                 icon: 'success',
                 title: 'Acción Finalizada',
                 showConfirmButton: false,
@@ -474,7 +474,7 @@ export default {
               })
             }).catch(error => {
               if (error.response.status == 400) {
-                $swal.fire(
+                this.$swal.fire(
                   'Oops!',
                   error.response.data.error,
                   'error'

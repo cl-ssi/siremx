@@ -552,7 +552,7 @@
             this.fillEditExam.path = response.path;
             console.log(response);
             this.fullscreenLoading = false;
-             $swal.fire({
+             this.$swal.fire({
                 icon: 'success',
                 title: 'Guardado Correctamente',
                 showConfirmButton: false,

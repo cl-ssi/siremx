@@ -164,7 +164,7 @@
 
           }).then(response => {
             this.fullscreenLoading = false;
-             $swal.fire({
+             this.$swal.fire({
                 icon: 'success',
                 title: 'Actualizado',
                 showConfirmButton: false,

@@ -6,24 +6,28 @@
 export default {
     name: 'Logout',
     
-    mounted() {
+    // NO usar mounted() - usar beforeCreate para ejecutar ANTES de que Vue renderice
+    beforeCreate() {
         this.logout();
     },
     
     methods: {
         async logout() {
             try {
-                // Llamar al backend para destruir sesión
-                await this.$axios.get('/authenticate/logout');
+                // Intentar logout en backend
+                await fetch('/authenticate/logout', {
+                    method: 'GET',
+                    credentials: 'include'
+                });
             } catch (e) {
-                console.error('Error en logout API:', e);
+                console.error('Logout error:', e);
             } finally {
-                // Limpiar storage
+                // Limpiar TODO
                 localStorage.clear();
                 sessionStorage.clear();
                 
-                // Forzar recarga completa a login (evita problemas de chunk)
-                window.location.href = '/auth/login';
+                // Forzar recarga completa LIMPIA (evita chunks de Vue)
+                window.location.replace('/auth/login');
             }
         }
     }

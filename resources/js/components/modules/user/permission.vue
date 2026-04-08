@@ -265,7 +265,7 @@
           }).then(response => {
             this.getListRolePermissionsByUser();
             this.fullscreenLoading = false;
-             $swal.fire({
+             this.$swal.fire({
                       icon: 'success',
                       title: 'Se otorgaron los permisos del usuario correctamente',
                       showConfirmButton: false,
@@ -303,7 +303,7 @@
             localStorage.setItem('listRolePermissionsByUser', JSON.stringify(me.listRolePermissionsByUserFilter));
             $bus.emit('notifyrolePermissionsByUser', me.listRolePermissionsByUserFilter);
             this.fullscreenLoading = false;
-             $swal.fire({
+             this.$swal.fire({
                       icon: 'success',
                       title: 'Se otorgaron los permisos del usuario correctamente',
                       showConfirmButton: false,

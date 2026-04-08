@@ -274,7 +274,7 @@ export default {
     },
     setDelete(id) {
       //console.log(id)
-      $swal.fire({
+      this.$swal.fire({
         title: '¿Está Seguro de eliminar el registro?',
         icon: 'warning',
         showCancelButton: true,
@@ -289,7 +289,7 @@ export default {
             'idExam': id,
 
           }).then(response => {
-            $swal.fire({
+            this.$swal.fire({
               icon: 'success',
               title: 'Se elimino el registro',
               showConfirmButton: false,
