@@ -73,8 +73,8 @@
                       <label class="col-md-3 col-form-label">Comuna</label>
                       <div class="col-md-9">
                         <el-select v-model="fillBsqReport.commune" filterable placeholder="Seleccione" clearable>
-                          <el-option v-for="item in listCommunes" :key="item.id" :label="item.code_deis + ' - ' + item.name"
-                            :value="item.code_deis">
+                          <el-option v-for="item in listCommunes" :key="item.id"
+                            :label="item.code_deis + ' - ' + item.name" :value="item.code_deis">
                           </el-option>
                         </el-select>
                       </div>
@@ -404,47 +404,120 @@ export default {
     },
     // Cargar archivo xlxs
     importExcel(callback) {
-      // const files = e.target.files;
-      // console.log(this.file[0]);
-      if (!this.file.length) {
-        return;
-      } else if (!/\.(xls|xlsx)$/.test(this.file[0].name.toLowerCase())) {
-        return alert("El formato de archivo a cargar es incorrecto, formato xls o xlsx requerido");
-      }
-      const fileReader = new FileReader();
-      fileReader.onload = ev => {
-        try {
-          let examsData = [];
-          const data = ev.target.result;
-          // console.log(data);
-          const workbook = XLSX.read(data, {
-            type: "binary"
-            , cellDates: true, dateNF: 'yyyy/mm/dd;@'
-          });
-          const wsname = workbook.SheetNames[0]; // Take the first sheet，wb.SheetNames[0] :Take the name of the first sheet in the sheets
-          const ws = XLSX.utils.sheet_to_json(workbook.Sheets[wsname], { raw: false, defval: '' }); // Generate JSON table content，wb.Sheets[Sheet]    Get the data of the first sheet
+      // Debug: Verificar archivo
+      console.log('Archivo recibido:', this.file);
+      console.log('¿Es array?', Array.isArray(this.file));
+      console.log('Length:', this.file?.length);
 
-          // save data            
-          for (var i = 0; i < ws.length; i++) {
+      if (!this.file || !this.file.length) {
+        console.error('Error: No hay archivo');
+        alert("Debe seleccionar un archivo");
+        return;
+      }
+
+      const archivo = this.file[0];
+      console.log('Nombre:', archivo.name);
+      console.log('Tamaño:', archivo.size);
+      console.log('Tipo:', archivo.type);
+
+      if (!/\.(xls|xlsx)$/i.test(archivo.name)) {
+        alert("El formato debe ser xls o xlsx");
+        return;
+      }
+
+      const fileReader = new FileReader();
+
+      // AGREGAR ESTO: Manejo de errores del FileReader
+      fileReader.onerror = (error) => {
+        console.error('FileReader Error:', error);
+        console.error('FileReader State:', fileReader.readyState);
+        console.error('FileReader Error Code:', fileReader.error?.code);
+        alert("Error al leer el archivo: " + (fileReader.error?.message || "Desconocido"));
+      };
+
+      fileReader.onload = (ev) => {
+        try {
+          console.log('Archivo cargado en memoria, tamaño:', ev.target.result.byteLength);
+
+          const data = ev.target.result;
+
+          // Verificar que data sea válido
+          if (!data || data.byteLength === 0) {
+            throw new Error("El archivo está vacío");
+          }
+
+          console.log('Intentando parsear con XLSX...');
+          const workbook = XLSX.read(data, {
+            type: "array",
+            cellDates: true,
+            dateNF: 'yyyy/mm/dd;@'
+          });
+
+          console.log('Workbook leído:', workbook);
+          console.log('Hojas disponibles:', workbook.SheetNames);
+
+          if (!workbook.SheetNames || workbook.SheetNames.length === 0) {
+            throw new Error("El archivo no tiene hojas de cálculo");
+          }
+
+          const wsname = workbook.SheetNames[0];
+          console.log('Leyendo hoja:', wsname);
+
+          const ws = XLSX.utils.sheet_to_json(
+            workbook.Sheets[wsname],
+            { raw: false, defval: '' }
+          );
+
+          console.log('Filas leídas:', ws.length);
+          console.log('Primera fila:', ws[0]);
+
+          if (!ws || ws.length === 0) {
+            throw new Error("La hoja está vacía");
+          }
+
+          const examsData = [];
+          for (let i = 0; i < ws.length; i++) {
             examsData.push(ws[i]);
+          }
+
+          console.log('Datos preparados:', examsData.length, 'registros');
+
+          // Verificar que callback sea función antes de llamarlo
+          if (typeof callback !== 'function') {
+            throw new Error("Callback no es una función válida");
           }
 
           callback(examsData);
 
         } catch (e) {
-          return alert("Read failure!");
+          console.error('ERROR DETALLADO en importExcel:', e);
+          console.error('Stack trace:', e.stack);
+          console.error('Tipo de error:', e.name);
+          alert("Error al procesar: " + e.message);
         }
       };
-      fileReader.readAsBinaryString(this.file[0]);
+
+      console.log('Iniciando lectura de archivo...');
+      try {
+        fileReader.readAsArrayBuffer(archivo);
+      } catch (e) {
+        console.error('Error al iniciar FileReader:', e);
+        alert("No se pudo iniciar la lectura: " + e.message);
+      }
     },
     storeExcel() {
+      console.log('Iniciando storeExcel...');
+      console.log('Archivo en componente:', this.file);
+
       if (this.validFormExcel()) {
         this.modalShow = true;
         return;
       }
 
+      const vm = this;
+
       this.$swal.fire({
-        title: '¿Está Seguro de desea cargar el archivo?',
+        title: '¿Está Seguro que desea cargar el archivo?',
         icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#3085d6',
@@ -452,44 +525,49 @@ export default {
         confirmButtonText: 'Cargar'
       }).then((result) => {
         if (result.value) {
-          this.importExcel(function (exams) {
+          console.log('Usuario confirmó, llamando importExcel...');
+
+          vm.importExcel(function (exams) {
+            console.log('Callback de importExcel ejecutado, datos:', exams);
+
             if (!exams) {
-              throw new Error("Falla en la carga de datos");
+              console.error('Callback recibió null/undefined');
+              alert("Falla en la carga de datos");
+              return;
             }
 
-            let post = {
-              exams: exams,
-            };
+            if (!Array.isArray(exams)) {
+              console.error('Callback no recibió array:', typeof exams);
+              alert("Formato de datos incorrecto");
+              return;
+            }
 
-            // AQUI IRA LA CONFIRMACIÓN DEL BOTON Y PETICIÓN DEL SERVIDOR
-            var url = '/exam/setLoadSigteID'
+            let post = { exams: exams };
+            var url = '/exam/setLoadSigteID';
 
-            this.$axios.post(url, post).then(response => {
-              // console.log(response.data);
-              this.$swal.fire({
-                icon: 'success',
-                title: 'Acción Finalizada',
-                showConfirmButton: false,
-                timer: 1500
+            vm.$axios.post(url, post)
+              .then(response => {
+                vm.$swal.fire({
+                  icon: 'success',
+                  title: 'Acción Finalizada',
+                  showConfirmButton: false,
+                  timer: 1500
+                });
               })
-            }).catch(error => {
-              if (error.response.status == 400) {
-                this.$swal.fire(
-                  'Oops!',
-                  error.response.data.error,
-                  'error'
-                )
-              }
-              if (error.response.status == 401) {
-                this.$router.push({ name: 'login' })
-                location.reload();
-                localStorage.clear();
-                this.fullscreenLoading = false;
-              }
-            })
+              .catch(error => {
+                console.error('Error en POST:', error);
+                if (error.response?.status == 400) {
+                  vm.$swal.fire('Oops!', error.response.data.error, 'error');
+                }
+                if (error.response?.status == 401) {
+                  localStorage.clear();
+                  vm.$router.push({ name: 'login' });
+                  location.reload();
+                }
+              });
           });
         }
-      })
+      });
     },
     validFormExcel() {
       this.error = 0;

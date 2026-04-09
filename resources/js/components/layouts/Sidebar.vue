@@ -16,7 +16,7 @@
               <img :src="ruta + '/img/avatar.png'" class="img-circle elevation-2" alt="User Image">
             </div>
             <div class="info">
-              <a href="#" class="d-block">{{user?.fullname || ''}}</a>
+              <a href="javascript:void(0)" class="d-block">{{user?.fullname || ''}}</a>
             </div>
           </div>
 
@@ -56,7 +56,7 @@
               <!-- MENÚ GESTIÓN - Desplegable -->
               <template v-if="listPermissions.includes('exam.index','exam.load')">
                 <li class="nav-item has-treeview" :class="{ 'menu-open': menus.gestion }">
-                  <a href="#" class="nav-link" @click.prevent="toggleMenu('gestion')">
+                  <a href="javascript:void(0)" class="nav-link" @click.prevent="toggleMenu('gestion')">
                     <i class="nav-icon fas fa-notes-medical"></i>
                     <p>
                       Examen Mamario
@@ -115,7 +115,7 @@
               <template v-if="listPermissions.includes('patientHistoryClinical.index')">
                 <li class="nav-header">REPORTES</li>
                 <li class="nav-item has-treeview" :class="{ 'menu-open': menus.reportes }">
-                  <a href="#" class="nav-link" @click.prevent="toggleMenu('reportes')">
+                  <a href="javascript:void(0)" class="nav-link" @click.prevent="toggleMenu('reportes')">
                     <i class="nav-icon fas fa-notes-medical"></i>
                     <p>
                       Examenes Mamarios
@@ -203,7 +203,7 @@
               <template v-if="listPermissions.includes('user.index','role.index','permission.index')">
                 <li class="nav-header">ADMINISTRACIÓN</li>
                 <li class="nav-item has-treeview" :class="{ 'menu-open': menus.admin }">
-                  <a href="#" class="nav-link" @click.prevent="toggleMenu('admin')">
+                  <a href="javascript:void(0)" class="nav-link" @click.prevent="toggleMenu('admin')">
                     <i class="nav-icon fas fa-cogs"></i>
                     <p>
                       Configuración
