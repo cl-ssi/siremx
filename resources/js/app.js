@@ -1,8 +1,8 @@
-import './bootstrap';
+import './bootstrap';  // ← Solo esto, ya asigna window.axios
 import { createApp } from 'vue';
 import App from './components/App.vue';
 import router from './routes';
-import axiosInstance from './bootstrap';
+// ❌ ELIMINAR: import axiosInstance from './bootstrap';
 import moment from 'moment';
 import ElementPlus from 'element-plus';
 import 'element-plus/dist/index.css';
@@ -13,7 +13,8 @@ import Swal from 'sweetalert2';
 const EventBus = mitt();
 const app = createApp(App);
 
-app.config.globalProperties.$axios = axiosInstance;
+// ✅ Usar window.axios que ya fue configurado en bootstrap.js
+app.config.globalProperties.$axios = window.axios;
 app.config.globalProperties.$moment = moment;
 app.config.globalProperties.$bus = EventBus;
 app.config.globalProperties.$swal = Swal;
